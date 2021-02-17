@@ -1,0 +1,36 @@
+{
+	"name": "ehaerer/paste-reference",
+	"type": "typo3-cms-extension",
+	"description": "Paste reference instead of copy for content elements in TYPO3",
+	"keywords": [
+		"TYPO3 CMS",
+		"content element",
+		"copy paste",
+		"references"
+	],
+	"homepage": "https://github.com/kephson/paste-reference",
+	"authors": [
+		{
+			"name": "Ephraim Härer",
+			"email": "mail@ephra.im",
+			"role": "Developer",
+			"homepage": "https://ephra.im"
+		}
+	],
+	"license": "MIT",
+	"support": {
+		"issues": "https://github.com/kephson/paste-reference/issues"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"version": "0.1.0",
+	"require": {
+		"php": ">=7.2.0",
+		"typo3/cms-frontend": "^9.5 || ^10.0 || 10.*@dev"
+	},
+	"autoload": {
+		"psr-4": {
+			"EHAERER\\PasteReference\\": "Classes"
+		}
+	}
+}

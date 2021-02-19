@@ -44,7 +44,8 @@ Please report issue directly in the [issue tracker in the Github repository][6].
 
 ### 4.1 Settings in extension configuration
 
-* 
+* **disableCopyFromPageButton** - You can disable the "copy from page button" in the page module if you don't need it.
+* **disableDragInWizard** - You can disable the "DragIn wizard" if you don't need it.
 
 ### 4.2 Changelog
 

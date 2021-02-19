@@ -1,0 +1,23 @@
+1.0.0 - 19th February 2021
+==========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- fixed backend JavaScripts for TYPO3 10
+- updated database handling for TYPO3 10
+- added documentation and updated readme
+- initial release of version 1.0 also in TER

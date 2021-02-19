@@ -1,0 +1,46 @@
+.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
+
+.. This is 'Includes.txt'. It is included at the very top of each and
+   every ReST source file in this documentation project (= manual).
+
+
+.. ==================================================
+.. DEFINE SOME TEXT ROLES
+.. --------------------------------------------------
+
+.. role::   typoscript(code)
+
+.. role::   ts(typoscript)
+   :class:  typoscript
+
+.. role::   php(code)
+
+.. role::   yaml(code)
+
+.. role:: html(code)
+
+
+.. highlight:: php
+
+.. |img-extension-configuration|      image:: /Images/Administration/extension-configuration.png
+.. :border: 0
+.. :align: left
+.. :name: ExtensionConfiguration
+
+.. |img-copy-content-other-page|      image:: /Images/Backend/copy-content-other-page.png
+.. :border: 0
+.. :align: left
+.. :name: CopyContentOtherPage
+
+.. |img-paste-copy-or-reference|      image:: /Images/Backend/paste-copy-or-reference.png
+.. :border: 0
+.. :align: left
+.. :name: PasteCopyOrReference
+
+.. |img-paste-into-column|      image:: /Images/Backend/paste-into-column.png
+.. :border: 0
+.. :align: left
+.. :name: PasteIntoColumn

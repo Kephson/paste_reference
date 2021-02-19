@@ -1,0 +1,21 @@
+0.1.0 - 17th February 2021
+==========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- initial release for TYPO3 9.5 and 10.4
+- extracted most important functions from gridelements

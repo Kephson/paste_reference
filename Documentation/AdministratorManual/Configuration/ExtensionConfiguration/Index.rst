@@ -23,7 +23,3 @@ Properties
 disableCopyFromPageButton
 """""""""""""""""""""""""
 You can disable the "copy from page button" in the page module if you don't need it.
-
-disableDragInWizard
-"""""""""""""""""""
-You can disable the "DragIn wizard" if you don't need it.

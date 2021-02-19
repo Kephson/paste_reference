@@ -1,4 +1,2 @@
 # cat=basic; type=boolean; label=LLL:EXT:paste_reference/Resources/Private/Language/locallang.xlf:disableCopyFromPageButton
 disableCopyFromPageButton = 0
-# cat=basic; type=boolean; label=LLL:EXT:paste_reference/Resources/Private/Language/locallang.xlf:disableDragInWizard
-disableDragInWizard = 0

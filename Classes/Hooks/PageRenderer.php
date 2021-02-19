@@ -73,9 +73,6 @@ class PageRenderer implements SingletonInterface
             $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
             $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceOnReady');
             $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceDragDrop');
-            if ((bool)$this->extensionConfiguration['disableDragInWizard'] !== true) {
-                $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceDragInWizard');
-            }
 
             /** @var Clipboard $clipObj */
             $clipObj = GeneralUtility::makeInstance(Clipboard::class); // Start clipboard
@@ -126,8 +123,7 @@ class PageRenderer implements SingletonInterface
                 }
             }
 
-            if ((bool)$this->extensionConfiguration['disableCopyFromPageButton'] !== true
-                && (bool)$this->getBackendUser()->uc['disableCopyFromPageButton'] !== true) {
+            if ((bool)$this->extensionConfiguration['disableCopyFromPageButton'] !== true) {
                 $pAddExtOnReadyCode .= '
                     top.copyFromAnotherPageLinkTemplate = ' . json_encode('<a class="t3js-paste-new btn btn-default" title="' . $this->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_js.copyfrompage') . '">' . $iconFactory->getIcon(
                             'actions-insert-reference',

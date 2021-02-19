@@ -152,7 +152,7 @@ class PageRenderer implements SingletonInterface
     /**
      * getter for language service
      *
-     * @return \TYPO3\CMS\Lang\LanguageService
+     * @return \TYPO3\CMS\Core\Localization\LanguageService
      */
     public function getLanguageService()
     {

@@ -5,6 +5,7 @@ namespace EHAERER\PasteReference\DataHandler;
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
+ *  (c) 2021 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -28,6 +29,8 @@ use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Utility\DebugUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -140,22 +143,37 @@ abstract class AbstractDataHandler
     {
         $queryBuilder = $this->getQueryBuilder();
 
-        $constraints = [
-            $queryBuilder->expr()->andX(
-                $queryBuilder->expr()->eq(
-                    'pid',
-                    $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
+        if (Helper::getInstance()->isTypo3OlderThen10()) {
+            $constraints = [
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq(
+                        'pid',
+                        $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        't3ver_wsid',
+                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                    ),
+                    $queryBuilder->expr()->gt(
+                        't3ver_id',
+                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                    )
                 ),
-                $queryBuilder->expr()->eq(
-                    't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+            ];
+        } else {
+            $constraints = [
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq(
+                        'pid',
+                        $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        't3ver_wsid',
+                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                    )
                 ),
-                $queryBuilder->expr()->gt(
-                    't3ver_id',
-                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                )
-            ),
-        ];
+            ];
+        }
 
         $queryBuilder->delete('tt_content')
             ->where(...$constraints)

@@ -5,6 +5,7 @@ namespace EHAERER\PasteReference\Helper;
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
+ *  (c) 2021 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -27,6 +28,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Paste reference helper class
@@ -106,5 +108,16 @@ class Helper implements SingletonInterface
     public function getBackendUser()
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * Decide if TYPO3 9.5 is used or older
+     *
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public function isTypo3OlderThen10(): bool
+    {
+        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 10000000;
     }
 }

@@ -23,6 +23,9 @@
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
+	"conflict": {
+		"gridelementsteam/gridelements": "*"
+	},
 	"require": {
 		"php": ">=7.2.0",
 		"typo3/cms-frontend": "^9.5 || ^10.0 || 10.*@dev"

@@ -11,11 +11,14 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Paste reference for content elements',
     'description' => 'Paste reference instead of copy for content elements',
     'category' => 'plugin',
+    'version' => '0.2.0',
     'constraints' => [
         'depends' => [
             'typo3' => '9.5.0-10.4.99',
         ],
-        'conflicts' => [],
+        'conflicts' => [
+            'gridelements' => '*',
+        ],
     ],
     'autoload' => [
         'psr-4' => [
@@ -29,5 +32,4 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Ephraim Härer',
     'author_email' => 'mail@ephra.im',
     'author_company' => 'private',
-    'version' => '0.1.0',
 ];

@@ -129,6 +129,9 @@ class PageRenderer implements SingletonInterface
                             'actions-insert-reference',
                             Icon::SIZE_SMALL
                         )->render() . '</a>') . ';';
+            } else {
+                $pAddExtOnReadyCode .= '
+                    top.copyFromAnotherPageLinkTemplate = \'\';';
             }
 
             $pageRenderer->addJsInlineCode('pasteReferenceExtOnReady', $pAddExtOnReadyCode);

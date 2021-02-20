@@ -18,9 +18,9 @@ Headline 4
 Headline 5
 ~~~~~~~~~~
 
-http://wiki.typo3.org/ReST_Syntax
+https://wiki.typo3.org/ReST_Syntax
 
-http://docs.typo3.org/typo3cms/drafts/github/marble/DocumentationStarter/Chapter1/SubChapter/TopicC.html
+https://docs.typo3.org/
 
 .. note:: This is a note admonition.
 

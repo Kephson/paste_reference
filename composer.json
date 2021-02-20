@@ -28,7 +28,8 @@
 	},
 	"require": {
 		"php": ">=7.2.0",
-		"typo3/cms-frontend": "^9.5 || ^10.0 || 10.*@dev"
+		"typo3/cms-core": "^9.5 || ^10.0 || 10.*@dev",
+		"typo3/cms-backend": "^9.5 || ^10.0 || 10.*@dev"
 	},
 	"autoload": {
 		"psr-4": {

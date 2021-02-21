@@ -70,5 +70,7 @@ node_modules/
 .sass_cache
 var/
 ENABLE_INSTALL_TOOL
+
+# TYPO3 documentation
 docker-compose.yml
 Documentation-GENERATED-temp/

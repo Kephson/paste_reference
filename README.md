@@ -6,7 +6,7 @@
 [![License](https://poser.pugx.org/ehaerer/paste-reference/license)](//packagist.org/packages/ehaerer/paste-reference)
 
 > This extension brings the extracted functions from gridelements to copy and paste content elements also as reference and not only as copy. 
-> A lot of TYPO3 users love this features but don't know that this aren't core features.
+> A lot of TYPO3 users love these features but don't know that this aren't core features.
 
 ## 1 Features
 
@@ -69,9 +69,9 @@ Features: Not every feature is relevant for the bulk of `paste_reference` users.
 even more complicated in usability for an edge case feature. It helps to have a discussion about a new feature before you open a pull request.
 
 
-[1]: https://docs.typo3.org/typo3cms/extensions/paste_reference/
+[1]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/
 [2]: https://getcomposer.org/
 [3]: https://extensions.typo3.org/extension/paste_reference
-[4]: https://docs.typo3.org/p/ehaerer/paste_reference/master/en-us/Misc/Changelog/Index.html
+[4]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/Misc/Changelog/Index.html
 [5]: https://semver.org/
 [6]: https://github.com/Kephson/paste_reference/issues

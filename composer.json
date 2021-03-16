@@ -35,5 +35,10 @@
 		"psr-4": {
 			"EHAERER\\PasteReference\\": "Classes"
 		}
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "paste_reference"
+		}
 	}
 }

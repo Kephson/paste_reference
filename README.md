@@ -1,9 +1,10 @@
 # TYPO3 Extension `paste_reference`
 
 [![Latest Stable Version](https://poser.pugx.org/ehaerer/paste-reference/v)](//packagist.org/packages/ehaerer/paste-reference)
-[![Total Downloads](https://poser.pugx.org/ehaerer/paste-reference/downloads)](//packagist.org/packages/ehaerer/paste-reference) 
 [![Latest Unstable Version](https://poser.pugx.org/ehaerer/paste-reference/v/unstable)](//packagist.org/packages/ehaerer/paste-reference) 
 [![License](https://poser.pugx.org/ehaerer/paste-reference/license)](//packagist.org/packages/ehaerer/paste-reference)
+[![Total Downloads](https://poser.pugx.org/ehaerer/paste-reference/downloads)](//packagist.org/packages/ehaerer/paste-reference)
+[![Monthly Downloads](https://poser.pugx.org/ehaerer/paste-reference/d/monthly)](//packagist.org/packages/ehaerer/paste-reference)
 
 > This extension brings the extracted functions from gridelements to copy and paste content elements also as reference and not only as copy. 
 > A lot of TYPO3 users love these features but don't know that this aren't core features.

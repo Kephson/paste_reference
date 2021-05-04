@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a  bug report to help us improving tailor
+about: Create a bug report to help improving paste_reference
 title: "[BUG] Something does not work properly"
 labels: bug
 assignees: ''

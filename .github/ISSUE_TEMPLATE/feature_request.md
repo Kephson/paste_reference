@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea to help us improving tailor
+about: Suggest an idea to help improving paste_reference
 title: "[FEATURE] Suggestion for some new feature"
 labels: feature
 assignees: ''

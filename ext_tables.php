@@ -2,8 +2,9 @@
 
 defined('TYPO3') || die();
 
-(static function ($extKey = 'eh_site_ephespage') {
-    if (TYPO3_MODE === 'BE') {
+(static function () {
+
+    if (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()) {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess'][] = 'EHAERER\\PasteReference\\Hooks\\PageRenderer->addJSCSS';
     }
 

@@ -23,6 +23,7 @@ namespace EHAERER\PasteReference\Hooks;
 
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
 use TYPO3\CMS\Backend\Controller\PageLayoutController;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -30,6 +31,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Recordlist\Controller\RecordListController;
 
 /**
@@ -56,20 +58,19 @@ class PageRenderer implements SingletonInterface
      *
      * @param array $parameters An array of available parameters
      * @param \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer The parent object that triggered this hook
+     * @throws RouteNotFoundException
      */
     public function addJSCSS(array $parameters, \TYPO3\CMS\Core\Page\PageRenderer $pageRenderer)
     {
-        if (!empty($GLOBALS['SOBE']) && (get_class($GLOBALS['SOBE']) === RecordListController::class || is_subclass_of(
-                    $GLOBALS['SOBE'],
-                    RecordListController::class
-                ))) {
+        $requestAttributes = $GLOBALS['TYPO3_REQUEST']->getAttributes();
+        $recordListController = 'TYPO3\CMS\Recordlist\Controller\RecordListController::mainAction';
+        $pageLayoutController = 'TYPO3\CMS\Backend\Controller\PageLayoutController::mainAction';
+
+        if (!empty($requestAttributes['target']) && $requestAttributes['target'] === $recordListController) {
             $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceOnReady');
             return;
         }
-        if (!empty($GLOBALS['SOBE']) && (get_class($GLOBALS['SOBE']) === PageLayoutController::class || is_subclass_of(
-                    $GLOBALS['SOBE'],
-                    PageLayoutController::class
-                ))) {
+        if (!empty($requestAttributes['target']) && $requestAttributes['target'] === $pageLayoutController) {
             $iconFactory = GeneralUtility::makeInstance(IconFactory::class);
             $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceOnReady');
             $pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceDragDrop');

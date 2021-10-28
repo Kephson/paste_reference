@@ -1,5 +1,6 @@
 {
 	"name": "ehaerer/paste-reference",
+	"version": "2.0.0",
 	"type": "typo3-cms-extension",
 	"description": "Paste reference instead of copy for content elements in TYPO3",
 	"keywords": [

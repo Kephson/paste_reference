@@ -4,7 +4,7 @@ defined('TYPO3') || die();
 
 (static function () {
 
-    if (\TYPO3\CMS\Core\Http\ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isBackend()) {
+    if (TYPO3_MODE === 'BE') {
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_pagerenderer.php']['render-preProcess'][] = 'EHAERER\\PasteReference\\Hooks\\PageRenderer->addJSCSS';
     }
 

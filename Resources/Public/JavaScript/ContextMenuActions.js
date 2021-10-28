@@ -17,7 +17,7 @@
  * JavaScript to handle PasteReference related actions for Contextmenu
  * @exports TYPO3/CMS/PasteReference/ContextMenuActions
  */
-define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], function ($, Modal, Severity) {
+define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], function($, Modal, Severity) {
     'use strict';
 
     /**
@@ -25,7 +25,7 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
      */
     var ContextMenuActions = {};
 
-    ContextMenuActions.pasteAfter = function (table, uid) {
+    ContextMenuActions.pasteAfter = function(table, uid) {
         //the only difference between this pasteReference and PasteAfter is in the action url
         //which is already taken care of on the PHP side
         ContextMenuActions.pasteReference.bind($(this))(table, uid);
@@ -37,13 +37,14 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
      * @param {string} table
      * @param {int} uid of the record after which record from the cliboard will be pasted
      */
-    ContextMenuActions.pasteReference = function (table, uid) {
+    ContextMenuActions.pasteReference = function(table, uid) {
         var $anchorElement = $(this);
         var actionUrl = $anchorElement.data('action-url');
-        var performPaste = function () {
-            var url = actionUrl + '&redirect=' + top.rawurlencode(top.list_frame.document.location.pathname + top.list_frame.document.location.search);
-
-            top.TYPO3.Backend.ContentContainer.setUrl(url);
+        var performPaste = function() {
+            var url = actionUrl + '&redirect=' + encodeURIComponent('top.list_frame.document.location.pathname + top.list_frame.document.location.search').replace(/\*/g, '%2A');
+            
+			// TODO; fix the next line to make it work in TYPO3 11
+			top.TYPO3.Backend.ContentContainer.setUrl(url);
             if (table === 'pages' && top.TYPO3.Backend.NavigationContainer.PageTree) {
                 top.TYPO3.Backend.NavigationContainer.PageTree.refreshTree.defer(500);
             }
@@ -55,8 +56,7 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
         var $modal = Modal.confirm(
             $anchorElement.data('title'),
             $anchorElement.data('message'),
-            Severity.warning, [
-                {
+            Severity.warning, [{
                     text: $(this).data('button-close-text') || TYPO3.lang['button.cancel'] || 'Cancel',
                     active: true,
                     btnClass: 'btn-default',
@@ -69,7 +69,7 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
                 }
             ]);
 
-        $modal.on('button.clicked', function (e) {
+        $modal.on('button.clicked', function(e) {
             if (e.target.name === 'ok') {
                 performPaste();
             }

@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpFullyQualifiedNameUsageInspection */
 
-defined('TYPO3_MODE') || die();
+defined('TYPO3') || die();
 
 (static function ($extKey = 'eh_site_ephespage') {
     if (TYPO3_MODE === 'BE') {

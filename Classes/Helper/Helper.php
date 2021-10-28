@@ -2,6 +2,7 @@
 
 namespace EHAERER\PasteReference\Helper;
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
@@ -118,6 +119,6 @@ class Helper implements SingletonInterface
      */
     public function isTypo3OlderThen10(): bool
     {
-        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 10000000;
+        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 10000000;
     }
 }

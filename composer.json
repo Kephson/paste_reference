@@ -28,7 +28,7 @@
 		"gridelementsteam/gridelements": "*"
 	},
 	"require": {
-		"php": ">=7.4.0",
+		"php": "^7.4 || ^8.0 || ^8.1",
 		"typo3/cms-core": "^11.5",
 		"typo3/cms-backend": "^11.5"
 	},

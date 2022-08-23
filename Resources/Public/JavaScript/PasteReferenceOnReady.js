@@ -16,7 +16,7 @@
  * based on jQuery UI
  */
 
-define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/PasteReference/PasteReferenceDragDrop', 'TYPO3/CMS/Backend/LayoutModule/Paste', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], function ($, AjaxDataHandler, DragDrop, Paste, Modal, Severity) {
+define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storage/Persistent', 'TYPO3/CMS/PasteReference/PasteReferenceDragDrop', 'TYPO3/CMS/Backend/LayoutModule/Paste', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], function ($, AjaxDataHandler, PersistentStorage, DragDrop, Paste, Modal, Severity) {
 
 	var OnReady = {
 		openedPopupWindow: []
@@ -33,16 +33,26 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/PasteReference
 			}
 			$(this).addClass('btn-group btn-group-sm');
 			$('.t3js-page-lang-column .t3-page-ce > .t3-page-ce').removeClass('t3js-page-ce');
-			var parent = $(this).parent();
-			if (parent.data('page') || (parent.data('container') && !parent.data('uid'))) {
-				$(this).append(top.pasteIntoLinkTemplate);
-			} else {
-				$(this).append(top.pasteAfterLinkTemplate);
+			if (top.pasteAfterLinkTemplate && top.pasteIntoLinkTemplate) {
+				var parent = $(this).parent();
+				if (parent.data('page') || (parent.data('container') && !parent.data('uid'))) {
+					$(this).append(top.pasteIntoLinkTemplate);
+				} else {
+					$(this).append(top.pasteAfterLinkTemplate);
+				}
+				$(this).find('.t3js-paste').on('click', function (evt) {
+					evt.preventDefault();
+					Paste.activatePasteModal($(this));
+				});
 			}
-			$(this).find('.t3js-paste').on('click', function (evt) {
-				evt.preventDefault();
-				Paste.activatePasteModal($(this));
-			});
+			if (Paste.pasteAfterLinkTemplate && Paste.pasteIntoLinkTemplate) {
+				var parent = $(this).parent();
+				if (parent.data('page') || (parent.data('container') && !parent.data('uid'))) {
+					$(this).append(Paste.pasteIntoLinkTemplate);
+				} else {
+					$(this).append(Paste.pasteAfterLinkTemplate);
+				}
+			}
 			$(this).append(top.copyFromAnotherPageLinkTemplate);
 			$(this).find('.t3js-paste-new').on('click', function (evt) {
 				evt.preventDefault();

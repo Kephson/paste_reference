@@ -165,11 +165,12 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array &$collectedItems,
-        int $recursive = 0,
-        int $parentUid = 0,
-        int $language = 0
-    ) {
+        array  &$collectedItems,
+        int    $recursive = 0,
+        int    $parentUid = 0,
+        int    $language = 0
+    )
+    {
         $itemList = str_replace('pages_', '', $shortcutItem);
         if ($recursive) {
             if (!$this->tree instanceof QueryGenerator) {
@@ -207,7 +208,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             ->addOrderBy('sorting')
             ->executeQuery();
 
-        while($item = $result->fetchAssociative()) {
+        while ($item = $result->fetchAssociative()) {
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
                 $translatedItem = BackendUtility::getRecordLocalization('tt_content', $item['uid'], $language);
                 if (!empty($translatedItem)) {

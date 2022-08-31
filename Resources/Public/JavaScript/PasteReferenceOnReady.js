@@ -82,7 +82,7 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
 				},
 				{
 					text: TYPO3.lang['tx_paste_reference_js.modal.button.pastecopy'] || 'Paste as copy',
-					btnClass: 'btn-' + top.TYPO3.Severity.getCssClass(severity),
+					btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
 					trigger: function (ev) {
 						Modal.currentModal.trigger('modal-dismiss');
 						DragDrop.default.onDrop($element.data('content'), $element, ev);
@@ -90,7 +90,7 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
 				},
 				{
 					text: TYPO3.lang['tx_paste_reference_js.modal.button.pastereference'] || 'Paste as reference',
-					btnClass: 'btn-' + top.TYPO3.Severity.getCssClass(severity),
+					btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
 					trigger: function (ev) {
 						Modal.currentModal.trigger('modal-dismiss');
 						DragDrop.default.onDrop($element.data('content'), $element, ev, 'reference');

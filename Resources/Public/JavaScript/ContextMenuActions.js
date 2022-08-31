@@ -41,13 +41,12 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
         var $anchorElement = $(this);
         var actionUrl = $anchorElement.data('action-url');
         var performPaste = function() {
-            var url = actionUrl + '&redirect=' + encodeURIComponent('top.list_frame.document.location.pathname + top.list_frame.document.location.search').replace(/\*/g, '%2A');
-            
-			// TODO; fix the next line to make it work in TYPO3 11
+			var url = actionUrl + '&redirect=' + top.rawurlencode(top.list_frame.document.location.pathname + top.list_frame.document.location.search);
+
 			top.TYPO3.Backend.ContentContainer.setUrl(url);
-            if (table === 'pages' && top.TYPO3.Backend.NavigationContainer.PageTree) {
-                top.TYPO3.Backend.NavigationContainer.PageTree.refreshTree.defer(500);
-            }
+			if (table === 'pages' && top.TYPO3.Backend.NavigationContainer.PageTree) {
+				top.TYPO3.Backend.NavigationContainer.PageTree.refreshTree.defer(500);
+			}
         };
         if (!$anchorElement.data('title')) {
             performPaste();

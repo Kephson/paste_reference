@@ -2,6 +2,7 @@
 
 namespace EHAERER\PasteReference\Helper;
 
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 /***************************************************************
  *  Copyright notice
@@ -68,18 +69,18 @@ class Helper implements SingletonInterface
      */
     public function getPidFromUid($uid = 0)
     {
-        $queryBuilder = self::getQueryBuilder();
+        $queryBuilder = $this->getQueryBuilder();
         $triggerElement = $queryBuilder
             ->select('pid')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter(abs($uid), \PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(abs($uid), Connection::PARAM_INT)
                 )
             )
-            ->execute()
-            ->fetch();
+            ->executeQuery()
+            ->fetchAssociative();
         $pid = (int)$triggerElement['pid'];
         return is_array($triggerElement) && $pid ? $pid : 0;
     }

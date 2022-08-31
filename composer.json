@@ -1,45 +1,56 @@
 {
 	"name": "ehaerer/paste-reference",
-	"version": "2.0.0",
-	"type": "typo3-cms-extension",
 	"description": "Paste reference instead of copy for content elements in TYPO3",
+	"license": "MIT",
+	"type": "typo3-cms-extension",
 	"keywords": [
 		"TYPO3 CMS",
 		"content element",
 		"copy paste",
 		"references"
 	],
-	"homepage": "https://github.com/kephson/paste-reference",
 	"authors": [
 		{
 			"name": "Ephraim Härer",
 			"email": "mail@ephra.im",
-			"role": "Developer",
-			"homepage": "https://ephra.im"
+			"homepage": "https://ephra.im",
+			"role": "Developer"
 		}
 	],
-	"license": "MIT",
+	"homepage": "https://github.com/kephson/paste-reference",
 	"support": {
 		"issues": "https://github.com/kephson/paste-reference/issues"
 	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
+	"require": {
+		"php": "^7.4 || ^8.0",
+		"typo3/cms-backend": "^11.5",
+		"typo3/cms-core": "^11.5"
+	},
+	"require-dev": {
+		"ergebnis/composer-normalize": "^2.28"
+	},
 	"conflict": {
 		"gridelementsteam/gridelements": "*"
 	},
-	"require": {
-		"php": "^7.4 || ^8.0 || ^8.1",
-		"typo3/cms-core": "^11.5",
-		"typo3/cms-backend": "^11.5"
-	},
+	"minimum-stability": "dev",
+	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
 			"EHAERER\\PasteReference\\": "Classes"
 		}
 	},
+	"config": {
+		"allow-plugins": {
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true,
+			"ergebnis/composer-normalize": true
+		}
+	},
 	"extra": {
 		"typo3/cms": {
-			"extension-key": "paste_reference"
+			"cms-package-dir": "{$vendor-dir}/typo3/cms",
+			"extension-key": "paste_reference",
+			"web-dir": ".Build/web"
 		}
 	}
 }

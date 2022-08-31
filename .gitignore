@@ -55,7 +55,6 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
-out
 gen### NetBeans template
 nbproject/private/
 build/
@@ -71,6 +70,11 @@ node_modules/
 var/
 ENABLE_INSTALL_TOOL
 
-# TYPO3 documentation
-docker-compose.yml
-Documentation-GENERATED-temp/
+# TYPO3 docs
+Documentation-GENERATED-temp
+Documentation
+
+# project
+public
+.build
+.Build

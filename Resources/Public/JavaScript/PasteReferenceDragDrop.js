@@ -263,13 +263,18 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
           });
         });
       } else {
-        parameters['data']['tt_content'][contentElementUid] = {
-          colPos: colPos
+        parameters['cmd']['tt_content'][contentElementUid] = {
+          move: {
+            action: 'paste',
+            target: targetPid,
+            update: {
+              colPos: colPos
+            }
+          }
         };
         if (language > -1) {
-          parameters['data']['tt_content'][contentElementUid]['sys_language_uid'] = language;
+          parameters['cmd']['tt_content'][contentElementUid]['move']['update']['sys_language_uid'] = language;
         }
-        parameters['cmd']['tt_content'][contentElementUid] = {move: targetPid};
         // fire the request, and show a message if it has failed
         require(['TYPO3/CMS/Backend/AjaxDataHandler'], function (DataHandler) {
           DataHandler.process(parameters).done(function (result) {

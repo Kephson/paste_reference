@@ -22,6 +22,8 @@ namespace EHAERER\PasteReference\PageLayoutView;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
@@ -33,7 +35,9 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
+use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Database\QueryGenerator;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -56,7 +60,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * Dedicated method for rendering preview body HTML for
-     * the page module only. Receives the the GridColumnItem
+     * the page module only. Receives the GridColumnItem
      * that contains the record for which a preview should be
      * rendered and returned.
      */
@@ -156,12 +160,12 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
      *
-     * @param string $shortcutItem : The single page to be used as the tree root
-     * @param array $collectedItems : The collected item data rows ordered by parent position, column position and sorting
-     * @param int $recursive : The number of levels for the recursion
-     * @param int $parentUid : uid of the referencing tt_content record
-     * @param int $language : sys_language_uid of the referencing tt_content record
-     * @throws \Doctrine\DBAL\DBALException
+     * @param string $shortcutItem The single page to be used as the tree root
+     * @param array $collectedItems The collected item data rows ordered by parent position, column position and sorting
+     * @param int $recursive The number of levels for the recursion
+     * @param int $parentUid uid of the referencing tt_content record
+     * @param int $language sys_language_uid of the referencing tt_content record
+     * @throws DBALException
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
@@ -227,17 +231,20 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * Collects tt_content data from a single tt_content element
      *
-     * @param string $shortcutItem : The tt_content element to fetch the data from
-     * @param array $collectedItems : The collected item data row
-     * @param int $parentUid : uid of the referencing tt_content record
-     * @param int $language : sys_language_uid of the referencing tt_content record
-     * @throws \Doctrine\DBAL\DBALException
+     * @param string $shortcutItem The tt_content element to fetch the data from
+     * @param array $collectedItems The collected item data row
+     * @param int $parentUid uid of the referencing tt_content record
+     * @param int $language sys_language_uid of the referencing tt_content record
+     * @throws DBALException
+     * @throws Exception
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language)
     {
         $shortcutItem = str_replace('tt_content_', '', $shortcutItem);
         if ((int)$shortcutItem !== $parentUid) {
             $queryBuilder = $this->getQueryBuilder();
+            $queryBuilder->getRestrictions()->removeByType(StartTimeRestriction::class);
+            $queryBuilder->getRestrictions()->removeByType(EndTimeRestriction::class);
             if ($this->showHidden) {
                 $queryBuilder->getRestrictions()->removeByType(HiddenRestriction::class);
             }

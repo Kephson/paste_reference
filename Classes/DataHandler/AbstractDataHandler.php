@@ -21,6 +21,8 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -68,9 +70,11 @@ abstract class AbstractDataHandler
     /**
      * initializes this class
      *
-     * @param string $table : The name of the table the data should be saved to
-     * @param int $uidPid : The uid of the record or page we are currently working on
+     * @param string $table The name of the table the data should be saved to
+     * @param int $uidPid The uid of the record or page we are currently working on
      * @param DataHandler $dataHandler
+     * @throws DBALException
+     * @throws Exception
      */
     public function init($table, $uidPid, DataHandler $dataHandler)
     {

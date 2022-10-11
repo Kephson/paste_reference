@@ -2,6 +2,8 @@
 
 namespace EHAERER\PasteReference\Helper;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
@@ -67,6 +69,8 @@ class Helper implements SingletonInterface
      * @param int $uid the uid value of a tt_content record
      *
      * @return int
+     * @throws DBALException
+     * @throws Exception
      */
     public function getPidFromUid($uid = 0)
     {

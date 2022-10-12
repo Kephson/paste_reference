@@ -72,7 +72,6 @@ ENABLE_INSTALL_TOOL
 
 # TYPO3 docs
 Documentation-GENERATED-temp
-Documentation
 
 # project
 public

@@ -290,7 +290,7 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
                 }
               }
               self.location.hash = $droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
-              self.location.reload(true);
+              self.location.reload();
             }
           });
         });

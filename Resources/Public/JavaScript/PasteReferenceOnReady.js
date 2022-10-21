@@ -135,15 +135,19 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
    */
   OnReady.copyFromAnotherPage = function (element) {
     var url = top.browserUrl + '&mode=db&bparams=' + element.parent().attr('id') + '|||tt_content|';
-    OnReady.openedPopupWindow = window.open(url, 'Typo3WinBrowser', 'height=600,width=800,status=0,menubar=0,resizable=1,scrollbars=1');
-    OnReady.openedPopupWindow.focus();
+    var configurationIframe = {
+      type: Modal.types.iframe,
+      content: url,
+      size: Modal.sizes.large
+    };
+    Modal.advanced(configurationIframe);
   };
 
   /**
    * gives back the data from the popup window to the copy action
    */
   if (!$('.typo3-TCEforms').length) {
-    OnReady.setSelectOptionFromExternalSource = setFormValueFromBrowseWin = function (elementId, tableUid) {
+    OnReady.setSelectOptionFromExternalSource = function (elementId, tableUid) {
       tableUid = tableUid.replace('tt_content_', '') * 1;
       DragDrop.default.onDrop(tableUid, $('#' + elementId).find('.t3js-paste-new'), 'copyFromAnotherPage');
     }

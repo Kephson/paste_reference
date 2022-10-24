@@ -147,10 +147,28 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
    * gives back the data from the popup window to the copy action
    */
   if (!$('.typo3-TCEforms').length) {
-    OnReady.setSelectOptionFromExternalSource = function (elementId, tableUid) {
-      tableUid = tableUid.replace('tt_content_', '') * 1;
-      DragDrop.default.onDrop(tableUid, $('#' + elementId).find('.t3js-paste-new'), 'copyFromAnotherPage');
-    }
+    require(['TYPO3/CMS/Backend/Utility/MessageUtility'], function (MessageUtility) {
+      window.addEventListener('message', function (e) {
+
+        if (!MessageUtility.MessageUtility.verifyOrigin(e.origin)) {
+          throw 'Denied message sent by ' + e.origin;
+        }
+
+        if (typeof e.data.fieldName === 'undefined') {
+          throw 'fieldName not defined in message';
+        }
+
+        if (typeof e.data.value === 'undefined') {
+          throw 'value not defined in message';
+        }
+
+        const result = e.data.value;
+        var tableUid = result.replace('tt_content_', '') * 1;
+        var elementId = e.data.fieldName;
+        DragDrop.default.onDrop(tableUid, $('#' + elementId).find('.t3js-paste-new'), 'copyFromAnotherPage');
+      });
+    });
+
   }
 
   $(OnReady.initialize);

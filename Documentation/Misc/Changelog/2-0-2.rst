@@ -1,0 +1,22 @@
+2.0.2 - 24 of October 2022
+==========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [BUG] fixed a problem with inserting elements from other pages, see issue #8, thanks to @tomashavner
+- [BUG] fixed problems drag and drop handling, see issue #8, thanks to @tomashavner
+- [FEATURE] replaced new JS window with backend Modal

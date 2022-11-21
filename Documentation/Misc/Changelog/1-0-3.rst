@@ -1,0 +1,21 @@
+1.0.3 - 21st November 2022
+==========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- added new branch for TYPO3 9.5 and 10.4
+- merged pull request from @mikestreety to fix problems with EXT:container in version 2

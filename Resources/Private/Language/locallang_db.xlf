@@ -8,9 +8,6 @@
 			</description>
 		</header>
 		<body>
-			<trans-unit id="pasteReference">
-				<source>Paste Reference</source>
-			</trans-unit>
 			<trans-unit id="tx_paste_reference_clickmenu_pastereference">
 				<source>Paste reference after</source>
 			</trans-unit>

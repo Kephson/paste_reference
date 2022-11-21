@@ -11,10 +11,10 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Paste reference for content elements',
     'description' => 'Paste reference instead of copy for content elements',
     'category' => 'plugin',
-    'version' => '2.0.2',
+    'version' => '1.0.3',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.0-11.5.99',
+            'typo3' => '9.5.0-10.4.99',
         ],
         'conflicts' => [
             'gridelements' => '*',
@@ -26,6 +26,8 @@ $EM_CONF[$_EXTKEY] = [
         ],
     ],
     'state' => 'stable',
+    'uploadfolder' => false,
+    'createDirs' => '',
     'clearCacheOnLoad' => true,
     'author' => 'Ephraim Härer',
     'author_email' => 'mail@ephra.im',

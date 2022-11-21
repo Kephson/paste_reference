@@ -2,11 +2,6 @@
 
 namespace EHAERER\PasteReference\Helper;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Information\Typo3Version;
-
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
@@ -69,23 +64,21 @@ class Helper implements SingletonInterface
      * @param int $uid the uid value of a tt_content record
      *
      * @return int
-     * @throws DBALException
-     * @throws Exception
      */
     public function getPidFromUid($uid = 0)
     {
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = self::getQueryBuilder();
         $triggerElement = $queryBuilder
             ->select('pid')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq(
                     'uid',
-                    $queryBuilder->createNamedParameter(abs($uid), Connection::PARAM_INT)
+                    $queryBuilder->createNamedParameter(abs($uid), \PDO::PARAM_INT)
                 )
             )
-            ->executeQuery()
-            ->fetchAssociative();
+            ->execute()
+            ->fetch();
         $pid = (int)$triggerElement['pid'];
         return is_array($triggerElement) && $pid ? $pid : 0;
     }
@@ -125,6 +118,6 @@ class Helper implements SingletonInterface
      */
     public function isTypo3OlderThen10(): bool
     {
-        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 10000000;
+        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 10000000;
     }
 }

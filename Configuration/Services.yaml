@@ -1,6 +1,0 @@
-services:
-  EHAERER\PasteReference\EventListener\ExtTablesInclusionPostProcessing:
-    tags:
-      - name: event.listener
-        identifier: 'paste_reference-after-tca-compilation-event'
-        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent

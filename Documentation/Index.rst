@@ -27,7 +27,7 @@ Paste reference
 		paste reference backend content elements
 
 	:Copyright:
-		2022
+		2021
 
 	:Author:
 		Ephraim Härer

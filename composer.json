@@ -22,9 +22,9 @@
 		"issues": "https://github.com/kephson/paste-reference/issues"
 	},
 	"require": {
-		"php": "^7.4 || ^8.0",
-		"typo3/cms-backend": "^11.5",
-		"typo3/cms-core": "^11.5"
+		"php": "^7.2",
+		"typo3/cms-backend": "^9.5 || ^10.0 || 10.*@dev",
+		"typo3/cms-core": "^9.5 || ^10.0 || 10.*@dev"
 	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.28"

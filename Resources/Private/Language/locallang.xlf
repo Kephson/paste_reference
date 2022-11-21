@@ -7,9 +7,6 @@
 			<trans-unit id="disableCopyFromPageButton" xml:space="preserve">
 				<source>Disable the "Copy from page" button.</source>
 			</trans-unit>
-			<trans-unit id="disableCopyFromPageButton" xml:space="preserve">
-				<source>Disable the "Copy from page" button.</source>
-			</trans-unit>
 		</body>
 	</file>
 </xliff>

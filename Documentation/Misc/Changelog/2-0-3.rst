@@ -1,0 +1,20 @@
+2.0.3 - 1st of February 2023
+============================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [BUG] fixed a problem with deprecated top.rawurlencode(), see issue #11, thanks to @taieb123

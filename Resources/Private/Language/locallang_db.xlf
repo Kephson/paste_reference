@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2021-02-17T18:41:55Z"
+	<file source-language="en" datatype="plaintext" original="EXT:paste_reference/Resources/Private/Language/locallang_db.xlf" date="2021-02-17T18:41:55Z"
 		  product-name="paste_reference">
 		<header>
 			<type>database</type>
@@ -46,6 +46,9 @@
 			</trans-unit>
 			<trans-unit id="tx_paste_reference_js.modal.button.pastereference">
 				<source>Paste reference</source>
+			</trans-unit>
+			<trans-unit id="tx_paste_reference_js.modal.labels.no_title" resname="tx_paste_reference_js.modal.labels.no_title">
+				<source>No title</source>
 			</trans-unit>
 		</body>
 	</file>

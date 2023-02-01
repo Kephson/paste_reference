@@ -6,3 +6,4 @@ services:
     volumes:
       - ./:/PROJECT:ro
       - ./Documentation-GENERATED-temp:/RESULT
+# build documentation with "docker-compose run --rm t3docmake"

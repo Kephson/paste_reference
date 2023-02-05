@@ -67,7 +67,8 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
   Paste.activatePasteModal = function (element) {
     var $element = $(element);
     var url = $element.data('url') || null;
-    var title = (TYPO3.lang['paste.modal.title.paste'] || 'Paste record') + ': "' + $element.data('title') + '"';
+    var elementTitle = this.itemOnClipboardTitle != undefined ? this.itemOnClipboardTitle : "["+TYPO3.lang['tx_paste_reference_js.modal.labels.no_title']+"]";
+    var title = (TYPO3.lang['paste.modal.title.paste'] || 'Paste record') + ': "' + elementTitle + '"';
     var severity = (typeof top.TYPO3.Severity[$element.data('severity')] !== 'undefined') ? top.TYPO3.Severity[$element.data('severity')] : top.TYPO3.Severity.info;
     if ($element.hasClass('t3js-paste-copy')) {
       var content = TYPO3.lang['tx_paste_reference_js.modal.pastecopy'] || '1 How do you want to paste that clipboard content here?';

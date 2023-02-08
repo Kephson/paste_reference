@@ -1,0 +1,22 @@
+2.0.4 - February 8, 2023
+========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [FEATURE] added French translation files, thanks to @taieb123
+- [BUX] fixed problems with broken language when moving elements, thanks to @gamerxl
+- [BUG] fixed undefined header in modal, thanks to @taieb123

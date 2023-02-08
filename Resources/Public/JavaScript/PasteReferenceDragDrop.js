@@ -186,7 +186,11 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
         // the negative value of the content element after where it should be moved
         targetPid = 0 - parseInt(targetFound);
       }
-      var language = parseInt($droppableElement.closest('[data-language-uid]').data('language-uid'));
+      var $closestElementWithLanguage = $draggableElement || $droppableElement.closest('[data-language-uid]');
+      var language = parseInt($closestElementWithLanguage.data('language-uid'));
+      if (language !== -1) {
+        language = parseInt($droppableElement.closest('[data-language-uid]').data('language-uid'));
+      }
       var colPos = 0;
       if (targetPid !== 0) {
         colPos = newColumn;
@@ -204,9 +208,6 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
           parameters['data']['tt_content']['NEW234134']['header'] = TYPO3.l10n.localize('tx_paste_reference_js.newcontentelementheader');
         }
 
-        if (language > -1) {
-          parameters['data']['tt_content']['NEW234134']['sys_language_uid'] = language;
-        }
         parameters['DDinsertNew'] = 1;
 
         // fire the request, and show a message if it has failed
@@ -234,15 +235,13 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
             action: 'paste',
             target: targetPid,
             update: {
-              colPos: colPos
+              colPos: colPos,
+              sys_language_uid: language
             }
           }
         };
         if (reference === 'reference') {
           parameters['reference'] = 1;
-        }
-        if (language > -1) {
-          parameters['cmd']['tt_content'][contentElementUid]['copy']['update']['sys_language_uid'] = language;
         }
         if (evt === 'copyFromAnotherPage') {
           parameters['CB'] = {setCopyMode: 1};
@@ -272,13 +271,11 @@ define(['jquery', 'jquery-ui/droppable', 'TYPO3/CMS/Backend/LayoutModule/DragDro
             action: 'paste',
             target: targetPid,
             update: {
-              colPos: colPos
+              colPos: colPos,
+              sys_language_uid: language
             }
           }
         };
-        if (language > -1) {
-          parameters['cmd']['tt_content'][contentElementUid]['move']['update']['sys_language_uid'] = language;
-        }
         // fire the request, and show a message if it has failed
         require(['TYPO3/CMS/Backend/AjaxDataHandler'], function (DataHandler) {
           DataHandler.process(parameters).done(function (result) {

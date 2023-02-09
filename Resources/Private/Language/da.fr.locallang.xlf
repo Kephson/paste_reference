@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" target-language="da" datatype="plaintext" original="messages" date="2023-02-01T10:41:55Z" product-name="paste_reference">
+    <header>
+      <type>database</type>
+      <description>Language labels for database tables/fields belonging to extension 'paste_reference'
+			</description>
+    </header>
+    <body>
+      <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
+				<source>Disable the "Copy from page" button.</source>
+				<target state="needs-translation">Disable the "Copy from page" button.</target>
+			</trans-unit>
+      <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
+				<source>Disable the "Copy from page" button.</source>
+				<target state="needs-translation">Disable the "Copy from page" button.</target>
+			</trans-unit>
+    </body>
+  </file>
+</xliff>

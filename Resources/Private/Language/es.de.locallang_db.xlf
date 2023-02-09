@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" target-language="es-ES" datatype="plaintext" original="messages" date="2021-02-17T18:41:55Z" product-name="paste_reference">
+    <header>
+      <type>database</type>
+      <description>Language labels for database tables/fields belonging to extension 'paste_reference'
+			</description>
+    </header>
+    <body>
+      <trans-unit id="tx_paste_reference_clickmenu_pastereference">
+        <source>Paste reference after</source>
+        <target state="needs-translation">Paste reference after</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.copyfrompage">
+        <source>Copy content from another page to this place</source>
+        <target state="needs-translation">Copy content from another page to this place</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.drophere">
+        <source>Drop Here</source>
+        <target state="needs-translation">Drop Here</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.missingcontenttemplate">
+        <source>Missing Content Template</source>
+        <target state="needs-translation">Missing Content Template</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.newcontentelementheader">
+        <source>New</source>
+        <target state="needs-translation">New</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.pastecopy">
+        <source>Paste copy into this column</source>
+        <target state="needs-translation">Paste copy into this column</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.pasteref">
+        <source>Paste reference into this column</source>
+        <target state="needs-translation">Paste reference into this column</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.modal.pastecopy">
+        <source>How do you want to paste that clipboard content here?</source>
+        <target state="needs-translation">How do you want to paste that clipboard content here?</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.modal.button.pastecopy">
+        <source>Paste copy</source>
+        <target state="needs-translation">Paste copy</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.modal.button.pastereference">
+        <source>Paste reference</source>
+        <target state="needs-translation">Paste reference</target>
+      </trans-unit>
+      <trans-unit id="tx_paste_reference_js.modal.labels.no_title" resname="tx_paste_reference_js.modal.labels.no_title">
+        <source>No title</source>
+        <target state="needs-translation">No title</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,21 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2023-02-01T10:41:55Z"
-	product-name="paste_reference">
-		<header>
-			<type>database</type>
-			<description>Language labels for database tables/fields belonging to extension 'paste_reference'
-			</description>
-		</header>
-		<body>
-			<trans-unit id="disableCopyFromPageButton" xml:space="preserve">
+  <file source-language="en" datatype="plaintext" original="messages" date="2021-02-17T20:30:12Z" product-name="paste_reference" target-language="fr">
+    <header/>
+    <body>
+      <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
 				<source>Disable the "Copy from page" button.</source>
-				<target>Désactiver le bouton "Copier depuis la page".</target>
-			</trans-unit>
-			<trans-unit id="disableCopyFromPageButton" xml:space="preserve">
+			<target state="translated">Désactiver le bouton "Copier depuis la page".</target></trans-unit>
+      <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
 				<source>Disable the "Copy from page" button.</source>
-				<target>Désactiver le bouton "Copier depuis la page".</target>
-			</trans-unit>
-		</body>
-	</file>
+			<target state="translated">Désactiver le bouton "Copier depuis la page".</target></trans-unit>
+    </body>
+  </file>
 </xliff>

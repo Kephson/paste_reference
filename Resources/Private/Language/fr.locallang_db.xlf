@@ -11,25 +11,25 @@
         <source>Paste Reference</source>
         <target state="needs-translation">Paste Reference</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_clickmenu_pastereference" approved="yes">
+      <trans-unit id="tx_paste_reference_clickmenu_pastereference">
         <source>Paste reference after</source>
-        <target state="final">Collez la référence après</target>
+        <target state="needs-translation">Paste reference after</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_js.copyfrompage" approved="yes">
+      <trans-unit id="tx_paste_reference_js.copyfrompage">
         <source>Copy content from another page to this place</source>
-        <target state="final">Copier un élément de contenu d'une autre page</target>
+        <target state="needs-translation">Copy content from another page to this place</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_js.drophere" approved="yes">
+      <trans-unit id="tx_paste_reference_js.drophere">
         <source>Drop Here</source>
-        <target state="final">Déposez ici</target>
+        <target state="needs-translation">Drop Here</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_js.missingcontenttemplate" approved="yes">
+      <trans-unit id="tx_paste_reference_js.missingcontenttemplate">
         <source>Missing Content Template</source>
-        <target state="final">Mise en page de l'élément de contenu manquant</target>
+        <target state="needs-translation">Missing Content Template</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_js.newcontentelementheader" approved="yes">
+      <trans-unit id="tx_paste_reference_js.newcontentelementheader">
         <source>New</source>
-        <target state="final">Nouveau</target>
+        <target state="needs-translation">New</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.pasteinto">
         <source>Paste into this column</source>
@@ -39,17 +39,17 @@
         <source>Paste after this record</source>
         <target state="needs-translation">Paste after this record</target>
       </trans-unit>
-      <trans-unit id="tx_paste_reference_js.pastecopy" approved="yes">
+      <trans-unit id="tx_paste_reference_js.pastecopy">
         <source>Paste copy into this column</source>
-        <target state="final">Coller la copie dans cette colonne</target>
+        <target state="needs-translation">Paste copy into this column</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.modal.pastecopy">
         <source>How do you want to paste that clipboard content here?</source>
-        <target state="translated">Comment voulez-vous coller le contenu du presse-papier?</target>
+        <target state="needs-translation">How do you want to paste that clipboard content here?</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.modal.button.pastecopy">
         <source>Paste copy</source>
-        <target state="translated">Coller une copie</target>
+        <target state="needs-translation">Paste copy</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.pastereference">
         <source>Paste reference into this column</source>
@@ -57,11 +57,11 @@
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.modal.button.pastereference">
         <source>Paste reference</source>
-        <target state="translated">Coller la référence</target>
+        <target state="needs-translation">Paste reference</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.modal.labels.no_title" resname="tx_paste_reference_js.modal.labels.no_title">
         <source>No title</source>
-        <target state="translated">Sans titre</target>
+        <target state="needs-translation">No title</target>
       </trans-unit>
     </body>
   </file>

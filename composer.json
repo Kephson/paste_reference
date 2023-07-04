@@ -22,12 +22,12 @@
 		"issues": "https://github.com/kephson/paste-reference/issues"
 	},
 	"require": {
-		"php": "^7.4 || ^8.0",
-		"typo3/cms-backend": "^11.5",
-		"typo3/cms-core": "^11.5"
+		"php": "^8.1",
+		"typo3/cms-backend": "^12.4",
+		"typo3/cms-core": "^12.4"
 	},
 	"require-dev": {
-		"ergebnis/composer-normalize": "^2.28"
+		"ergebnis/composer-normalize": "^2.31"
 	},
 	"conflict": {
 		"gridelementsteam/gridelements": "*"

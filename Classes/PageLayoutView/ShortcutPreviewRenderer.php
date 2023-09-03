@@ -22,7 +22,8 @@ namespace EHAERER\PasteReference\PageLayoutView;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception;
 use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
@@ -118,6 +119,12 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         return parent::renderPageModulePreviewContent($item);
     }
 
+    /**
+     * @param GridColumnItem $gridColumnItem
+     * @return array
+     * @throws DBALException
+     * @throws Exception
+     */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
     {
         $renderItems = [];
@@ -189,7 +196,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
                     'pid',
-                    $queryBuilder->createNamedParameter($itemList, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
                 ) . ' AS inSet')
             ->from('tt_content')
             ->where(
@@ -199,12 +206,12 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                 ),
                 $queryBuilder->expr()->in(
                     'pid',
-                    $queryBuilder->createNamedParameter($itemList, Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
                 ),
                 $queryBuilder->expr()->gte('colPos', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)),
                 $queryBuilder->expr()->in(
                     'sys_language_uid',
-                    $queryBuilder->createNamedParameter([0, -1], Connection::PARAM_INT_ARRAY)
+                    $queryBuilder->createNamedParameter([0, -1], ArrayParameterType::INTEGER)
                 )
             )
             ->orderBy('inSet')
@@ -223,7 +230,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                 unset($item['inSet']);
                 BackendUtility::workspaceOL('tt_content', $item, $this->helper->getBackendUser()->workspace);
             }
-            $item['tx_gridelements_reference_container'] = $item['pid'];
+            $item['tx_paste_reference_container'] = $item['pid'];
             $collectedItems[] = $item;
         }
     }

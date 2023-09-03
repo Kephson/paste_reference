@@ -6,6 +6,7 @@ namespace EHAERER\PasteReference\DataHandler;
  *  Copyright notice
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  (c) 2013 Stefan Froemken <froemken@gmail.com>
+ *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -21,6 +22,7 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -39,8 +41,9 @@ class ProcessCmdmap extends AbstractDataHandler
      * @param int $id The id of the record that is going to be copied
      * @param string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
-     * @param DataHandler $parentObj The parent object that triggered this hook
+     * @param DataHandler|null $parentObj The parent object that triggered this hook
      * @param array|bool $pasteUpdate Values to be updated after the record is pasted
+     * @throws Exception
      */
     public function execute_processCmdmap(
         $command,
@@ -50,7 +53,7 @@ class ProcessCmdmap extends AbstractDataHandler
         &$commandIsProcessed,
         DataHandler $parentObj = null,
         $pasteUpdate = false
-    )
+    ): void
     {
         $this->init($table, $id, $parentObj);
         $reference = (int)GeneralUtility::_GET('reference');

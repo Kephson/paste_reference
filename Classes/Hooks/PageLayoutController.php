@@ -68,9 +68,9 @@ class PageLayoutController
             $this->pageRenderer->setCharSet('utf-8');
         }
 
-        // pull locallang_db.xml to JS side - only the tx_gridelements_js-prefixed keys
+        // pull locallang_db.xml to JS side - only the tx_paste_reference_js-prefixed keys
         $this->pageRenderer->addInlineLanguageLabelFile(
-            'EXT:paste_reference/Resources/Private/Language/locallang_db.xml',
+            'EXT:paste_reference/Resources/Private/Language/locallang_db.xlf',
             'tx_paste_reference_js'
         );
 
@@ -114,13 +114,13 @@ class PageLayoutController
             && !(bool)($this->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
         ) {
             $pAddExtOnReadyCode .= '
-                    top.copyFromAnotherPageLinkTemplate = ' . json_encode('<a class="t3js-paste-new btn btn-default" title="' . $this->getLanguageService()->sL('LLL:EXT:gridelements/Resources/Private/Language/locallang_db.xml:tx_gridelements_js.copyfrompage') . '">' . $this->iconFactory->getIcon(
+                    top.copyFromAnotherPageLinkTemplate = ' . json_encode('<a class="t3js-paste-new btn btn-default" title="' . $this->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_js.copyfrompage') . '">' . $this->iconFactory->getIcon(
                         'actions-insert-reference',
                         Icon::SIZE_SMALL
                     )->render() . '</a>') . ';';
         }
 
-        $this->pageRenderer->addJsInlineCode('gridelementsExtOnReady', $pAddExtOnReadyCode);
+        $this->pageRenderer->addJsInlineCode('pasterefExtOnReady', $pAddExtOnReadyCode);
     }
 
     /**

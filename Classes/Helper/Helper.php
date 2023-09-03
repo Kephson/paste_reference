@@ -2,8 +2,9 @@
 
 namespace EHAERER\PasteReference\Helper;
 
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
@@ -47,14 +48,14 @@ class Helper implements SingletonInterface
      *
      * @var Helper
      */
-    protected static $instance = null;
+    protected static Helper $instance;
 
     /**
      * Get instance from the class.
      *
      * @return Helper
      */
-    public static function getInstance()
+    public static function getInstance(): ?Helper
     {
         if (!self::$instance instanceof Helper) {
             self::$instance = new self();
@@ -70,9 +71,8 @@ class Helper implements SingletonInterface
      *
      * @return int
      * @throws DBALException
-     * @throws Exception
      */
-    public function getPidFromUid($uid = 0)
+    public function getPidFromUid(int $uid = 0): int
     {
         $queryBuilder = $this->getQueryBuilder();
         $triggerElement = $queryBuilder
@@ -95,7 +95,7 @@ class Helper implements SingletonInterface
      *
      * @return QueryBuilder queryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
         /** @var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -110,21 +110,21 @@ class Helper implements SingletonInterface
     /**
      * Gets the current backend user.
      *
-     * @return \TYPO3\CMS\Core\Authentication\BackendUserAuthentication
+     * @return BackendUserAuthentication
      */
-    public function getBackendUser()
+    public function getBackendUser(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
 
     /**
-     * Decide if TYPO3 9.5 is used or older
+     * Decide if TYPO3 11.5 is used or older
      *
      * @return bool
      * @codeCoverageIgnore
      */
-    public function isTypo3OlderThen10(): bool
+    public function isTypo3OlderThen11(): bool
     {
-        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 10000000;
+        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 11000000;
     }
 }

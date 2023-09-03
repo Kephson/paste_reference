@@ -97,8 +97,7 @@ class ItemProvider extends RecordProvider
             $canRender = $this->canBePastedAfter() && $this->clipboard->currentMode() === 'copy' && $this->backendUser->checkAuthMode(
                     'tt_content',
                     'CType',
-                    'shortcut',
-                    $GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode']
+                    'shortcut'
                 );
         }
         return $canRender;

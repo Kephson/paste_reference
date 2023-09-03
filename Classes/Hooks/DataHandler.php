@@ -5,6 +5,7 @@ namespace EHAERER\PasteReference\Hooks;
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
+ *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -20,9 +21,11 @@ namespace EHAERER\PasteReference\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Driver\Exception;
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -43,18 +46,19 @@ class DataHandler implements SingletonInterface
      * @param int $id The id of the record that is going to be copied
      * @param string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
-     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $parentObj The parent object that triggered this hook
-     * @param array|bool $pasteUpdate Values to be updated after the record is pasted
+     * @param CoreDataHandler $parentObj The parent object that triggered this hook
+     * @param bool|array $pasteUpdate Values to be updated after the record is pasted
+     * @throws Exception
      */
     public function processCmdmap(
-        $command,
-        $table,
-        $id,
-        $value,
-        &$commandIsProcessed,
-        \TYPO3\CMS\Core\DataHandling\DataHandler &$parentObj,
-        $pasteUpdate
-    )
+        string          $command,
+        string          $table,
+        int             $id,
+        string          $value,
+        bool            &$commandIsProcessed,
+        CoreDataHandler &$parentObj,
+        bool|array $pasteUpdate
+    ): void
     {
         if (!$parentObj->isImporting) {
             /** @var ProcessCmdmap $hook */

@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -70,7 +71,7 @@ abstract class AbstractDataHandler
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
      * @param DataHandler $dataHandler
-     * @throws DBALException
+     * @throws DBALException|DBALDriverException
      */
     public function init(string $table, int $uidPid, DataHandler $dataHandler): void
     {
@@ -100,7 +101,7 @@ abstract class AbstractDataHandler
      *
      * @param int $contentUid
      */
-    public function setContentUid($contentUid): void
+    public function setContentUid(int $contentUid): void
     {
         $this->contentUid = $contentUid;
     }

@@ -15,6 +15,7 @@
  * this JS code initializes several settings for the Layout module (Web => Page)
  * based on jQuery UI
  */
+import $ from 'jquery';
 
 define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storage/Persistent', 'TYPO3/CMS/PasteReference/PasteReferenceDragDrop', 'TYPO3/CMS/Backend/LayoutModule/Paste', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], function ($, AjaxDataHandler, PersistentStorage, DragDrop, Paste, Modal, Severity) {
 
@@ -67,7 +68,7 @@ define(['jquery', 'TYPO3/CMS/Backend/AjaxDataHandler', 'TYPO3/CMS/Backend/Storag
   Paste.activatePasteModal = function (element) {
     var $element = $(element);
     var url = $element.data('url') || null;
-    var elementTitle = this.itemOnClipboardTitle != undefined ? this.itemOnClipboardTitle : "["+TYPO3.lang['tx_paste_reference_js.modal.labels.no_title']+"]";
+    var elementTitle = this.itemOnClipboardTitle != undefined ? this.itemOnClipboardTitle : "[" + TYPO3.lang['tx_paste_reference_js.modal.labels.no_title'] + "]";
     var title = (TYPO3.lang['paste.modal.title.paste'] || 'Paste record') + ': "' + elementTitle + '"';
     var severity = (typeof top.TYPO3.Severity[$element.data('severity')] !== 'undefined') ? top.TYPO3.Severity[$element.data('severity')] : top.TYPO3.Severity.info;
     if ($element.hasClass('t3js-paste-copy')) {

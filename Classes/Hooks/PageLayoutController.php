@@ -23,7 +23,9 @@ namespace EHAERER\PasteReference\Hooks;
  ***************************************************************/
 
 use EHAERER\PasteReference\Helper\Helper;
+use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
+use TYPO3\CMS\Backend\Controller\PageLayoutController as CorePageLayoutController;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -33,6 +35,7 @@ use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -42,9 +45,24 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageLayoutController
 {
+    /**
+     * @var array|mixed
+     */
     protected array $extensionConfiguration = [];
-    protected Helper $helper;
+
+    /**
+     * @var Helper|null
+     */
+    protected ?Helper $helper;
+
+    /**
+     * @var PageRenderer|mixed|object|LoggerAwareInterface|SingletonInterface|null
+     */
     protected PageRenderer $pageRenderer;
+
+    /**
+     * @var IconFactory|mixed|object|LoggerAwareInterface|(IconFactory&LoggerAwareInterface)|(IconFactory&SingletonInterface)|SingletonInterface|null
+     */
     protected IconFactory $iconFactory;
 
     public function __construct()
@@ -55,10 +73,15 @@ class PageLayoutController
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
     }
 
-    public function drawHeaderHook(array $parameters, \TYPO3\CMS\Backend\Controller\PageLayoutController $pageLayoutController)
+    /**
+     * @param array $parameters
+     * @param CorePageLayoutController $pageLayoutController
+     * @return void
+     */
+    public function drawHeaderHook(array $parameters, CorePageLayoutController $pageLayoutController)
     {
-        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceOnReady');
-        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/PasteReference/PasteReferenceDragDrop');
+        $this->pageRenderer->loadJavaScriptModule('@haerer/paste-reference/PasteReferenceOnReady.js');
+        $this->pageRenderer->loadJavaScriptModule('@haerer/paste-reference/PasteReferenceDragDrop.js');
 
         $clipObj = GeneralUtility::makeInstance(Clipboard::class); // Start clipboard
         $clipObj->initializeClipboard();
@@ -126,9 +149,9 @@ class PageLayoutController
     /**
      * Gets the current backend user.
      *
-     * @return BackendUserAuthentication
+     * @return BackendUserAuthentication|null
      */
-    public function getBackendUser(): BackendUserAuthentication
+    public function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
@@ -136,9 +159,9 @@ class PageLayoutController
     /**
      * getter for language service
      *
-     * @return LanguageService
+     * @return LanguageService|null
      */
-    public function getLanguageService(): LanguageService
+    public function getLanguageService(): ?LanguageService
     {
         return $GLOBALS['LANG'];
     }

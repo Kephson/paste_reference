@@ -2,8 +2,8 @@
 
 namespace EHAERER\PasteReference\Helper;
 
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Driver\Exception;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -11,7 +11,7 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
- *  (c) 2021 Ephraim Härer <mail@ephra.im>
+ *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -53,7 +53,7 @@ class Helper implements SingletonInterface
     /**
      * Get instance from the class.
      *
-     * @return Helper
+     * @return Helper|null
      */
     public static function getInstance(): ?Helper
     {
@@ -70,7 +70,7 @@ class Helper implements SingletonInterface
      * @param int $uid the uid value of a tt_content record
      *
      * @return int
-     * @throws DBALException
+     * @throws DBALException|DBALDriverException
      */
     public function getPidFromUid(int $uid = 0): int
     {

@@ -10,6 +10,7 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
+import $ from 'jquery';
 
 /**
  * Module: TYPO3/CMS/PasteReference/ContextMenuActions
@@ -35,7 +36,7 @@ define(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], func
    * Paste record as a reference
    *
    * @param {string} table
-   * @param {int} uid of the record after which record from the cliboard will be pasted
+   * @param {int} uid of the record after which record from the clipboard will be pasted
    */
   ContextMenuActions.pasteReference = function (table, uid) {
     var $anchorElement = $(this);

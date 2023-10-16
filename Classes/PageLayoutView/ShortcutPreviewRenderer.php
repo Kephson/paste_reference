@@ -24,7 +24,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
@@ -64,6 +64,10 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * the page module only. Receives the GridColumnItem
      * that contains the record for which a preview should be
      * rendered and returned.
+     *
+     * @param $item GridColumnItem
+     * @return string
+     * @throws DBALException
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
@@ -123,7 +127,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param GridColumnItem $gridColumnItem
      * @return array
      * @throws DBALException
-     * @throws Exception
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
     {
@@ -172,7 +175,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
-     * @throws DBALException
+     * @throws DBALDriverException|DBALException
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
@@ -242,8 +245,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
-     * @throws DBALException
-     * @throws Exception
+     * @throws DBALDriverException|DBALException
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language)
     {

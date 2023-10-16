@@ -10,6 +10,7 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
+import $ from 'jquery';
 
 /**
  * this JS code does the drag+drop logic for the Layout module (Web => Page)

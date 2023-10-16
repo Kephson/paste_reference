@@ -21,7 +21,8 @@ namespace EHAERER\PasteReference\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -48,7 +49,7 @@ class DataHandler implements SingletonInterface
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
      * @param CoreDataHandler $parentObj The parent object that triggered this hook
      * @param bool|array $pasteUpdate Values to be updated after the record is pasted
-     * @throws Exception
+     * @throws DBALException|DBALDriverException
      */
     public function processCmdmap(
         string          $command,
@@ -57,7 +58,7 @@ class DataHandler implements SingletonInterface
         string          $value,
         bool            &$commandIsProcessed,
         CoreDataHandler &$parentObj,
-        bool|array $pasteUpdate
+        bool|array      $pasteUpdate
     ): void
     {
         if (!$parentObj->isImporting) {

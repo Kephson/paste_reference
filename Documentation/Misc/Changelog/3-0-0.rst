@@ -1,0 +1,22 @@
+3.0.0 - October 16, 2023
+========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [CHG] updated all Classes and files to work with TYPO3 12
+- [CHG] moved/changed JavaScript files from RequireJS to ES6
+- initial release for TYPO3 >= 12.4

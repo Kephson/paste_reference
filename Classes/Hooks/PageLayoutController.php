@@ -53,7 +53,7 @@ class PageLayoutController
     /**
      * @var Helper|null
      */
-    protected ?Helper $helper;
+    protected ?Helper $helper = null;
 
     /**
      * @var PageRenderer|mixed|object|LoggerAwareInterface|SingletonInterface|null
@@ -74,12 +74,11 @@ class PageLayoutController
     }
 
     /**
-     * @param array $parameters
-     * @param CorePageLayoutController $pageLayoutController
-     * @return void
+     * @return string
      */
-    public function drawHeaderHook(array $parameters, CorePageLayoutController $pageLayoutController)
+    public function drawHeaderHook(): string
     {
+        $this->pageRenderer->loadJavaScriptModule('@haerer/paste-reference/ContextMenuActions.js');
         $this->pageRenderer->loadJavaScriptModule('@haerer/paste-reference/PasteReferenceOnReady.js');
         $this->pageRenderer->loadJavaScriptModule('@haerer/paste-reference/PasteReferenceDragDrop.js');
 
@@ -109,12 +108,10 @@ class PageLayoutController
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         try {
             $pAddExtOnReadyCode .= '
-                top.pasteReferenceAllowed = ' . ($this->getBackendUser()->checkAuthMode(
+                top.pasteReferenceAllowed = ' . $this->getBackendUser()->checkAuthMode(
                     'tt_content',
                     'CType',
-                    'shortcut',
-                    $GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode']
-                ) ? 'true' : 'false') . ';
+                    'shortcut') . ';
                 top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
@@ -144,6 +141,8 @@ class PageLayoutController
         }
 
         $this->pageRenderer->addJsInlineCode('pasterefExtOnReady', $pAddExtOnReadyCode);
+
+        return '';
     }
 
     /**

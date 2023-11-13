@@ -15,11 +15,12 @@ namespace EHAERER\PasteReference\ContextMenu;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Backend\ContextMenu\ItemProviders\ProviderInterface;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ItemProvider extends RecordProvider
+class ItemProvider extends RecordProvider implements ProviderInterface
 {
     protected $itemsConfiguration = [
         'pastereference' => [

@@ -46,7 +46,7 @@ class Helper implements SingletonInterface
     /**
      * Local instance of the helper
      *
-     * @var Helper
+     * @var ?Helper
      */
     protected static ?Helper $instance = null;
 
@@ -117,14 +117,4 @@ class Helper implements SingletonInterface
         return $GLOBALS['BE_USER'];
     }
 
-    /**
-     * Decide if TYPO3 11.5 is used or older
-     *
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    public function isTypo3OlderThen11(): bool
-    {
-        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 11000000;
-    }
 }

@@ -13,15 +13,7 @@ final class ModifyPageLayoutContentListener
 
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
-        // Get the current page ID
-        $id = (int)($event->getRequest()->getQueryParams()['id'] ?? 0);
-
         $pageLayoutController = GeneralUtility::makeInstance(PageLayoutController::class);
         $event->addHeaderContent($pageLayoutController->drawHeaderHook());
-
-        $event->addHeaderContent('Additional header content');
-
-        $event->setFooterContent('Overwrite footer content');
     }
-
 }

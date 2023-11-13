@@ -48,7 +48,7 @@ class Helper implements SingletonInterface
      *
      * @var Helper
      */
-    protected static Helper $instance;
+    protected static ?Helper $instance = null;
 
     /**
      * Get instance from the class.

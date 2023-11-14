@@ -21,8 +21,6 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
 use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -31,9 +29,9 @@ use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\DebugUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -45,27 +43,27 @@ abstract class AbstractDataHandler
     /**
      * @var Connection
      */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * @var int
      */
-    protected $pageUid;
+    protected int $pageUid;
 
     /**
      * @var int
      */
-    protected $contentUid = 0;
+    protected int $contentUid = 0;
 
     /**
      * @var DataHandler
      */
-    protected $dataHandler;
+    protected DataHandler $dataHandler;
 
     /**
      * initializes this class
@@ -73,10 +71,9 @@ abstract class AbstractDataHandler
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
      * @param DataHandler $dataHandler
-     * @throws DBALException
-     * @throws Exception
+     * @throws DBALException|DBALDriverException
      */
-    public function init($table, $uidPid, DataHandler $dataHandler)
+    public function init(string $table, int $uidPid, DataHandler $dataHandler): void
     {
         $this->setTable($table);
         if ($table === 'tt_content' && (int)$uidPid < 0) {
@@ -94,7 +91,7 @@ abstract class AbstractDataHandler
      *
      * @return int contentUid
      */
-    public function getContentUid()
+    public function getContentUid(): int
     {
         return $this->contentUid;
     }
@@ -104,7 +101,7 @@ abstract class AbstractDataHandler
      *
      * @param int $contentUid
      */
-    public function setContentUid($contentUid)
+    public function setContentUid(int $contentUid): void
     {
         $this->contentUid = $contentUid;
     }
@@ -114,7 +111,7 @@ abstract class AbstractDataHandler
      *
      * @param DataHandler $dataHandler
      */
-    public function setTceMain(DataHandler $dataHandler)
+    public function setTceMain(DataHandler $dataHandler): void
     {
         $this->dataHandler = $dataHandler;
     }
@@ -124,7 +121,7 @@ abstract class AbstractDataHandler
      *
      * @return int pageUid
      */
-    public function getPageUid()
+    public function getPageUid(): int
     {
         return $this->pageUid;
     }
@@ -134,7 +131,7 @@ abstract class AbstractDataHandler
      *
      * @param int $pageUid
      */
-    public function setPageUid($pageUid)
+    public function setPageUid(int $pageUid): void
     {
         $this->pageUid = $pageUid;
     }
@@ -143,45 +140,22 @@ abstract class AbstractDataHandler
      * Function to remove any remains of versioned records after finalizing a workspace action
      * via 'Discard' or 'Publish' commands
      */
-    public function cleanupWorkspacesAfterFinalizing()
+    public function cleanupWorkspacesAfterFinalizing(): void
     {
         $queryBuilder = $this->getQueryBuilder();
-
-        if (Helper::getInstance()->isTypo3OlderThen10()) {
-            $constraints = [
-                $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq(
-                        'pid',
-                        $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
-                    ),
-                    $queryBuilder->expr()->eq(
-                        't3ver_wsid',
-                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                    ),
-                    $queryBuilder->expr()->gt(
-                        't3ver_id',
-                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                    )
+        $queryBuilder
+            ->delete('tt_content')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'pid',
+                    $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
                 ),
-            ];
-        } else {
-            $constraints = [
-                $queryBuilder->expr()->andX(
-                    $queryBuilder->expr()->eq(
-                        'pid',
-                        $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
-                    ),
-                    $queryBuilder->expr()->eq(
-                        't3ver_wsid',
-                        $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
-                    )
-                ),
-            ];
-        }
-
-        $queryBuilder->delete('tt_content')
-            ->where(...$constraints)
-            ->execute();
+                $queryBuilder->expr()->eq(
+                    't3ver_wsid',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
+                )
+            )
+            ->executeStatement();
     }
 
     /**
@@ -190,7 +164,7 @@ abstract class AbstractDataHandler
      * @param string $table
      * @return QueryBuilder $queryBuilder
      */
-    public function getQueryBuilder($table = 'tt_content')
+    public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder
     {
         /**@var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -208,7 +182,7 @@ abstract class AbstractDataHandler
      *
      * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tt_content');
@@ -219,7 +193,7 @@ abstract class AbstractDataHandler
      *
      * @return DataHandler dataHandler
      */
-    public function getTceMain()
+    public function getTceMain(): DataHandler
     {
         return $this->dataHandler;
     }
@@ -229,7 +203,7 @@ abstract class AbstractDataHandler
      *
      * @return string table
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -239,7 +213,7 @@ abstract class AbstractDataHandler
      *
      * @param string $table
      */
-    public function setTable($table)
+    public function setTable(string $table): void
     {
         $this->table = $table;
     }

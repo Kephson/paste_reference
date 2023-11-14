@@ -19,7 +19,7 @@ use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ItemProvider extends RecordProvider
+class PasteReferenceItemProvider extends RecordProvider
 {
     protected $itemsConfiguration = [
         'pastereference' => [
@@ -46,7 +46,7 @@ class ItemProvider extends RecordProvider
             $end = array_slice($items, $position + 1, null, true);
 
             $items = $beginning + $localItems + $end;
-            $items['pasteAfter']['additioanlAttributes'] = $this->getAdditionalAttributes('pasteAfter');
+            $items['pasteAfter']['additionalAttributes'] = $this->getAdditionalAttributes('pasteAfter');
         }
         return $items;
     }
@@ -66,11 +66,11 @@ class ItemProvider extends RecordProvider
             $urlParameters['reference'] = 1;
         }
 
-        $attributes = $this->getPasteAdditionalAttributes('after');
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
+        $attributes = $this->getPasteAdditionalAttributes('after');
         $attributes += [
-            'data-callback-module' => 'TYPO3/CMS/PasteReference/ContextMenuActions',
-            'data-action-url' => htmlspecialchars($uriBuilder->buildUriFromRoute('tce_db', $urlParameters)),
+            'data-callback-module' => '@haerer/paste-reference/context-menu-actions',
+            'data-action-url' => (string)$uriBuilder->buildUriFromRoute('tce_db', $urlParameters),
         ];
         return $attributes;
     }
@@ -85,11 +85,6 @@ class ItemProvider extends RecordProvider
         return 45;
     }
 
-    /**
-     * @param string $itemName
-     * @param string $type
-     * @return bool
-     */
     protected function canRender(string $itemName, string $type): bool
     {
         $canRender = false;
@@ -97,8 +92,7 @@ class ItemProvider extends RecordProvider
             $canRender = $this->canBePastedAfter() && $this->clipboard->currentMode() === 'copy' && $this->backendUser->checkAuthMode(
                     'tt_content',
                     'CType',
-                    'shortcut',
-                    $GLOBALS['TYPO3_CONF_VARS']['BE']['explicitADmode']
+                    'shortcut'
                 );
         }
         return $canRender;

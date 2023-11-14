@@ -43,21 +43,11 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  */
 class Helper implements SingletonInterface
 {
-    /**
-     * Local instance of the helper
-     *
-     * @var ?Helper
-     */
     protected static ?Helper $instance = null;
 
-    /**
-     * Get instance from the class.
-     *
-     * @return Helper|null
-     */
     public static function getInstance(): ?Helper
     {
-        if (!self::$instance instanceof Helper) {
+        if (!self::$instance instanceof self) {
             self::$instance = new self();
         }
 
@@ -90,14 +80,8 @@ class Helper implements SingletonInterface
         return is_array($triggerElement) && $pid ? $pid : 0;
     }
 
-    /**
-     * getter for queryBuilder
-     *
-     * @return QueryBuilder queryBuilder
-     */
     public function getQueryBuilder(): QueryBuilder
     {
-        /** @var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tt_content');
         $queryBuilder->getRestrictions()
@@ -107,11 +91,6 @@ class Helper implements SingletonInterface
         return $queryBuilder;
     }
 
-    /**
-     * Gets the current backend user.
-     *
-     * @return BackendUserAuthentication
-     */
     public function getBackendUser(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];

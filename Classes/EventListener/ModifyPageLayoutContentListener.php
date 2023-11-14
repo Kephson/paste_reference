@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 namespace EHAERER\PasteReference\EventListener;
 
@@ -10,7 +10,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class ModifyPageLayoutContentListener
 {
-
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
         $pageLayoutController = GeneralUtility::makeInstance(PageLayoutController::class);

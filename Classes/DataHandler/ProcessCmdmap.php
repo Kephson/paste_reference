@@ -6,6 +6,7 @@ namespace EHAERER\PasteReference\DataHandler;
  *  Copyright notice
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  (c) 2013 Stefan Froemken <froemken@gmail.com>
+ *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -21,6 +22,8 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -39,19 +42,19 @@ class ProcessCmdmap extends AbstractDataHandler
      * @param int $id The id of the record that is going to be copied
      * @param string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
-     * @param DataHandler $parentObj The parent object that triggered this hook
-     * @param array|bool $pasteUpdate Values to be updated after the record is pasted
+     * @param DataHandler|null $parentObj The parent object that triggered this hook
+     * @param bool|array $pasteUpdate Values to be updated after the record is pasted
+     * @throws DBALException|DBALDriverException
      */
     public function execute_processCmdmap(
-        $command,
-        $table,
-        $id,
-        $value,
-        &$commandIsProcessed,
+        string      $command,
+        string      $table,
+        int         $id,
+        string      $value,
+        bool        &$commandIsProcessed,
         DataHandler $parentObj = null,
-        $pasteUpdate = false
-    )
-    {
+        bool|array  $pasteUpdate = false
+    ): void {
         $this->init($table, $id, $parentObj);
         $reference = (int)GeneralUtility::_GET('reference');
 

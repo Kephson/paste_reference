@@ -2,15 +2,16 @@
 
 namespace EHAERER\PasteReference\Helper;
 
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Information\Typo3Version;
 
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
- *  (c) 2021 Ephraim Härer <mail@ephra.im>
+ *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -42,21 +43,11 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  */
 class Helper implements SingletonInterface
 {
-    /**
-     * Local instance of the helper
-     *
-     * @var Helper
-     */
-    protected static $instance = null;
+    protected static ?Helper $instance = null;
 
-    /**
-     * Get instance from the class.
-     *
-     * @return Helper
-     */
-    public static function getInstance()
+    public static function getInstance(): ?Helper
     {
-        if (!self::$instance instanceof Helper) {
+        if (!self::$instance instanceof self) {
             self::$instance = new self();
         }
 
@@ -69,10 +60,9 @@ class Helper implements SingletonInterface
      * @param int $uid the uid value of a tt_content record
      *
      * @return int
-     * @throws DBALException
-     * @throws Exception
+     * @throws DBALException|DBALDriverException
      */
-    public function getPidFromUid($uid = 0)
+    public function getPidFromUid(int $uid = 0): int
     {
         $queryBuilder = $this->getQueryBuilder();
         $triggerElement = $queryBuilder
@@ -90,14 +80,8 @@ class Helper implements SingletonInterface
         return is_array($triggerElement) && $pid ? $pid : 0;
     }
 
-    /**
-     * getter for queryBuilder
-     *
-     * @return QueryBuilder queryBuilder
-     */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
-        /** @var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tt_content');
         $queryBuilder->getRestrictions()
@@ -107,24 +91,9 @@ class Helper implements SingletonInterface
         return $queryBuilder;
     }
 
-    /**
-     * Gets the current backend user.
-     *
-     * @return \TYPO3\CMS\Core\Authentication\BackendUserAuthentication
-     */
-    public function getBackendUser()
+    public function getBackendUser(): BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
 
-    /**
-     * Decide if TYPO3 9.5 is used or older
-     *
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    public function isTypo3OlderThen10(): bool
-    {
-        return VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion()) < 10000000;
-    }
 }

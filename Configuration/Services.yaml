@@ -7,16 +7,18 @@ services:
   EHAERER\PasteReference\:
     resource: '../Classes/*'
 
+  EHAERER\PasteReference\Hooks\PageLayoutController:
+    public: true
+
+  EHAERER\PasteReference\ContextMenu\PasteReferenceItemProvider:
+    tags:
+      - name: backend.contextmenu.itemprovider
+
   EHAERER\PasteReference\EventListener\ExtTablesInclusionPostProcessing:
     tags:
       - name: event.listener
         identifier: 'paste-reference/after-tca-compilation-event'
         event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
-
-  EHAERER\PasteReference\ContextMenu\ItemProvider:
-    tags:
-      - name: backend.contextmenu.itemprovider
-        identifier: 'paste-reference/backend/contextmenu/itemprovider'
 
   EHAERER\PasteReference\EventListener\ModifyPageLayoutContentListener:
     tags:

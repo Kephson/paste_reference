@@ -143,9 +143,9 @@ abstract class AbstractDataHandler
     public function cleanupWorkspacesAfterFinalizing(): void
     {
         $queryBuilder = $this->getQueryBuilder();
-
-        $constraints = [
-            $queryBuilder->expr()->and(
+        $queryBuilder
+            ->delete('tt_content')
+            ->where(
                 $queryBuilder->expr()->eq(
                     'pid',
                     $queryBuilder->createNamedParameter(-1, \PDO::PARAM_INT)
@@ -154,12 +154,8 @@ abstract class AbstractDataHandler
                     't3ver_wsid',
                     $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
-            ),
-        ];
-
-        $queryBuilder->delete('tt_content')
-            ->where(...$constraints)
-            ->executeQuery();
+            )
+            ->executeStatement();
     }
 
     /**

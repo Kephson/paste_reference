@@ -65,7 +65,8 @@ abstract class AbstractDataHandler
         $this->setTable($table);
         if ($table === 'tt_content' && $uidPid < 0) {
             $this->setContentUid(abs($uidPid));
-            $pageUid = Helper::getInstance()->getPidFromUid($this->getContentUid());
+            $helper = GeneralUtility::makeInstance(Helper::class);
+            $pageUid = $helper->getPidFromUid($this->getContentUid());
             $this->setPageUid($pageUid);
         } else {
             $this->setPageUid((int)$uidPid);

@@ -43,17 +43,6 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  */
 class Helper implements SingletonInterface
 {
-    protected static ?Helper $instance = null;
-
-    public static function getInstance(): ?Helper
-    {
-        if (!self::$instance instanceof self) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
     /**
      * converts tt_content uid into a pid
      *

@@ -50,14 +50,6 @@ class PageLayoutController
      */
     protected array $extensionConfiguration = [];
 
-    /**
-     * @var Helper|null
-     */
-    protected ?Helper $helper = null;
-
-    /**
-     * @var PageRenderer|mixed|object|LoggerAwareInterface|SingletonInterface|null
-     */
     protected PageRenderer $pageRenderer;
 
     /**
@@ -68,7 +60,6 @@ class PageLayoutController
     public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
-        $this->helper = Helper::getInstance();
         $this->pageRenderer = $pageRenderer;
         $this->iconFactory = $iconFactory;
     }

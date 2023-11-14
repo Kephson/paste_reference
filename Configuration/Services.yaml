@@ -14,11 +14,10 @@ services:
     tags:
       - name: backend.contextmenu.itemprovider
 
-  EHAERER\PasteReference\EventListener\ExtTablesInclusionPostProcessing:
+  EHAERER\PasteReference\EventListener\AfterTcaCompilationEventListener:
     tags:
       - name: event.listener
         identifier: 'paste-reference/after-tca-compilation-event'
-        event: TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent
 
   EHAERER\PasteReference\EventListener\ModifyPageLayoutContentListener:
     tags:

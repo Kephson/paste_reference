@@ -22,8 +22,6 @@ namespace EHAERER\PasteReference\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use EHAERER\PasteReference\Helper\Helper;
-use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -35,26 +33,17 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Class/Function which adds the necessary ExtJS and pure JS stuff for the grid elements.
- *
  * @author Jo Hasenau <info@cybercraft.de>, Tobias Ferger <tobi@tt36.de>
  */
 class PageLayoutController
 {
-    /**
-     * @var array|mixed
-     */
     protected array $extensionConfiguration = [];
 
     protected PageRenderer $pageRenderer;
 
-    /**
-     * @var IconFactory|mixed|object|LoggerAwareInterface|(IconFactory&LoggerAwareInterface)|(IconFactory&SingletonInterface)|SingletonInterface|null
-     */
     protected IconFactory $iconFactory;
 
     public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
@@ -64,9 +53,6 @@ class PageLayoutController
         $this->iconFactory = $iconFactory;
     }
 
-    /**
-     * @return string
-     */
     public function drawHeaderHook(): string
     {
         $clipboard = GeneralUtility::makeInstance(Clipboard::class);
@@ -132,12 +118,12 @@ class PageLayoutController
         return '';
     }
 
-    public function getBackendUser(): ?BackendUserAuthentication
+    protected function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
 
-    public function getLanguageService(): ?LanguageService
+    protected function getLanguageService(): ?LanguageService
     {
         return $GLOBALS['LANG'];
     }

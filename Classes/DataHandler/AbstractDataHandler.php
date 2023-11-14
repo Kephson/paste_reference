@@ -69,7 +69,7 @@ abstract class AbstractDataHandler
             $pageUid = $helper->getPidFromUid($this->getContentUid());
             $this->setPageUid($pageUid);
         } else {
-            $this->setPageUid((int)$uidPid);
+            $this->setPageUid($uidPid);
         }
         $this->setTceMain($dataHandler);
     }

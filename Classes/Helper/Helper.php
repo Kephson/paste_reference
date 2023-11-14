@@ -79,10 +79,4 @@ class Helper implements SingletonInterface
             ->removeByType(EndTimeRestriction::class);
         return $queryBuilder;
     }
-
-    public function getBackendUser(): BackendUserAuthentication
-    {
-        return $GLOBALS['BE_USER'];
-    }
-
 }

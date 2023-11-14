@@ -62,7 +62,6 @@ class DataHandler implements SingletonInterface
     ): void
     {
         if (!$parentObj->isImporting) {
-            /** @var ProcessCmdmap $hook */
             $hook = GeneralUtility::makeInstance(ProcessCmdmap::class);
             $hook->execute_processCmdmap($command, $table, $id, $value, $commandIsProcessed, $parentObj, $pasteUpdate);
         }

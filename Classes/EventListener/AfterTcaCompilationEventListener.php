@@ -25,7 +25,7 @@ namespace EHAERER\PasteReference\EventListener;
 use EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 
-class ExtTablesInclusionPostProcessing
+class AfterTcaCompilationEventListener
 {
     public function __invoke(AfterTcaCompilationEvent $event): void
     {

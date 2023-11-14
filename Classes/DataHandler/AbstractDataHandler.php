@@ -40,29 +40,14 @@ use Doctrine\DBAL\Driver\Exception as DBALDriverException;
  */
 abstract class AbstractDataHandler
 {
-    /**
-     * @var Connection
-     */
     protected Connection $connection;
 
-    /**
-     * @var string
-     */
     protected string $table;
 
-    /**
-     * @var int
-     */
     protected int $pageUid;
 
-    /**
-     * @var int
-     */
     protected int $contentUid = 0;
 
-    /**
-     * @var DataHandler
-     */
     protected DataHandler $dataHandler;
 
     /**
@@ -76,7 +61,7 @@ abstract class AbstractDataHandler
     public function init(string $table, int $uidPid, DataHandler $dataHandler): void
     {
         $this->setTable($table);
-        if ($table === 'tt_content' && (int)$uidPid < 0) {
+        if ($table === 'tt_content' && $uidPid < 0) {
             $this->setContentUid(abs($uidPid));
             $pageUid = Helper::getInstance()->getPidFromUid($this->getContentUid());
             $this->setPageUid($pageUid);
@@ -84,56 +69,6 @@ abstract class AbstractDataHandler
             $this->setPageUid((int)$uidPid);
         }
         $this->setTceMain($dataHandler);
-    }
-
-    /**
-     * getter for contentUid
-     *
-     * @return int contentUid
-     */
-    public function getContentUid(): int
-    {
-        return $this->contentUid;
-    }
-
-    /**
-     * setter for contentUid
-     *
-     * @param int $contentUid
-     */
-    public function setContentUid(int $contentUid): void
-    {
-        $this->contentUid = $contentUid;
-    }
-
-    /**
-     * setter for dataHandler object
-     *
-     * @param DataHandler $dataHandler
-     */
-    public function setTceMain(DataHandler $dataHandler): void
-    {
-        $this->dataHandler = $dataHandler;
-    }
-
-    /**
-     * getter for pageUid
-     *
-     * @return int pageUid
-     */
-    public function getPageUid(): int
-    {
-        return $this->pageUid;
-    }
-
-    /**
-     * setter for pageUid
-     *
-     * @param int $pageUid
-     */
-    public function setPageUid(int $pageUid): void
-    {
-        $this->pageUid = $pageUid;
     }
 
     /**
@@ -158,15 +93,8 @@ abstract class AbstractDataHandler
             ->executeStatement();
     }
 
-    /**
-     * getter for queryBuilder
-     *
-     * @param string $table
-     * @return QueryBuilder $queryBuilder
-     */
     public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder
     {
-        /**@var $queryBuilder QueryBuilder */
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
@@ -177,44 +105,49 @@ abstract class AbstractDataHandler
         return $queryBuilder;
     }
 
-    /**
-     * setter for Connection object
-     *
-     * @return Connection
-     */
     public function getConnection(): Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tt_content');
     }
 
-    /**
-     * getter for dataHandler
-     *
-     * @return DataHandler dataHandler
-     */
-    public function getTceMain(): DataHandler
-    {
-        return $this->dataHandler;
-    }
-
-    /**
-     * getter for table
-     *
-     * @return string table
-     */
     public function getTable(): string
     {
         return $this->table;
     }
 
-    /**
-     * setter for table
-     *
-     * @param string $table
-     */
     public function setTable(string $table): void
     {
         $this->table = $table;
+    }
+
+    public function getPageUid(): int
+    {
+        return $this->pageUid;
+    }
+
+    public function setPageUid(int $pageUid): void
+    {
+        $this->pageUid = $pageUid;
+    }
+
+    public function getContentUid(): int
+    {
+        return $this->contentUid;
+    }
+
+    public function setContentUid(int $contentUid): void
+    {
+        $this->contentUid = $contentUid;
+    }
+
+    public function getTceMain(): DataHandler
+    {
+        return $this->dataHandler;
+    }
+
+    public function setTceMain(DataHandler $dataHandler): void
+    {
+        $this->dataHandler = $dataHandler;
     }
 }

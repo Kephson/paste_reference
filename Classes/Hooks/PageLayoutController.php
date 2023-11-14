@@ -25,7 +25,6 @@ namespace EHAERER\PasteReference\Hooks;
 use EHAERER\PasteReference\Helper\Helper;
 use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
-use TYPO3\CMS\Backend\Controller\PageLayoutController as CorePageLayoutController;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -142,21 +141,11 @@ class PageLayoutController
         return '';
     }
 
-    /**
-     * Gets the current backend user.
-     *
-     * @return BackendUserAuthentication|null
-     */
     public function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
 
-    /**
-     * getter for language service
-     *
-     * @return LanguageService|null
-     */
     public function getLanguageService(): ?LanguageService
     {
         return $GLOBALS['LANG'];

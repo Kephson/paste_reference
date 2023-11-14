@@ -90,14 +90,16 @@ class PageLayoutController
             if (!(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
                 && !(bool)($this->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
             ) {
-                $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
+                /* FIXME: the file @haerer/paste-reference/paste-reference.js doesn't exist.
+                 * FIXME: It should add a button next to "+ Content"
+                 * $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
                     JavaScriptModuleInstruction::create('@haerer/paste-reference/paste-reference.js')
                         ->instance([
                             'itemOnClipboardUid' => $pasteItem,
                             'itemOnClipboardTitle' => $pasteTitle,
                             'copyMode' => $clipboard->clipData['normal']['mode'] ?? '',
                         ])
-                );
+                );*/
 
                 $pAddExtOnReadyCode .= '
                     top.copyFromAnotherPageLinkTemplate = ' . json_encode('<button type="button" class="t3js-paste-new btn btn-default" title="' . $this->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage') . '">' . $this->iconFactory->getIcon(

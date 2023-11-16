@@ -23,6 +23,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PasteReferenceItemProvider extends RecordProvider
 {
+    /**
+     * @var array[]
+     */
     protected $itemsConfiguration = [
         'pasteReference' => [
             'type' => 'item',
@@ -32,16 +35,27 @@ class PasteReferenceItemProvider extends RecordProvider
         ],
     ];
 
+    /**
+     * @return bool
+     */
     public function canHandle(): bool
     {
         return $this->table === 'tt_content';
     }
 
+    /**
+     * @return int
+     */
     public function getPriority(): int
     {
         return 45;
     }
 
+    /**
+     * @param string $itemName
+     * @return string[]
+     * @throws \TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException
+     */
     protected function getAdditionalAttributes(string $itemName): array
     {
         $urlParameters = [
@@ -96,6 +110,11 @@ class PasteReferenceItemProvider extends RecordProvider
         return $items;
     }
 
+    /**
+     * @param string $itemName
+     * @param string $type
+     * @return bool
+     */
     protected function canRender(string $itemName, string $type): bool
     {
         $canRender = false;

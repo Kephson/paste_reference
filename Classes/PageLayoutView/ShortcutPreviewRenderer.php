@@ -32,31 +32,51 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Backend\View\PageLayoutView;
 use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Database\QueryGenerator;
-use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
 {
+    /**
+     * @var array|mixed
+     */
     protected array $extensionConfiguration = [];
+
+    /**
+     * @var Helper|mixed|object|\Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|null
+     */
     protected Helper $helper;
-    protected IconFactory $iconFactory;
+
+    /**
+     * @var QueryGenerator
+     */
     protected QueryGenerator $tree;
+
+    /**
+     * @var bool
+     */
     protected bool $showHidden = true;
+
+    /**
+     * @var string
+     */
     protected string $backPath = '';
 
+    /**
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     */
     public function __construct()
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
         $this->helper = GeneralUtility::makeInstance(Helper::class);
-        $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
     }
 
     /**
@@ -67,7 +87,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      *
      * @param $item GridColumnItem
      * @return string
-     * @throws DBALException
+     * @throws DBALException|DBALDriverException
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
@@ -124,6 +144,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     }
 
     /**
+     * @param GridColumnItem $gridColumnItem
+     * @return array
      * @throws DBALDriverException
      * @throws DBALException
      */
@@ -174,15 +196,17 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
+     * @return void
      * @throws DBALDriverException|DBALException
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array &$collectedItems,
-        int $recursive = 0,
-        int $parentUid = 0,
-        int $language = 0
-    ): void {
+        array  &$collectedItems,
+        int    $recursive = 0,
+        int    $parentUid = 0,
+        int    $language = 0
+    ): void
+    {
         $itemList = str_replace('pages_', '', $shortcutItem);
         if ($recursive) {
             if (!$this->tree instanceof QueryGenerator) {
@@ -192,7 +216,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         }
         $itemList = GeneralUtility::intExplode(',', $itemList);
 
-        $queryBuilder = $this->getQueryBuilder();
+        $queryBuilder = $this->helper->getQueryBuilder();
         $result = $queryBuilder
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
@@ -227,9 +251,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                     $item = array_shift($translatedItem);
                 }
             }
-            if ($this->helper->getBackendUser()->workspace > 0) {
+            if ($this->getBackendUser()->workspace > 0) {
                 unset($item['inSet']);
-                BackendUtility::workspaceOL('tt_content', $item, $this->helper->getBackendUser()->workspace);
+                BackendUtility::workspaceOL('tt_content', $item, $this->getBackendUser()->workspace);
             }
             $item['tx_paste_reference_container'] = $item['pid'];
             $collectedItems[] = $item;
@@ -243,13 +267,14 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
+     * @return void
      * @throws DBALDriverException|DBALException
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language): void
     {
         $shortcutItem = str_replace('tt_content_', '', $shortcutItem);
         if ((int)$shortcutItem !== $parentUid) {
-            $queryBuilder = $this->getQueryBuilder();
+            $queryBuilder = $this->helper->getQueryBuilder();
             $queryBuilder->getRestrictions()->removeByType(StartTimeRestriction::class);
             $queryBuilder->getRestrictions()->removeByType(EndTimeRestriction::class);
             if ($this->showHidden) {
@@ -275,20 +300,14 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                 }
             }
 
-            if ($this->helper->getBackendUser()->workspace > 0) {
+            if ($this->getBackendUser()->workspace > 0) {
                 BackendUtility::workspaceOL(
                     'tt_content',
                     $item,
-                    $this->helper->getBackendUser()->workspace
+                    $this->getBackendUser()->workspace
                 );
             }
             $collectedItems[] = $item;
         }
-    }
-
-    protected function getQueryBuilder(): QueryBuilder
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tt_content');
     }
 }

@@ -35,9 +35,6 @@ use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
  */
 class DataHandler implements SingletonInterface
 {
-    public function __construct()
-    {
-    }
 
     /**
      * Function to process the drag & drop copy action

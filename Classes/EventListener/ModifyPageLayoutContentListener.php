@@ -10,6 +10,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 final class ModifyPageLayoutContentListener
 {
+    /**
+     * @param ModifyPageLayoutContentEvent $event
+     * @return void
+     */
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
         $pageLayoutController = GeneralUtility::makeInstance(PageLayoutController::class);

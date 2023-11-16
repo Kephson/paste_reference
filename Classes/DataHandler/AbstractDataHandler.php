@@ -6,8 +6,8 @@ namespace EHAERER\PasteReference\DataHandler;
 
 /***************************************************************
  *  Copyright notice
+ *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
- *  (c) 2021 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -42,14 +42,29 @@ use Doctrine\DBAL\Driver\Exception as DBALDriverException;
  */
 abstract class AbstractDataHandler
 {
+    /**
+     * @var Connection
+     */
     protected Connection $connection;
 
+    /**
+     * @var string
+     */
     protected string $table;
 
+    /**
+     * @var int
+     */
     protected int $pageUid;
 
+    /**
+     * @var int
+     */
     protected int $contentUid = 0;
 
+    /**
+     * @var DataHandler
+     */
     protected DataHandler $dataHandler;
 
     /**
@@ -58,6 +73,7 @@ abstract class AbstractDataHandler
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
      * @param DataHandler $dataHandler
+     * @return void
      * @throws DBALException|DBALDriverException
      */
     public function init(string $table, int $uidPid, DataHandler $dataHandler): void
@@ -77,6 +93,8 @@ abstract class AbstractDataHandler
     /**
      * Function to remove any remains of versioned records after finalizing a workspace action
      * via 'Discard' or 'Publish' commands
+     *
+     * @return void
      */
     public function cleanupWorkspacesAfterFinalizing(): void
     {
@@ -96,6 +114,10 @@ abstract class AbstractDataHandler
             ->executeStatement();
     }
 
+    /**
+     * @param string $table
+     * @return QueryBuilder
+     */
     public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -108,47 +130,78 @@ abstract class AbstractDataHandler
         return $queryBuilder;
     }
 
+    /**
+     * @return Connection
+     */
     public function getConnection(): Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tt_content');
     }
 
+    /**
+     * @return string
+     */
     public function getTable(): string
     {
         return $this->table;
     }
 
+    /**
+     * @param string $table
+     * @return void
+     */
     public function setTable(string $table): void
     {
         $this->table = $table;
     }
 
+    /**
+     * @return int
+     */
     public function getPageUid(): int
     {
         return $this->pageUid;
     }
 
+    /**
+     * @param int $pageUid
+     * @return void
+     */
     public function setPageUid(int $pageUid): void
     {
         $this->pageUid = $pageUid;
     }
 
+    /**
+     * @return int
+     */
     public function getContentUid(): int
     {
         return $this->contentUid;
     }
 
+    /**
+     * @param int $contentUid
+     * @return void
+     */
     public function setContentUid(int $contentUid): void
     {
         $this->contentUid = $contentUid;
     }
 
+    /**
+     * @return DataHandler
+     */
     public function getTceMain(): DataHandler
     {
         return $this->dataHandler;
     }
 
+    /**
+     * @param DataHandler $dataHandler
+     * @return void
+     */
     public function setTceMain(DataHandler $dataHandler): void
     {
         $this->dataHandler = $dataHandler;

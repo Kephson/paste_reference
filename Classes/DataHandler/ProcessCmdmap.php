@@ -29,11 +29,6 @@ use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-/**
- * Class/Function which offers TCE main hook functions.
- *
- * @author         Jo Hasenau <info@cybercraft.de>
- */
 class ProcessCmdmap extends AbstractDataHandler
 {
     /**

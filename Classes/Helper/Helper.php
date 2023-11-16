@@ -2,12 +2,6 @@
 
 namespace EHAERER\PasteReference\Helper;
 
-use Doctrine\DBAL\Driver\Exception as DBALDriverException;
-use Doctrine\DBAL\Exception as DBALException;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Information\Typo3Version;
-
 /***************************************************************
  *  Copyright notice
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
@@ -32,9 +26,13 @@ use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\Connection;
 
 /**
  * Paste reference helper class
@@ -69,14 +67,34 @@ class Helper implements SingletonInterface
         return is_array($triggerElement) && $pid ? $pid : 0;
     }
 
-    public function getQueryBuilder(): QueryBuilder
+    /**
+     * @param string $table
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('tt_content');
+            ->getQueryBuilderForTable($table);
         $queryBuilder->getRestrictions()
             ->removeByType(HiddenRestriction::class)
             ->removeByType(StartTimeRestriction::class)
             ->removeByType(EndTimeRestriction::class);
         return $queryBuilder;
+    }
+
+    /**
+     * @return BackendUserAuthentication|null
+     */
+    public function getBackendUser(): ?BackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
+    /**
+     * @return LanguageService|null
+     */
+    protected function getLanguageService(): ?LanguageService
+    {
+        return $GLOBALS['LANG'];
     }
 }

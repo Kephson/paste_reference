@@ -93,7 +93,7 @@ class Helper implements SingletonInterface
     /**
      * @return LanguageService|null
      */
-    protected function getLanguageService(): ?LanguageService
+    public function getLanguageService(): ?LanguageService
     {
         return $GLOBALS['LANG'];
     }

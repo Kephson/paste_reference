@@ -55,7 +55,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     public function __construct()
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
-        $this->helper = Helper::getInstance();
+        $this->helper = GeneralUtility::makeInstance(Helper::class);
         $this->iconFactory = GeneralUtility::makeInstance(IconFactory::class);
     }
 
@@ -124,8 +124,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     }
 
     /**
-     * @param GridColumnItem $gridColumnItem
-     * @return array
+     * @throws DBALDriverException
      * @throws DBALException
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
@@ -136,7 +135,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $collectedItems = [];
         foreach ($shortcutItems as $shortcutItem) {
             $shortcutItem = trim($shortcutItem);
-            if (strpos($shortcutItem, 'pages_') !== false) {
+            if (str_contains($shortcutItem, 'pages_')) {
                 $this->collectContentDataFromPages(
                     $shortcutItem,
                     $collectedItems,
@@ -145,7 +144,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                     $record['sys_language_uid']
                 );
             } else {
-                if (strpos($shortcutItem, '_') === false || strpos($shortcutItem, 'tt_content_') !== false) {
+                if (!str_contains($shortcutItem, '_') || str_contains($shortcutItem, 'tt_content_')) {
                     $this->collectContentData(
                         $shortcutItem,
                         $collectedItems,
@@ -179,12 +178,11 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array  &$collectedItems,
-        int    $recursive = 0,
-        int    $parentUid = 0,
-        int    $language = 0
-    )
-    {
+        array &$collectedItems,
+        int $recursive = 0,
+        int $parentUid = 0,
+        int $language = 0
+    ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
         if ($recursive) {
             if (!$this->tree instanceof QueryGenerator) {
@@ -247,7 +245,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALDriverException|DBALException
      */
-    protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language)
+    protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language): void
     {
         $shortcutItem = str_replace('tt_content_', '', $shortcutItem);
         if ((int)$shortcutItem !== $parentUid) {
@@ -288,16 +286,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         }
     }
 
-    /**
-     * getter for queryBuilder
-     *
-     * @return QueryBuilder
-     */
-    public function getQueryBuilder(): QueryBuilder
+    protected function getQueryBuilder(): QueryBuilder
     {
-        /** @var QueryBuilder $queryBuilder */
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+        return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tt_content');
-        return $queryBuilder;
     }
 }

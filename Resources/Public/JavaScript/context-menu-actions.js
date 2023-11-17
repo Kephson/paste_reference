@@ -32,7 +32,7 @@ class ContextMenuActions {
    * @param {String} table
    * @param {Number} uid of the record after which record from the clipboard will be pasted
    */
-  pasteReference (table, uid) {
+  pasteReference(table, uid) {
     const performPaste = (element) => {
       const actionUrl = element.data('action-url');
       const url = actionUrl + '&redirect=' + ContextMenuActions.getReturnUrl();
@@ -40,11 +40,14 @@ class ContextMenuActions {
       top.TYPO3.Backend.ContentContainer.setUrl(url);
     }
 
+    console.log(this);
+
     const $anchorElement = $(this);
     if (!$anchorElement.data('title')) {
       performPaste($anchorElement);
       return;
     }
+
     Modal.confirm(
       $anchorElement.data('title'),
       $anchorElement.data('message'),
@@ -54,7 +57,7 @@ class ContextMenuActions {
           active: true,
           btnClass: 'btn-default',
           name: 'cancel',
-          trigger: function(event, modal) {
+          trigger: function (event, modal) {
             modal.hideModal();
           }
         },
@@ -62,12 +65,14 @@ class ContextMenuActions {
           text: $(this).data('button-ok-text') || TYPO3.lang['button.ok'] || 'OK',
           btnClass: 'btn-warning',
           name: 'ok',
-          trigger: function(event, modal) {
+          trigger: function (event, modal) {
             modal.hideModal();
             performPaste($anchorElement);
           }
         }
       ]);
+
   };
 }
+
 export default new ContextMenuActions();

@@ -25,17 +25,26 @@ namespace EHAERER\PasteReference\EventListener;
 
 use EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AfterTcaCompilationEventListener
 {
     /**
      * @param AfterTcaCompilationEvent $event
      * @return void
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        $tca = $event->getTca();
-        $tca['tt_content']['types']['shortcut']['previewRenderer'] = ShortcutPreviewRenderer::class;
-        $event->setTca($tca);
+        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        if (isset($extConf['enableExtendedShortcutPreviewRenderer']) && (int)$extConf['enableExtendedShortcutPreviewRenderer'] === 1) {
+            $tca = $event->getTca();
+            $tca['tt_content']['types']['shortcut']['previewRenderer'] = ShortcutPreviewRenderer::class;
+            $event->setTca($tca);
+        }
     }
 }

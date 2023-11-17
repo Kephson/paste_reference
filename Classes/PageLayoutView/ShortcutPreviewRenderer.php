@@ -41,7 +41,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
 {
@@ -78,13 +77,10 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      *
      * @param $item GridColumnItem
      * @return string
-     * @throws DBALException|DBALDriverException
+     * @throws DBALException
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
-        $out = '';
-        $content = parent::renderPageModulePreviewContent($item);
-        $context = $item->getContext();
         $record = $item->getRecord();
 
         // Check if a Fluid-based preview template was defined for this CType
@@ -110,6 +106,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             }
             return $preview;
         }
+
         return parent::renderPageModulePreviewContent($item);
     }
 

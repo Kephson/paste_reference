@@ -6,9 +6,9 @@ namespace EHAERER\PasteReference\DataHandler;
 
 /***************************************************************
  *  Copyright notice
+ *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  (c) 2013 Stefan Froemken <froemken@gmail.com>
- *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -26,8 +26,8 @@ namespace EHAERER\PasteReference\DataHandler;
 
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ProcessCmdmap extends AbstractDataHandler
 {
@@ -54,10 +54,10 @@ class ProcessCmdmap extends AbstractDataHandler
     ): void
     {
         $this->init($table, $id, $parentObj);
-        $reference = (int)GeneralUtility::_GET('reference');
-        // https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.4/Deprecation-100596-GeneralUtility_GET.html
-        // @todo migrate to
-        // $value = $request->getQueryParams()['reference']) ?? null;
+        /** @var ServerRequestInterface $request */
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $queryParams = $request->getQueryParams();
+        $reference = isset($queryParams['reference']) ? (int)$queryParams['reference'] : null;
 
         if ($command === 'copy' && $reference === 1 && !$commandIsProcessed && $table === 'tt_content' && !$this->getTceMain()->isImporting) {
             $dataArray = [
@@ -72,7 +72,7 @@ class ProcessCmdmap extends AbstractDataHandler
                 $dataArray = array_merge($dataArray, $pasteUpdate);
             }
 
-            $clipBoard = GeneralUtility::_GET('CB');
+            $clipBoard = $queryParams['CB'] ??= null;
             if (!empty($clipBoard)) {
                 $updateArray = $clipBoard['update'];
                 if (!empty($updateArray)) {
@@ -86,8 +86,6 @@ class ProcessCmdmap extends AbstractDataHandler
             $this->getTceMain()->start($data, []);
             $this->getTceMain()->process_datamap();
 
-            $parentObj->registerDBList = null;
-            $parentObj->remapStack = null;
             $commandIsProcessed = true;
         }
 

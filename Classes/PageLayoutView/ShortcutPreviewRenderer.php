@@ -6,6 +6,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
 
 /***************************************************************
  *  Copyright notice
+ *  (c) 2023 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,12 +27,11 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use EHAERER\PasteReference\Helper\Helper;
+use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
-use TYPO3\CMS\Backend\View\PageLayoutView;
-use TYPO3\CMS\Backend\View\PageLayoutViewDrawItemHookInterface;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -39,8 +39,9 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
-use TYPO3\CMS\Core\Database\QueryGenerator;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
 {
@@ -50,24 +51,14 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     protected array $extensionConfiguration = [];
 
     /**
-     * @var Helper|mixed|object|\Psr\Log\LoggerAwareInterface|\TYPO3\CMS\Core\SingletonInterface|null
+     * @var Helper|mixed|object|LoggerAwareInterface|SingletonInterface|null
      */
     protected Helper $helper;
-
-    /**
-     * @var QueryGenerator
-     */
-    protected QueryGenerator $tree;
 
     /**
      * @var bool
      */
     protected bool $showHidden = true;
-
-    /**
-     * @var string
-     */
-    protected string $backPath = '';
 
     /**
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -96,27 +87,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $context = $item->getContext();
         $record = $item->getRecord();
 
-        $drawItem = true;
-        $hookPreviewContent = '';
-        // Hook: Render an own preview of a record
-        if (!empty($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem'])) {
-            $pageLayoutView = PageLayoutView::createFromPageLayoutContext($item->getContext());
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['tt_content_drawItem'] ?? [] as $className) {
-                $hookObject = GeneralUtility::makeInstance($className);
-                if (!$hookObject instanceof PageLayoutViewDrawItemHookInterface) {
-                    throw new \UnexpectedValueException(
-                        $className . ' must implement interface ' . PageLayoutViewDrawItemHookInterface::class,
-                        1582574553
-                    );
-                }
-                $hookObject->preProcess($pageLayoutView, $drawItem, $previewHeader, $hookPreviewContent, $record);
-            }
-            $item->setRecord($record);
-        }
-
-        if (!$drawItem) {
-            return $hookPreviewContent;
-        }
         // Check if a Fluid-based preview template was defined for this CType
         // and render it via Fluid. Possible option:
         // mod.web_layout.tt_content.preview.media = EXT:site_mysite/Resources/Private/Templates/Preview/Media.html
@@ -146,7 +116,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * @param GridColumnItem $gridColumnItem
      * @return array
-     * @throws DBALDriverException
      * @throws DBALException
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
@@ -197,7 +166,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @return void
-     * @throws DBALDriverException|DBALException
+     * @throws DBALException
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
@@ -208,12 +177,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     ): void
     {
         $itemList = str_replace('pages_', '', $shortcutItem);
-        if ($recursive) {
-            if (!$this->tree instanceof QueryGenerator) {
-                $this->tree = GeneralUtility::makeInstance(QueryGenerator::class);
-            }
-            $itemList = $this->tree->getTreeList($itemList, $recursive, 0, 1);
-        }
         $itemList = GeneralUtility::intExplode(',', $itemList);
 
         $queryBuilder = $this->helper->getQueryBuilder();
@@ -268,7 +231,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @return void
-     * @throws DBALDriverException|DBALException
+     * @throws DBALException
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language): void
     {

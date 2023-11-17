@@ -7,6 +7,6 @@ return [
         'backend.contextmenu',
     ],
     'imports' => [
-        '@haerer/paste-reference/' => 'EXT:paste_reference/Resources/Public/JavaScript/',
+        '@ehaerer/paste-reference/' => 'EXT:paste_reference/Resources/Public/JavaScript/',
     ],
 ];

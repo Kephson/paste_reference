@@ -4,8 +4,7 @@
 		  product-name="paste_reference">
 		<header>
 			<type>database</type>
-			<description>Language labels for database tables/fields belonging to extension 'paste_reference'
-			</description>
+			<description>Language labels for database tables/fields belonging to extension 'paste_reference'</description>
 		</header>
 		<body>
 			<trans-unit id="pasteReference">
@@ -47,8 +46,14 @@
 			<trans-unit id="tx_paste_reference_js.modal.button.pastereference">
 				<source>Paste reference</source>
 			</trans-unit>
-			<trans-unit id="tx_paste_reference_js.modal.labels.no_title" resname="tx_paste_reference_js.modal.labels.no_title">
+			<trans-unit id="tx_paste_reference_js.modal.labels.no_title">
 				<source>No title</source>
+			</trans-unit>
+			<trans-unit id="newContentElementReference">
+				<source>Paste in clipboard content as reference</source>
+			</trans-unit>
+			<trans-unit id="mess.reference_after" resname="mess.reference_after">
+				<source>Copy "%s" as reference after "%s"?</source>
 			</trans-unit>
 		</body>
 	</file>

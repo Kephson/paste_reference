@@ -51,9 +51,13 @@ class ProcessCmdmap extends AbstractDataHandler
         bool        &$commandIsProcessed,
         DataHandler $parentObj = null,
         bool|array  $pasteUpdate = false
-    ): void {
+    ): void
+    {
         $this->init($table, $id, $parentObj);
         $reference = (int)GeneralUtility::_GET('reference');
+        // https://docs.typo3.org/c/typo3/cms-core/main/en-us/Changelog/12.4/Deprecation-100596-GeneralUtility_GET.html
+        // @todo migrate to
+        // $value = $request->getQueryParams()['reference']) ?? null;
 
         if ($command === 'copy' && $reference === 1 && !$commandIsProcessed && $table === 'tt_content' && !$this->getTceMain()->isImporting) {
             $dataArray = [

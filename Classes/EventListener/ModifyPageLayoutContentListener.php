@@ -16,7 +16,9 @@ final class ModifyPageLayoutContentListener
      */
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
+        $request = $event->getRequest();
+        /** @var PageLayoutController $pageLayoutController */
         $pageLayoutController = GeneralUtility::makeInstance(PageLayoutController::class);
-        $event->addHeaderContent($pageLayoutController->drawHeaderHook());
+        $event->addHeaderContent($pageLayoutController->pasteReferenceModification($request));
     }
 }

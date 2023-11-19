@@ -77,8 +77,6 @@ class PasteReferenceItemProvider extends RecordProvider
         $attributes += [
             'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
             'data-action-url' => (string)$uriBuilder->buildUriFromRoute('tce_db', $urlParameters),
-            'data-title' => $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference'),
-            'data-message' => 'my message here',
         ];
         if ($this->backendUser->jsConfirmation(JsConfirmation::COPY_MOVE_PASTE)) {
             $selItem = $this->clipboard->getSelectedRecord();

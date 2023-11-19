@@ -23,19 +23,28 @@ namespace EHAERER\PasteReference\Hooks;
  ***************************************************************/
 
 use EHAERER\PasteReference\Helper\Helper;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
+use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Backend\View\BackendLayoutView;
+use TYPO3\CMS\Backend\View\Drawing\BackendLayoutRenderer;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Page\PageRenderer;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class PageLayoutController
+class PageLayoutController extends \TYPO3\CMS\Backend\Controller\PageLayoutController
 {
     /**
      * @var array|mixed
@@ -43,100 +52,48 @@ class PageLayoutController
     protected array $extensionConfiguration = [];
 
     /**
-     * @var PageRenderer
-     */
-    protected PageRenderer $pageRenderer;
-
-    /**
-     * @var IconFactory
-     */
-    protected IconFactory $iconFactory;
-
-    /**
      * @var Helper
      */
     protected Helper $helper;
 
-    /**
-     * @param PageRenderer $pageRenderer
-     * @param IconFactory $iconFactory
-     * @throws ExtensionConfigurationExtensionNotConfiguredException
-     * @throws ExtensionConfigurationPathDoesNotExistException
-     */
-    public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
+    protected function initializeData(): void
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
-        $this->pageRenderer = $pageRenderer;
-        $this->iconFactory = $iconFactory;
         $this->helper = GeneralUtility::makeInstance(Helper::class);
     }
 
     /**
-     *
+     * @param ServerRequestInterface $request
      * @return string
      */
-    public function drawHeaderHook(): string
+    public function pasteReferenceModification(ServerRequestInterface $request): string
     {
+        $this->initializeData();
+
         $clipboard = GeneralUtility::makeInstance(Clipboard::class);
-        $clipboard->initializeClipboard();
+        $clipboard->initializeClipboard($request);
         $clipboard->lockToNormal();
         $clipboard->cleanCurrent();
         $clipboard->endClipboard();
-
         $elFromTable = $clipboard->elFromTable('tt_content');
-
-        // pull locallang_db.xml to JS side - only the tx_paste_reference_js-prefixed keys
-        $this->pageRenderer->addInlineLanguageLabelFile(
-            'EXT:paste_reference/Resources/Private/Language/locallang_db.xlf',
-            'tx_paste_reference_js'
-        );
-
-        $pAddExtOnReadyCode = '';
-
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        try {
-            $pAddExtOnReadyCode .= '
-                top.pasteReferenceAllowed = ' . $this->helper->getBackendUser()->checkAuthMode(
-                    'tt_content',
-                    'CType',
-                    'shortcut') . ';
-                top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
-        } catch (RouteNotFoundException $e) {
-        }
-
         if (!empty($elFromTable)) {
             $pasteItem = (int)substr((string)key($elFromTable), 11);
             $pasteRecord = BackendUtility::getRecordWSOL('tt_content', $pasteItem);
             $pasteTitle = BackendUtility::getRecordTitle('tt_content', $pasteRecord);
-
-            if (!(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
-                && !(bool)($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
-            ) {
-                /* @todo: the file @haerer/paste-reference/paste-reference.js doesn't exist.
-                 * @todo: It should add a button next to "+ Content"
-                 * $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
-                 * JavaScriptModuleInstruction::create('@haerer/paste-reference/paste-reference.js')
-                 * ->instance([
-                 * 'itemOnClipboardUid' => $pasteItem,
-                 * 'itemOnClipboardTitle' => $pasteTitle,
-                 * 'copyMode' => $clipboard->clipData['normal']['mode'] ?? '',
-                 * ])
-                 * );*/
-
-                $pAddExtOnReadyCode .= '
-                    top.copyFromAnotherPageLinkTemplate = ' . json_encode('<button type="button" class="t3js-paste-new btn btn-default" title="' . $this->helper->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage') . '">' . $this->iconFactory->getIcon(
-                            'actions-insert-reference',
-                            Icon::SIZE_SMALL
-                        )->render() . '</button>') . ';';
-            }
+            $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
+                JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-reference.js')
+                    ->instance([
+                        'itemOnClipboardUid' => $pasteItem,
+                        'itemOnClipboardTitle' => $pasteTitle,
+                        'copyMode' => $clipboard->clipData['normal']['mode'] ?? '',
+                    ])
+            );
         }
 
-        $this->pageRenderer->addJsInlineCode(
-            'pasterefExtOnReady',
-            $pAddExtOnReadyCode,
-            true,
-            false,
-            true
+        // pull locallang_db.xlf to JS side - only the tx_paste_reference_js-prefixed keys
+        $this->pageRenderer->addInlineLanguageLabelFile(
+            'EXT:paste_reference/Resources/Private/Language/locallang_db.xlf',
+            'tx_paste_reference_js'
         );
 
         return '';

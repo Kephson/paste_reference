@@ -29,7 +29,7 @@
 				<source>Paste into this column</source>
 			</trans-unit>
 			<trans-unit id="tx_paste_reference_js.pasteafter">
-				<source>Paste after this record</source>
+				<source>Paste reference after this record</source>
 			</trans-unit>
 			<trans-unit id="tx_paste_reference_js.pastecopy">
 				<source>Paste copy into this column</source>

@@ -63,7 +63,7 @@ class PasteReferenceHandler {
   };
 
   /**
-   * activates the paste into / paste after icons outside the context menus
+   * activates the paste reference into / paste reference after icons outside the context menus
    */
   activatePasteIcons() {
     if (this.pasteAfterLinkTemplate && this.pasteIntoLinkTemplate) {
@@ -74,6 +74,9 @@ class PasteReferenceHandler {
     }
   }
 
+  /**
+   * activates the click handler events for the buttons
+   */
   initializeEvents() {
     document.querySelectorAll('.t3js-paste-reference').forEach(item => {
       item.addEventListener('click', e => {
@@ -83,7 +86,7 @@ class PasteReferenceHandler {
   }
 
   /**
-   *
+   * starts the paste reference modal
    * @param element
    */
   activatePasteModal(element) {

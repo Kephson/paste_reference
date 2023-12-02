@@ -1,7 +1,8 @@
 import Modal from '@typo3/backend/modal.js';
 import Severity from '@typo3/backend/severity.js';
-import Helper from '@ehaerer/paste-reference/helper.js';
 import DocumentService from '@typo3/core/document-service.js';
+import DataHandler from "@typo3/backend/ajax-data-handler.js";
+import Helper from '@ehaerer/paste-reference/helper.js';
 
 /**
  * JavaScript to handle PasteReference related actions for Contextmenu
@@ -15,6 +16,7 @@ class PasteReferenceHandler {
   buttonClassIdentifier = '.t3js-page-new-ce';
   pasteAfterLinkTemplate = '';
   pasteIntoLinkTemplate = '';
+  elementIdentifier = '.t3js-page-ce';
 
   /**
    * initializes paste icons for all content elements on the page
@@ -27,7 +29,6 @@ class PasteReferenceHandler {
     this.itemOnClipboardTitle = args.itemOnClipboardTitle;
     this.copyMode = args.copyMode;
 
-
     DocumentService.ready().then(() => {
       if (document.querySelectorAll('.t3js-page-columns').length > 0) {
         this.generateButtonTemplates();
@@ -36,6 +37,25 @@ class PasteReferenceHandler {
       }
     });
 
+  }
+
+  static determineColumn(element) {
+    const e = element.closest("[data-colpos]");
+    if (e.dataset.colpos !== "undefined") {
+      return e.dataset.colpos;
+    }
+    return 0;
+  }
+
+  /**
+   * activates the click handler events for the buttons
+   */
+  initializeEvents() {
+    document.querySelectorAll('.t3js-paste-reference').forEach(item => {
+      item.addEventListener('click', e => {
+        this.activatePasteReferenceModal(item);
+      })
+    });
   }
 
   /**
@@ -75,27 +95,30 @@ class PasteReferenceHandler {
   }
 
   /**
-   * activates the click handler events for the buttons
-   */
-  initializeEvents() {
-    document.querySelectorAll('.t3js-paste-reference').forEach(item => {
-      item.addEventListener('click', e => {
-        this.activatePasteModal(item);
-      })
-    });
-  }
-
-  /**
    * starts the paste reference modal
    * @param element
    */
-  activatePasteModal(element) {
+  activatePasteReferenceModal(element) {
     const performPasteReference = (element) => {
-      console.log(element);
-      /*const actionUrl = dataset.actionUrl;
-      const url = actionUrl + '&redirect=' + ContextMenuActions.getReturnUrl();
-      top.TYPO3.Backend.ContentContainer.setUrl(url);
-       */
+      const colPos = PasteReferenceHandler.determineColumn(element);
+      const pageElement = element.closest(this.elementIdentifier);
+      const languageId = parseInt(element.closest("[data-language-uid]").dataset.languageUid, 10);
+      const pageId = parseInt(pageElement.dataset.page, 10);
+      /*
+      const query = {
+        CB: {
+          paste: "tt_content|" + pageId,
+          pad: "normal",
+          update: {
+            colPos: colPos,
+            sys_language_uid: languageId
+          }
+        }
+      };
+      DataHandler.process(query).then((t => {
+        t.hasErrors || window.location.reload();
+      }));
+      */
     }
 
     let title = (TYPO3.lang["tx_paste_reference_js.modal.button.pastereference"] || "Paste reference");
@@ -115,7 +138,7 @@ class PasteReferenceHandler {
           }
         },
         {
-          text: TYPO3.lang['button.ok'] || 'OK',
+          text: TYPO3.lang['modal.button.pastereference'] || 'Paste reference',
           btnClass: 'btn-warning',
           name: 'ok',
           trigger: function (event, modal) {

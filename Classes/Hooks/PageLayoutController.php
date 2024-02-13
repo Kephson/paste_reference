@@ -96,7 +96,7 @@ class PageLayoutController
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         try {
             $pAddExtOnReadyCode .= '
-                top.pasteReferenceAllowed = ' . $this->helper->getBackendUser()->checkAuthMode(
+                top.pasteReferenceAllowed = ' . (int)$this->helper->getBackendUser()->checkAuthMode(
                     'tt_content',
                     'CType',
                     'shortcut') . ';

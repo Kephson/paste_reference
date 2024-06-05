@@ -101,7 +101,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             $preview = '';
             foreach ($shortCutRenderItems as $shortcutRecord) {
                 $shortcutItem = GeneralUtility::makeInstance(GridColumnItem::class, $item->getContext(), $item->getColumn(), $shortcutRecord);
-                $preview .= '<p class="pt-2 small"><b><a href="' . $shortcutItem->getEditUrl() . '">' . $this->getLanguageService()->getLL('edit') . '</a></b></p>';
+                $preview .= '<p class="pt-2 small"><b><a href="' . $shortcutItem->getEditUrl() . '">' . $this->getLanguageService()->sL('LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:edit') . '</a></b></p>';
                 $preview .= '<div class="mb-2 p-2 border reference">' . $shortcutItem->getPreview() . '<div class="reference-overlay"></div></div>';
             }
             return $preview;

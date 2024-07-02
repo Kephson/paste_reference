@@ -1,6 +1,6 @@
 name: paste-reference
 type: typo3
-docroot: .Build
+docroot: .Build/public
 php_version: "8.2"
 webserver_type: nginx-fpm
 router_http_port: "80"

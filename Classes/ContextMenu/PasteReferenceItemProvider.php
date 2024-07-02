@@ -72,6 +72,11 @@ class PasteReferenceItemProvider extends RecordProvider
             'reference' => 1,
         ];
 
+        // Add needed EXT:container information to reference into a container
+        if (($this->record['tx_container_parent'] ?? 0) > 0) {
+            $urlParameters['CB[update]']['tx_container_parent'] = $this->record['tx_container_parent'];
+        }
+
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $attributes = $this->getPasteAdditionalAttributes('after');
         $attributes += [

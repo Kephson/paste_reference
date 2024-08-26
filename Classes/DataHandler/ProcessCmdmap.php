@@ -37,25 +37,28 @@ class ProcessCmdmap extends AbstractDataHandler
      * @param string $command The command to be handled by the command map
      * @param string $table The name of the table we are working on
      * @param int $id The id of the record that is going to be copied
-     * @param string $value The value that has been sent with the copy command
+     * @param array|string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
      * @param DataHandler|null $parentObj The parent object that triggered this hook
      * @param bool|array $pasteUpdate Values to be updated after the record is pasted
      * @throws DBALException|DBALDriverException
      */
     public function execute_processCmdmap(
-        string      $command,
-        string      $table,
-        int         $id,
-        string      $value,
-        bool        &$commandIsProcessed,
-        DataHandler $parentObj = null,
-        bool|array  $pasteUpdate = false
+        string       $command,
+        string       $table,
+        int          $id,
+        array|string $value,
+        bool         &$commandIsProcessed,
+        DataHandler  $parentObj = null,
+        bool|array   $pasteUpdate = false
     ): void
     {
         $this->init($table, $id, $parentObj);
         /** @var ServerRequestInterface $request */
-        $request = $GLOBALS['TYPO3_REQUEST'];
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if (!($request instanceof ServerRequestInterface)) {
+            return;
+        }
         $queryParams = $request->getQueryParams();
         $reference = isset($queryParams['reference']) ? (int)$queryParams['reference'] : null;
 

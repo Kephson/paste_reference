@@ -5,13 +5,13 @@
     <body>
       <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
 				<source>Disable the "Copy from page" button.</source>
-			<target state="needs-translation">Disable the "Copy from page" button.</target></trans-unit>
+			<target state="translated">Deaktiviere den "Kopiere von Seite" Button.</target></trans-unit>
       <trans-unit id="overlayShortcutTranslation" xml:space="preserve">
 				<source>Use language overlay for content and page records referenced in shortcut elements.</source>
-			<target state="needs-translation">Use language overlay for content and page records referenced in shortcut elements.</target></trans-unit>
+			<target state="translated">Benutze das Sprach-Overlay für Inhalte und Seiten die auf Shortcut-Elemente referenzieren.</target></trans-unit>
       <trans-unit id="enableExtendedShortcutPreviewRenderer" xml:space="preserve">
 				<source>Enable extended shortcut preview renderer in TYPO3 backend.</source>
-			<target state="needs-translation">Enable extended shortcut preview renderer in TYPO3 backend.</target></trans-unit>
+			<target state="translated">Erweiterte Vorschau für Kurzbefehle im TYPO3 Backend aktivieren.</target></trans-unit>
     </body>
   </file>
 </xliff>

@@ -37,6 +37,8 @@ use TYPO3\CMS\Core\Database\Connection;
 /**
  * Paste reference helper class
  *
+ * TODO: move this in a repository
+ *
  * @author Dirk Hoffmann <dirk-hoffmann@telekom.de>
  */
 class Helper implements SingletonInterface

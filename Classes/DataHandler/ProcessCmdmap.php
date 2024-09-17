@@ -62,7 +62,13 @@ class ProcessCmdmap extends AbstractDataHandler
         $queryParams = $request->getQueryParams();
         $reference = isset($queryParams['reference']) ? (int)$queryParams['reference'] : null;
 
-        if ($command === 'copy' && $reference === 1 && !$commandIsProcessed && $table === 'tt_content' && !$this->getTceMain()->isImporting) {
+        if (
+            $table === 'tt_content'
+            && $command === 'copy'
+            && $reference === 1
+            && !$commandIsProcessed
+            && !$this->getTceMain()->isImporting
+        ) {
             $dataArray = [
                 'pid' => $value,
                 'CType' => 'shortcut',

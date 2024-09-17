@@ -157,6 +157,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
      *
+     * TODO: move this in a repository
+     *
      * @param string $shortcutItem The single page to be used as the tree root
      * @param array $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $recursive The number of levels for the recursion
@@ -222,6 +224,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * Collects tt_content data from a single tt_content element
+     *
+     * TODO: move this in a repository
      *
      * @param string $shortcutItem The tt_content element to fetch the data from
      * @param array $collectedItems The collected item data row

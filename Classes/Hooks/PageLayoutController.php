@@ -43,6 +43,7 @@ class PageLayoutController
     protected string $LLL = 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml';
     protected string $jsScriptName = '@ehaerer/paste-reference/paste-reference.js';
     protected array $elFromTable = [];
+    protected string $copyMode = '';
 
     protected Helper $helper;
     protected IconFactory $iconFactory;
@@ -62,6 +63,7 @@ class PageLayoutController
         $this->pageRenderer = $pageRenderer;
 
         $this->elFromTable = $this->getClipboard()->elFromTable('tt_content');
+        $this->copyMode = $this->getClipboard()->clipData['normal']['mode'] ?? '';
     }
 
     /**
@@ -82,11 +84,14 @@ class PageLayoutController
             $jsLines[] = 'top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {}
 
-        if (!empty($this->elFromTable)
-            && !(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
+        if (!empty($this->elFromTable)) {
+            $this->addJavaScriptModuleInstruction();
+            $jsLines[] = 'top.copyMode = "' . $this->copyMode . '";';
+        }
+
+        if (!(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
             && !(bool)($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
         ) {
-            $this->addJavaScriptModuleInstruction();
             $jsLines[] = 'top.copyFromAnotherPageLinkTemplate = ' . json_encode($this->getButtonTemplate()) . ';';
         }
 
@@ -94,7 +99,19 @@ class PageLayoutController
             $javaScript = implode("\n", $jsLines);
             $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
         }
-
+/*
+if (!empty($this->elFromTable)) {
+    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(['debug' => [
+        'ExtConf: disableCopyFromPageButton' => ($this->extensionConfiguration['disableCopyFromPageButton'] ?? false),
+        'USER: disableCopyFromPageButton' => ($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false),
+        '$javaScript' => $javaScript,
+    ]],__METHOD__.':'.__LINE__);
+} else {
+    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(['debug' => [
+        '$javaScript' => $javaScript,
+    ]],__METHOD__.':'.__LINE__);
+}
+*/
         return '';
     }
 
@@ -102,7 +119,7 @@ class PageLayoutController
     {
         $title = $this->helper->getLanguageService()->sL($this->LLL . ':tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', Icon::SIZE_SMALL)->render();
-        return '<button type="button" class="t3js-paste-new btn btn-default" title="' . $title . '">' . $icon . '</button>';
+        return '<button type="button" class="t3js-paste-new btn btn-default" title="' . $title . '" data-code-src="' . __METHOD__ . ':' . __LINE__ . '">' . $icon . '</button>';
     }
 
     protected function addJavaScriptModuleInstruction(): void
@@ -125,7 +142,7 @@ class PageLayoutController
         return [
             'itemOnClipboardUid' => $pasteItem,
             'itemOnClipboardTitle' => $pasteTitle,
-            'copyMode' => $this->getClipboard()->clipData['normal']['mode'] ?? '',
+            'copyMode' => $this->copyMode,
         ];
     }
 

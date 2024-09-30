@@ -37,7 +37,6 @@ class ContextMenuActions {
   public static pasteReference(table: string, uid: number, dataset: DOMStringMap): void {
     const performPaste = (givenDataset: DOMStringMap): void => {
       const actionUrl = givenDataset.actionUrl;
-      console.log(givenDataset);
       const url = actionUrl + '&redirect=' + ContextMenuActions.getReturnUrl();
       top.TYPO3.Backend.ContentContainer.setUrl(url);
     }

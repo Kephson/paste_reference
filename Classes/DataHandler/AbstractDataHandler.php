@@ -69,10 +69,9 @@ abstract class AbstractDataHandler
         } else {
             $this->setPageUid($uidPid);
         }
-        if (!$dataHandler) {
-            // TODO
+        if ($dataHandler) {
+            $this->setTceMain($dataHandler);
         }
-        $this->setTceMain($dataHandler);
     }
 
     /**

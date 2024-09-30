@@ -99,19 +99,7 @@ class PageLayoutController
             $javaScript = implode("\n", $jsLines);
             $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
         }
-/*
-if (!empty($this->elFromTable)) {
-    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(['debug' => [
-        'ExtConf: disableCopyFromPageButton' => ($this->extensionConfiguration['disableCopyFromPageButton'] ?? false),
-        'USER: disableCopyFromPageButton' => ($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false),
-        '$javaScript' => $javaScript,
-    ]],__METHOD__.':'.__LINE__);
-} else {
-    \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(['debug' => [
-        '$javaScript' => $javaScript,
-    ]],__METHOD__.':'.__LINE__);
-}
-*/
+
         return '';
     }
 
@@ -126,7 +114,7 @@ if (!empty($this->elFromTable)) {
     protected function addJavaScriptModuleInstruction(): void
     {
         $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create($this->jsScriptName);
-        /** @var TYPO3\CMS\Core\Page\JavaScriptRenderer */
+        /** @var TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(
             $JavaScriptModuleInstruction->instance(
@@ -137,7 +125,6 @@ if (!empty($this->elFromTable)) {
 
     protected function getJsArgumentsArray(): array
     {
-        /** int tt_content.uid */
         $pasteItem = (int)substr((string)key($this->elFromTable), 11);
         $pasteRecord = BackendUtility::getRecordWSOL('tt_content', $pasteItem);
         $pasteTitle = BackendUtility::getRecordTitle('tt_content', $pasteRecord);

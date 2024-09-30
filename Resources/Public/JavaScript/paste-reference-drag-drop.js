@@ -227,7 +227,7 @@ DragDrop.default = {
         parameters['DDinsertNew'] = 1;
 
         // fire the request, and show a message if it has failed
-        AjaxDataHandler.process(parameters).theb(function (result) {
+        AjaxDataHandler.process(parameters).then(function (result) {
           if (!result.hasErrors) {
             // insert draggable on the new position
             if (!$pasteAction) {

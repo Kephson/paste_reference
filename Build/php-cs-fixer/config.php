@@ -4,6 +4,39 @@ if (PHP_SAPI !== 'cli') {
     die('This script supports command line usage only. Please check your command.');
 }
 
+//$headerComment = <<<EOL
+///***************************************************************
+// *  Copyright notice
+// *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
+// *  (c) 2013 Jo Hasenau <info@cybercraft.de>
+// *  All rights reserved
+// *  This script is part of the TYPO3 project. The TYPO3 project is
+// *  free software; you can redistribute it and/or modify
+// *  it under the terms of the GNU General Public License as published by
+// *  the Free Software Foundation; either version 2 of the License, or
+// *  (at your option) any later version.
+// *  The GNU General Public License can be found at
+// *  http://www.gnu.org/copyleft/gpl.html.
+// *  This script is distributed in the hope that it will be useful,
+// *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+// *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// *  GNU General Public License for more details.
+// *  This copyright notice MUST APPEAR in all copies of the script!
+// ***************************************************************/
+//EOL;
+
+$headerComment = <<<EOF
+This file is part of the TYPO3 Extension `ehaerer/paste-reference`.
+
+Copyright notice
+(c) 2021-2023 Ephraim Härer <mail@ephra.im>
+(c) 2013 Jo Hasenau <info@cybercraft.de>
+
+???
+
+The TYPO3 project - inspiring people to share!
+EOF;
+
 return (new \PhpCsFixer\Config())
     ->setFinder(
         (new PhpCsFixer\Finder())
@@ -80,4 +113,10 @@ return (new \PhpCsFixer\Config())
         'trailing_comma_in_multiline' => ['elements' => ['arrays']],
         'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
         'yoda_style' => ['equal' => false, 'identical' => false, 'less_and_greater' => false],
+//        'header_comment' => [
+//            'header' => $headerComment,
+//            'comment_type' => 'comment',
+//            'location' => 'after_declare_strict',
+//            'separate' => 'both',
+//        ],
     ]);

@@ -24,9 +24,9 @@ namespace EHAERER\PasteReference\Hooks;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
+use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -35,7 +35,6 @@ use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
  */
 class DataHandler implements SingletonInterface
 {
-
     /**
      * Function to process the drag & drop copy action
      *
@@ -49,15 +48,14 @@ class DataHandler implements SingletonInterface
      * @throws DBALException|DBALDriverException
      */
     public function processCmdmap(
-        string          $command,
-        string          $table,
-        int             $id,
-        array|string    $value,
-        bool            &$commandIsProcessed,
+        string $command,
+        string $table,
+        int $id,
+        array|string $value,
+        bool &$commandIsProcessed,
         CoreDataHandler &$parentObj,
-        bool|array      $pasteUpdate
-    ): void
-    {
+        bool|array $pasteUpdate
+    ): void {
         if (!$parentObj->isImporting) {
             $hook = GeneralUtility::makeInstance(ProcessCmdmap::class);
             $hook->execute_processCmdmap($command, $table, $id, $value, $commandIsProcessed, $parentObj, $pasteUpdate);

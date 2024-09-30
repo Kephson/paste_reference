@@ -29,7 +29,6 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 final class DummyTest extends FunctionalTestCase
 {
-
     public function setUp(): void
     {
         $this->testExtensionsToLoad[] = 'ehaerer/paste-reference';

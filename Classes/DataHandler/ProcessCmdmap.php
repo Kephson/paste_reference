@@ -24,8 +24,8 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
@@ -44,16 +44,15 @@ class ProcessCmdmap extends AbstractDataHandler
      * @throws DBALException|DBALDriverException
      */
     public function execute_processCmdmap(
-        string       $command,
-        string       $table,
-        int          $id,
+        string $command,
+        string $table,
+        int $id,
         array|string $value,
-        bool         &$commandIsProcessed,
-        DataHandler  $parentObj,
-        bool|array   $pasteUpdate = false
-    ): void
-    {
-        $this->init($table, $id, $parentObj );
+        bool &$commandIsProcessed,
+        DataHandler $parentObj,
+        bool|array $pasteUpdate = false
+    ): void {
+        $this->init($table, $id, $parentObj);
         /** @var ServerRequestInterface $request */
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
         if (!($request instanceof ServerRequestInterface)) {

@@ -34,7 +34,6 @@ class AfterTcaCompilationEventListener
 {
     /**
      * @param AfterTcaCompilationEvent $event
-     * @return void
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */

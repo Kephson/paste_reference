@@ -25,9 +25,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use EHAERER\PasteReference\Helper\Helper;
-use Psr\Log\LoggerAwareInterface;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -39,7 +37,6 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
@@ -156,17 +153,15 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
-     * @return void
      * @throws DBALException
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array  &$collectedItems,
-        int    $recursive = 0,
-        int    $parentUid = 0,
-        int    $language = 0
-    ): void
-    {
+        array &$collectedItems,
+        int $recursive = 0,
+        int $parentUid = 0,
+        int $language = 0
+    ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
         $itemList = GeneralUtility::intExplode(',', $itemList);
 
@@ -174,9 +169,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $result = $queryBuilder
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
-                    'pid',
-                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
-                ) . ' AS inSet')
+                'pid',
+                $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
+            ) . ' AS inSet')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->neq(
@@ -222,7 +217,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
-     * @return void
      * @throws DBALException
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language): void

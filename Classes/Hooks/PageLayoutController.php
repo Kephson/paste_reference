@@ -74,7 +74,6 @@ class PageLayoutController
     }
 
     /**
-     *
      * @return string
      */
     public function drawHeaderHook(): string
@@ -99,9 +98,10 @@ class PageLayoutController
         try {
             $pAddExtOnReadyCode .= '
                 top.pasteReferenceAllowed = ' . (int)($this->helper->getBackendUser()?->checkAuthMode(
-                    'tt_content',
-                    'CType',
-                    'shortcut') ?? false) . ';
+                'tt_content',
+                'CType',
+                'shortcut'
+            ) ?? false) . ';
                 top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
@@ -127,9 +127,9 @@ class PageLayoutController
 
                 $pAddExtOnReadyCode .= '
                     top.copyFromAnotherPageLinkTemplate = ' . json_encode('<button type="button" class="t3js-paste-new btn btn-default" title="' . ($this->helper->getLanguageService()?->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage') ?? 'unknown') . '">' . $this->iconFactory->getIcon(
-                            'actions-insert-reference',
-                            Icon::SIZE_SMALL
-                        )->render() . '</button>') . ';';
+                    'actions-insert-reference',
+                    Icon::SIZE_SMALL
+                )->render() . '</button>') . ';';
             }
         }
 

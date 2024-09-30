@@ -171,19 +171,21 @@ DragDrop.default = {
    * @private
    */
   onDrop: function ($draggableElement, $droppableElement, evt, reference) {
-    const newColumn = DragDrop.default.getColumnPositionForElement($droppableElement);
+    const newColumn = DragDrop.default.getColumnPositionForElement($droppableElement) ?? 0;
 
     $droppableElement.removeClass(DragDrop.default.dropPossibleHoverClass);
     const $pasteAction = typeof $draggableElement === 'number' || typeof $draggableElement === 'undefined';
     let $pasteElement = null;
     if ($draggableElement) {
       $pasteElement = $draggableElement;
-    } else if (typeof Paste.itemOnClipboardUid === 'number') {
-      $pasteElement = Paste.itemOnClipboardUid;
+    } else if (typeof top.itemOnClipboardUid === 'number') {
+      $pasteElement = top.itemOnClipboardUid;
     }
-
     // send an AJAX request via the AjaxDataHandler
-    const contentElementUid = $pasteAction ? $pasteElement : parseInt($draggableElement.data('uid'));
+    let contentElementUid = $pasteAction ? $pasteElement : null;
+    if (!contentElementUid && typeof $draggableElement.data === 'function') {
+      contentElementUid = parseInt($draggableElement.data('uid') ?? 0);
+    }
     if (contentElementUid > 0 || (DragDrop.default.newContentElementDefaultValues.CType && !$pasteAction)) {
       let parameters = {};
       // add the information about a possible column position change

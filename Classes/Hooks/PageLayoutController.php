@@ -119,6 +119,7 @@ if (!empty($this->elFromTable)) {
     {
         $title = $this->helper->getLanguageService()->sL($this->LLL . ':tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', Icon::SIZE_SMALL)->render();
+        // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default" title="' . $title . '" data-code-src="' . __METHOD__ . ':' . __LINE__ . '">' . $icon . '</button>';
     }
 
@@ -136,6 +137,7 @@ if (!empty($this->elFromTable)) {
 
     protected function getJsArgumentsArray(): array
     {
+        /** int tt_content.uid */
         $pasteItem = (int)substr((string)key($this->elFromTable), 11);
         $pasteRecord = BackendUtility::getRecordWSOL('tt_content', $pasteItem);
         $pasteTitle = BackendUtility::getRecordTitle('tt_content', $pasteRecord);

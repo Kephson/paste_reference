@@ -132,6 +132,7 @@ Usage: $0 [options] [file]
 Options:
     -s <...>
         Specifies which test suite to run
+            - cgl: test and fix all php files
             - clean: Clean temporary files
             - composer: "composer" with all remaining arguments dispatched.
             - functional: PHP functional tests
@@ -246,7 +247,7 @@ DBMS_VERSION=""
 PHP_VERSION="8.1"
 PHP_XDEBUG_ON=0
 PHP_XDEBUG_PORT=9003
-CGLCHECK_DRY_RUN=0
+CGLCHECK_DRY_RUN=""
 CI_PARAMS="${CI_PARAMS:-}"
 DOCS_PARAMS="${DOCS_PARAMS:=--pull always}"
 CONTAINER_BIN=""
@@ -291,7 +292,7 @@ while getopts "a:b:d:i:s:p:xy:nhu" OPT; do
             PHP_XDEBUG_PORT=${OPTARG}
             ;;
         n)
-            CGLCHECK_DRY_RUN=1
+            CGLCHECK_DRY_RUN="-n"
             ;;
         h)
             loadHelp
@@ -397,6 +398,15 @@ fi
 
 # Suite execution
 case ${TEST_SUITE} in
+    cgl)
+        # Active dry-run for cgl needs not "-n" but specific options
+        if [[ ! -z ${CGLCHECK_DRY_RUN} ]]; then
+            CGLCHECK_DRY_RUN="--dry-run --diff"
+        fi
+        COMMAND="php -dxdebug.mode=off .Build/bin/php-cs-fixer fix -v ${CGLCHECK_DRY_RUN} --config=Build/php-cs-fixer/config.php"
+        ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name cgl-${SUFFIX} ${IMAGE_PHP} ${COMMAND}
+        SUITE_EXIT_CODE=$?
+        ;;
     composer)
         COMMAND=(composer "$@")
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name composer-command-${SUFFIX} -e COMPOSER_CACHE_DIR=.Build/.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} "${COMMAND[@]}"

@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class PageLayoutController
 {
     /**
-     * @var array|mixed
+     * @var array<string, mixed>
      */
     protected array $extensionConfiguration = [];
 
@@ -65,7 +65,9 @@ class PageLayoutController
      */
     public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
     {
-        $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        /** @var array<non-empty-string, mixed>|null $emConf */
+        $emConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        $this->extensionConfiguration = is_array($emConf) ? $emConf : [];
         $this->pageRenderer = $pageRenderer;
         $this->iconFactory = $iconFactory;
         $this->helper = GeneralUtility::makeInstance(Helper::class);
@@ -96,17 +98,17 @@ class PageLayoutController
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         try {
             $pAddExtOnReadyCode .= '
-                top.pasteReferenceAllowed = ' . (int)$this->helper->getBackendUser()->checkAuthMode(
+                top.pasteReferenceAllowed = ' . (int)($this->helper->getBackendUser()?->checkAuthMode(
                     'tt_content',
                     'CType',
-                    'shortcut') . ';
+                    'shortcut') ?? false) . ';
                 top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
 
         if (!empty($elFromTable)) {
             $pasteItem = (int)substr((string)key($elFromTable), 11);
-            $pasteRecord = BackendUtility::getRecordWSOL('tt_content', $pasteItem);
+            $pasteRecord = BackendUtility::getRecordWSOL('tt_content', $pasteItem) ?? [];
             $pasteTitle = BackendUtility::getRecordTitle('tt_content', $pasteRecord);
 
             if (!(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
@@ -124,7 +126,7 @@ class PageLayoutController
                  * );*/
 
                 $pAddExtOnReadyCode .= '
-                    top.copyFromAnotherPageLinkTemplate = ' . json_encode('<button type="button" class="t3js-paste-new btn btn-default" title="' . $this->helper->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage') . '">' . $this->iconFactory->getIcon(
+                    top.copyFromAnotherPageLinkTemplate = ' . json_encode('<button type="button" class="t3js-paste-new btn btn-default" title="' . ($this->helper->getLanguageService()?->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage') ?? 'unknown') . '">' . $this->iconFactory->getIcon(
                             'actions-insert-reference',
                             Icon::SIZE_SMALL
                         )->render() . '</button>') . ';';

@@ -42,10 +42,10 @@ class DataHandler implements SingletonInterface
      * @param string $command The command to be handled by the command map
      * @param string $table The name of the table we are working on
      * @param int $id The id of the record that is going to be copied
-     * @param array|string $value The value that has been sent with the copy command
+     * @param array<non-empty-string, mixed>|string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
      * @param CoreDataHandler $parentObj The parent object that triggered this hook
-     * @param bool|array $pasteUpdate Values to be updated after the record is pasted
+     * @param bool|array<non-empty-string, mixed> $pasteUpdate Values to be updated after the record is pasted
      * @throws DBALException|DBALDriverException
      */
     public function processCmdmap(

@@ -45,18 +45,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
 {
     /**
-     * @var array|mixed
+     * @var array<string, mixed>
      */
     protected array $extensionConfiguration = [];
-
-    /**
-     * @var Helper|mixed|object|LoggerAwareInterface|SingletonInterface|null
-     */
     protected Helper $helper;
-
-    /**
-     * @var bool
-     */
     protected bool $showHidden = true;
 
     /**
@@ -65,7 +57,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      */
     public function __construct()
     {
-        $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        /** @var array<non-empty-string, string|int|float|bool|null> $emConf */
+        $emConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
+        $this->extensionConfiguration = $emConf;
         $this->helper = GeneralUtility::makeInstance(Helper::class);
     }
 
@@ -112,7 +106,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * @param GridColumnItem $gridColumnItem
-     * @return array
+     * @return array<int, array<non-empty-string, mixed>>
      * @throws DBALException
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
@@ -158,7 +152,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * Collects tt_content data from a single page or a page tree starting at a given page
      *
      * @param string $shortcutItem The single page to be used as the tree root
-     * @param array $collectedItems The collected item data rows ordered by parent position, column position and sorting
+     * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
@@ -205,9 +199,10 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             ->executeQuery();
 
         while ($item = $result->fetchAssociative()) {
+            /** @var array<non-empty-string, string|int|float|bool|null> $item */
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
-                $translatedItem = BackendUtility::getRecordLocalization('tt_content', $item['uid'], $language);
-                if (!empty($translatedItem)) {
+                $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
+                if (is_array($translatedItem) && $translatedItem !== []) {
                     $item = array_shift($translatedItem);
                 }
             }
@@ -224,7 +219,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * Collects tt_content data from a single tt_content element
      *
      * @param string $shortcutItem The tt_content element to fetch the data from
-     * @param array $collectedItems The collected item data row
+     * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @return void
@@ -240,6 +235,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             if ($this->showHidden) {
                 $queryBuilder->getRestrictions()->removeByType(HiddenRestriction::class);
             }
+            /** @var array<non-empty-string, string|int|float|bool|null>|false $item */
             $item = $queryBuilder
                 ->select('*')
                 ->from('tt_content')
@@ -252,10 +248,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
                 ->setMaxResults(1)
                 ->executeQuery()
                 ->fetchAssociative();
-
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
-                $translatedItem = BackendUtility::getRecordLocalization('tt_content', $item['uid'], $language);
-                if (!empty($translatedItem)) {
+                $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
+                if (is_array($translatedItem) && $translatedItem !== []) {
                     $item = array_shift($translatedItem);
                 }
             }

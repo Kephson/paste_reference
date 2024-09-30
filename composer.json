@@ -23,9 +23,9 @@
 	},
 	"require": {
 		"php": "^8.1",
+		"ext-pdo": "*",
 		"typo3/cms-backend": "^12.4",
-		"typo3/cms-core": "^12.4",
-		"ext-pdo": "*"
+		"typo3/cms-core": "^12.4"
 	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.31"
@@ -42,9 +42,9 @@
 	},
 	"config": {
 		"allow-plugins": {
+			"ergebnis/composer-normalize": true,
 			"typo3/class-alias-loader": true,
-			"typo3/cms-composer-installers": true,
-			"ergebnis/composer-normalize": true
+			"typo3/cms-composer-installers": true
 		},
 		"bin-dir": ".Build/bin",
 		"sort-packages": true,
@@ -52,7 +52,6 @@
 	},
 	"extra": {
 		"typo3/cms": {
-			"cms-package-dir": "{$vendor-dir}/typo3/cms",
 			"extension-key": "paste_reference",
 			"web-dir": ".Build/public"
 		}

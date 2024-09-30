@@ -4,7 +4,7 @@ name: publish
 #       executing all ci tests first before automatically creating a tag and release after clean state is
 #       ensured.
 
-on:
+on: 
   push:
     tags:
       - "**"

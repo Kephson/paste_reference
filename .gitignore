@@ -83,3 +83,5 @@ public
 
 # composer
 composer.lock
+# phpunit
+.phpunit.cache

@@ -24,8 +24,8 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
@@ -37,22 +37,21 @@ class ProcessCmdmap extends AbstractDataHandler
      * @param string $command The command to be handled by the command map
      * @param string $table The name of the table we are working on
      * @param int $id The id of the record that is going to be copied
-     * @param array|string $value The value that has been sent with the copy command
+     * @param array<non-empty-string, mixed>|string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
-     * @param DataHandler|null $parentObj The parent object that triggered this hook
-     * @param bool|array $pasteUpdate Values to be updated after the record is pasted
+     * @param DataHandler $parentObj The parent object that triggered this hook
+     * @param bool|array<non-empty-string, mixed> $pasteUpdate Values to be updated after the record is pasted
      * @throws DBALException|DBALDriverException
      */
     public function execute_processCmdmap(
-        string       $command,
-        string       $table,
-        int          $id,
+        string $command,
+        string $table,
+        int $id,
         array|string $value,
-        bool         &$commandIsProcessed,
-        DataHandler  $parentObj = null,
-        bool|array   $pasteUpdate = false
-    ): void
-    {
+        bool &$commandIsProcessed,
+        DataHandler $parentObj,
+        bool|array $pasteUpdate = false
+    ): void {
         $this->init($table, $id, $parentObj);
         /** @var ServerRequestInterface $request */
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;

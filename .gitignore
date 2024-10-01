@@ -77,3 +77,11 @@ Documentation-GENERATED-temp
 public
 .build
 .Build
+
+# Unused TYPO3 composer mode configuration folder for additional.php
+/config
+
+# composer
+composer.lock
+# phpunit
+.phpunit.cache

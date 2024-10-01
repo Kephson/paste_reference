@@ -136,6 +136,7 @@ Options:
             - clean: Clean temporary files
             - composer: "composer" with all remaining arguments dispatched.
             - functional: PHP functional tests
+            - lintPhp: PHP linting
             - phpstan: phpstan analyze
             - phpstanGenerateBaseline: regenerate phpstan baseline, handy after phpstan updates
             - unit: PHP unit tests
@@ -449,6 +450,11 @@ case ${TEST_SUITE} in
                 SUITE_EXIT_CODE=$?
                 ;;
         esac
+        ;;
+    lintPhp)
+        COMMAND="php -v | grep '^PHP'; find . -name '*.php' ! -path './.Build/*' -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l >/dev/null"
+        ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name lint-php-${SUFFIX} ${IMAGE_PHP} /bin/sh -c "${COMMAND}"
+        SUITE_EXIT_CODE=$?
         ;;
     phpstan)
         COMMAND=(php -dxdebug.mode=off .Build/bin/phpstan analyse -c Build/phpstan/phpstan.neon --no-progress --no-interaction --memory-limit 4G "$@")

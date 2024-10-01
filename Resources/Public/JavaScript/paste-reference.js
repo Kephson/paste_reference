@@ -153,9 +153,6 @@ Paste.activatePasteIcons = function () {
       return true;
     }
 
-    // class "btn-pasteReference" doesn't have any functionality beyond marking the manipulation
-    $(this).addClass('btn-group btn-group-sm btn-pasteReference');
-
     // TODO: check
     // what does it do in detail and why?
     // this does not work, clases have the form ".t3js-page-lang-column-0" - ".t3js-page-lang-column-x"

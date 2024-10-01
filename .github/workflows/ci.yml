@@ -1,0 +1,58 @@
+#=======================================================================================================================
+name: CI
+run-name: "[CI] requested by @${{ github.actor }} on ${{ github.event_name }}"
+#-----------------------------------------------------------------------------------------------------------------------
+# This workflow defines all required CI execution and test runs required
+# to ensure quality for this extension. This may be extended over time.
+#
+# Note that it is on purpose to not containing a `scheduled` run in here,
+# because this will done using `workflow_dispatch` by `scheduled-*.yml`.
+# It is absolute required to have for all dispatched branch execution
+# this ci.yaml file for the main ci checks in place.
+#=======================================================================================================================
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  #---------------------------------------------------------------------------------------------------------------------
+  # Code quality provides low-level and quick executable checks to fail early before
+  # executing more costly tool executions like unit, functional or acceptance tests.
+  #---------------------------------------------------------------------------------------------------------------------
+  code-quality:
+    name: "code quality insurance"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '8.1', '8.2', '8.3' , '8.4' ]
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
+      - name: Checkout ${{ steps.extract_branch.outputs.branch }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.extract_branch.outputs.branch }}
+
+      - name: Composer install
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install
+
+      - name: Lint PHP
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s lintPhp
+
+      - name: CGL
+        if: ${{ matrix.php <= '8.3' }}
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s cgl -n
+
+      - name: Phpstan
+        if: ${{ matrix.php <= '8.3' }}
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s phpstan
+
+# @todo Add unit test execution after use-full tests has been added
+# @todo Add functional test execution after use-full tests has been added
+# @todo Add acceptance test execution after use-full tests has been added along with infrastructure and setup

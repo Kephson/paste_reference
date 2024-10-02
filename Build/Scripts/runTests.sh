@@ -137,8 +137,10 @@ Options:
             - composer: "composer" with all remaining arguments dispatched.
             - functional: PHP functional tests
             - lintPhp: PHP linting
-            - phpstan: phpstan analyze
-            - phpstanGenerateBaseline: regenerate phpstan baseline, handy after phpstan updates
+            - renderDocumentation: Render documentation locally
+            - renderDocumentationCheck: Validation rendering documentation in minimal mode
+            - phpstan: Execute static code analyzer PHPStan
+            - phpstanGenerateBaseline: Regenerate PHPStan baseline, handy after PHPStan updates
             - unit: PHP unit tests
 
     -b <docker|podman>
@@ -410,6 +412,11 @@ case ${TEST_SUITE} in
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name cgl-${SUFFIX} ${IMAGE_PHP} ${COMMAND}
         SUITE_EXIT_CODE=$?
         ;;
+    clean)
+        cleanCacheFiles
+        cleanRenderedDocumentationFiles
+        SUITE_EXIT_CODE=$?
+        ;;
     composer)
         COMMAND=(composer "$@")
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name composer-command-${SUFFIX} -e COMPOSER_CACHE_DIR=.Build/.cache/composer -e COMPOSER_ROOT_VERSION=${COMPOSER_ROOT_VERSION} ${IMAGE_PHP} "${COMMAND[@]}"
@@ -454,6 +461,16 @@ case ${TEST_SUITE} in
     lintPhp)
         COMMAND="php -v | grep '^PHP'; find . -name '*.php' ! -path './.Build/*' -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l >/dev/null"
         ${CONTAINER_BIN} run ${CONTAINER_COMMON_PARAMS} --name lint-php-${SUFFIX} ${IMAGE_PHP} /bin/sh -c "${COMMAND}"
+        SUITE_EXIT_CODE=$?
+        ;;
+    renderDocumentation)
+        mkdir -p Documentation-GENERATED-temp
+        ${CONTAINER_BIN} run --rm --pull always -v ./:/project/ ghcr.io/typo3-documentation/render-guides:latest --no-progress --config=Documentation Documentation
+        SUITE_EXIT_CODE=$?
+        ;;
+    renderDocumentationCheck)
+        mkdir -p Documentation-GENERATED-temp
+        ${CONTAINER_BIN} run --rm --pull always -v ./:/project/ ghcr.io/typo3-documentation/render-guides:latest --no-progress --config=Documentation Documentation --minimal-test
         SUITE_EXIT_CODE=$?
         ;;
     phpstan)

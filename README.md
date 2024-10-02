@@ -157,7 +157,7 @@ ddev typo3 styleguide:generate --create all \
 ddev launch /typo3/
 ```
 
-### # 5.2.3 Stop & destroy ddev instance
+#### 5.2.3 Stop & destroy ddev instance
 
 **Simply stop ddev instance**
 

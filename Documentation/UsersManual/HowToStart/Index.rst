@@ -26,15 +26,24 @@ Copy content from other page
 ----------------------------
 With the new button in page module it is possible to copy content from another page to the current page.
 
-|img-copy-content-other-page|
+..  image:: /Images/Backend/copy-content-other-page.png
+    :border: 0
+    :align: left
+    :name: CopyContentOtherPage
 
 
 Paste reference into column
 ---------------------------
 Paste a copied content element like it's done normally in TYPO3 core.
 
-|img-paste-into-column|
+..  image:: /Images/Backend/paste-into-column.png
+    :border: 0
+    :align: left
+    :name: PasteIntoColumn
 
 You can select if you want to copy the element or if you want to insert a reference.
 
-|img-paste-copy-or-reference|
+..  image:: /Images/Backend/paste-copy-or-reference.png
+    :border: 0
+    :align: left
+    :name: PasteCopyOrReference

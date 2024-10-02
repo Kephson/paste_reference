@@ -39,8 +39,8 @@ https://docs.typo3.org/
 
 .. attention::
 
-   Some directives of the Docutils have different
-   names in Sphinx or work differently.
+   Some directives of the ReST syntax have different
+   names or work differently.
 
 .. warning::
 

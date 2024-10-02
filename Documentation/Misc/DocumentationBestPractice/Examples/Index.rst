@@ -66,9 +66,9 @@ Property details
 
 .. only:: html
 
-	.. contents::
-		:local:
-		:depth: 1
+.. contents:: This page
+   :local:
+   :depth: 1
 
 
 .. _subst_elementUid`:

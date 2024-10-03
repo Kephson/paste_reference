@@ -182,30 +182,26 @@ which is included in the `Build/Scripts/runTests.sh` dispatcher script.
 Build/Scripts/runTests.sh -s renderDocumentation
 ```
 
-**Open rendered documentation**
+**Open rendered documentation (Linux>**
 
-..  tabs::
+```bash
+Build/Scripts/runTests.sh -s renderDocumentation
+xdg-open "Documentation-GENERATED-temp/Index.html"
+```
 
-    ..  group-tab:: Linux
+**Open rendered documentation (MacOS)**
 
-        ..  code-block:: bash
+```bash
+Build/Scripts/runTests.sh -s renderDocumentation
+open "Documentation-GENERATED-temp/Index.html"
+```
 
-            Build/Scripts/runTests.sh -s renderDocumentation
-            xdg-open "Documentation-GENERATED-temp/Index.html"
+**Open rendered documentation (Windows)**
 
-    .. group-tab:: MacOS
-
-        ..  code-block:: bash
-
-            Build/Scripts/runTests.sh -s renderDocumentation
-            open "Documentation-GENERATED-temp/Index.html"
-
-    ..  group-tab:: Windows
-
-        ..  code-block:: powershell
-
-            Build/Scripts/runTests.sh -s renderDocumentation
-            start "Documentation-GENERATED-temp/Index.html"
+```bash
+Build/Scripts/runTests.sh -s renderDocumentation
+start "Documentation-GENERATED-temp/Index.html"
+```
 
 
 [1]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/

@@ -80,12 +80,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $infoArr = [];
         $this->getProcessedValue($item, 'header_position,header_layout,header_link', $infoArr);
         $tsConfig = BackendUtility::getPagesTSconfig($record['pid'])['mod.']['web_layout.']['tt_content.']['preview.'] ?? [];
-        if (!empty($tsConfig[$record['CType']]) || !empty($tsConfig[$record['CType'] . '.'])) {
-            $fluidPreview = $this->renderContentElementPreviewFromFluidTemplate($record);
-            if ($fluidPreview !== null) {
-                return $fluidPreview;
-            }
-        }
 
         if (!empty($record['records'])) {
             $shortCutRenderItems = $this->addShortcutRenderItems($item);

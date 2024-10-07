@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PageLayoutController
 {
-    /** @var array|mixed */
+    /** @var array<string, mixed> */
     protected array $extensionConfiguration = [];
     protected string $LLL = 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml';
     protected string $jsScriptName = '@ehaerer/paste-reference/paste-reference.js';
@@ -57,7 +57,7 @@ class PageLayoutController
      */
     public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
     {
-        $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
         $this->helper = GeneralUtility::makeInstance(Helper::class);
         $this->iconFactory = $iconFactory;
         $this->pageRenderer = $pageRenderer;
@@ -67,7 +67,6 @@ class PageLayoutController
     }
 
     /**
-     *
      * @return string
      */
     public function drawHeaderHook(): string

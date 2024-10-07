@@ -34,13 +34,13 @@ class AfterTcaCompilationEventListener
 {
     /**
      * @param AfterTcaCompilationEvent $event
-     * @return void
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
-        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
+        /** @var array<non-empty-string, string|int|float|bool|null> $extConf */
+        $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
         if (
             isset($extConf['enableExtendedShortcutPreviewRenderer'])
             && (int)$extConf['enableExtendedShortcutPreviewRenderer'] === 1

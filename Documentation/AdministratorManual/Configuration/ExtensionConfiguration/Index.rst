@@ -13,7 +13,10 @@ Extension Manager
 Some general settings can be configured in the Extension Configuration in the administration module.
 If you need to configure those, switch to the module "Admin tools" -> "Settings" -> "Extension Configuration", select the extension "**paste_reference**" and open it!
 
-|img-extension-configuration|
+..  image:: /Images/Administration/extension-configuration.png
+    :border: 0
+    :align: left
+    :name: ExtensionConfiguration
 
 There are two settings:
 

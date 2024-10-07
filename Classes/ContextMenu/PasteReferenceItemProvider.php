@@ -98,8 +98,8 @@ class PasteReferenceItemProvider extends RecordProvider
      * The new item is added after the 'info' item.
      * @see https://docs.typo3.org/m/typo3/reference-coreapi/12.4/en-us/ApiOverview/Backend/ContextualMenu.html
      *
-     * @param array $items
-     * @return array
+     * @param array<string, mixed> $items
+     * @return array<string, mixed>
      */
     public function addItems(array $items): array
     {
@@ -117,7 +117,9 @@ class PasteReferenceItemProvider extends RecordProvider
         $localItems = $this->prepareItems($itemsConfiguration);
 
         if (isset($items['pasteAfter'])) {
-            $position = array_search('pasteAfter', array_keys($items), true);
+            // @todo Instead of simple typecasting to (int) non integer return values of
+            //       `array_search()` needs to be handled in a more appropriated way.
+            $position = (int)array_search('pasteAfter', array_keys($items), true);
             $beginning = array_slice($items, 0, $position + 1, true);
             $end = array_slice($items, $position, null, true);
             $items = $beginning + $localItems + $end;

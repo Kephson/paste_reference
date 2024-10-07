@@ -25,7 +25,7 @@ namespace EHAERER\PasteReference\DataHandler;
 
 use EHAERER\PasteReference\Helper\Helper;
 use PDO;
-use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\Connection as Typo3Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
@@ -43,7 +43,7 @@ use Doctrine\DBAL\Driver\Exception as DBALDriverException;
  */
 abstract class AbstractDataHandler
 {
-    protected ?Connection $connection = null;
+    protected ?Typo3Connection $connection = null;
     protected string $table = '';
     protected int $pageUid = 0;
     protected int $contentUid = 0;
@@ -88,11 +88,11 @@ abstract class AbstractDataHandler
             ->where(
                 $queryBuilder->expr()->eq(
                     'pid',
-                    $queryBuilder->createNamedParameter(-1, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(-1, Typo3Connection::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(0, Typo3Connection::PARAM_INT)
                 )
             )
             ->executeStatement();
@@ -115,9 +115,9 @@ abstract class AbstractDataHandler
     }
 
     /**
-     * @return Connection
+     * @return Typo3Connection
      */
-    public function getConnection(): ?Connection
+    public function getConnection(): ?Typo3Connection
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tt_content');

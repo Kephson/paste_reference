@@ -95,7 +95,7 @@ class PageLayoutController
             $jsLines[] = 'top.copyFromAnotherPageLinkTemplate = ' . json_encode($this->getButtonTemplate()) . ';';
         }
 
-        if (count($jsLines)) {
+        if (count($jsLines) > 0) {
             $javaScript = implode("\n", $jsLines);
             $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
             $this->pageRenderer->loadJavaScriptModule($this->jsScriptName);
@@ -115,7 +115,7 @@ class PageLayoutController
     protected function addJavaScriptModuleInstruction(): void
     {
         $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create($this->jsScriptName);
-        /** @var TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
+        /** @var \TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(
             $JavaScriptModuleInstruction->instance(

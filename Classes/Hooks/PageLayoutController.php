@@ -81,7 +81,8 @@ class PageLayoutController
         try {
             $jsLines[] = 'top.pasteReferenceAllowed = ' . (int)$this->helper->getBackendUser()->checkAuthMode('tt_content', 'CType', 'shortcut') . ';';
             $jsLines[] = 'top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
-        } catch (RouteNotFoundException $e) {}
+        } catch (RouteNotFoundException $e) {
+        }
 
         if (!empty($this->elFromTable)) {
             $this->addJavaScriptModuleInstruction();

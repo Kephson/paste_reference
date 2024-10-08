@@ -95,11 +95,9 @@ class PageLayoutController
             $jsLines[] = 'top.copyFromAnotherPageLinkTemplate = ' . json_encode($this->getButtonTemplate()) . ';';
         }
 
-        if (count($jsLines) > 0) {
-            $javaScript = implode("\n", $jsLines);
-            $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
-            $this->pageRenderer->loadJavaScriptModule($this->jsScriptName);
-        }
+        $javaScript = implode("\n", $jsLines);
+        $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
+        $this->pageRenderer->loadJavaScriptModule($this->jsScriptName);
 
         return '';
     }

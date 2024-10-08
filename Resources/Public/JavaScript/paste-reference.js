@@ -211,6 +211,7 @@ if (!$('.typo3-TCEforms').length) {
     const result = evt.data.value;
     const tableUid = result.replace('tt_content_', '') * 1;
     const elementId = evt.data.fieldName;
+    // console.log({'result':result, 'tableUid':tableUid, 'elementId':elementId, 'droppable': $('#' + elementId).find('.t3js-paste-new')});
     DragDrop.default.onDrop(tableUid, $('#' + elementId).find('.t3js-paste-new'), 'copyFromAnotherPage');
   });
 }

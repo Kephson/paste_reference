@@ -31,6 +31,7 @@ import AjaxDataHandler from "@typo3/backend/ajax-data-handler.js";
  * @exports @ehaerer/paste-reference/paste-reference-drag-drop.js
  */
 DragDrop.default = {
+  contentIdentifier: '.t3js-page-ce',
   draggableIdentifier: '.t3js-page-ce:has(.t3-page-ce-header-draggable)',
   newContentElementWizardIdentifier: '#new-element-drag-in-wizard',
   cTypeIdentifier: '.t3-ctype-identifier',

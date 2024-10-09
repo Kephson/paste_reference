@@ -1,0 +1,25 @@
+includes:
+  - phpstan-baseline.neon
+  - ../../.Build/vendor/phpstan/phpstan-phpunit/extension.neon
+
+parameters:
+  level: 5
+
+  # Use local cache dir instead of /tmp
+  tmpDir: ../../.Build/.cache/phpstan
+
+  bootstrapFiles:
+    - phpstan-constants.php
+
+  paths:
+    - ../../Classes
+    - ../../Tests
+    - ../../ext_localconf.php
+    - ../../ext_tables.php
+
+  excludePaths:
+    # Checking acceptance support files is cumbersome due to codeception dynamic mixin generation
+    - ../../Classes/Core/Acceptance/*
+    # Text fixtures extensions uses $_EXTKEY phpstan would be report as "might not defined"
+    - ../../Tests/Unit/*/Fixtures/Extensions/*/ext_emconf.php
+    - ../../Tests/Functional/*/Fixtures/Extensions/*/ext_emconf.php

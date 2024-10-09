@@ -1,6 +1,10 @@
 name: publish
 
-on:
+# @todo Consider to refactor this workflow to react on workflow_dispatch request instead of tag push events,
+#       executing all ci tests first before automatically creating a tag and release after clean state is
+#       ensured.
+
+on: 
   push:
     tags:
       - "**"

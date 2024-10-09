@@ -23,8 +23,9 @@ namespace EHAERER\PasteReference\DataHandler;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\Helper\Helper;
-use PDO;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
@@ -33,8 +34,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -75,8 +74,6 @@ abstract class AbstractDataHandler
     /**
      * Function to remove any remains of versioned records after finalizing a workspace action
      * via 'Discard' or 'Publish' commands
-     *
-     * @return void
      */
     public function cleanupWorkspacesAfterFinalizing(): void
     {
@@ -86,11 +83,11 @@ abstract class AbstractDataHandler
             ->where(
                 $queryBuilder->expr()->eq(
                     'pid',
-                    $queryBuilder->createNamedParameter(-1, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(-1, Connection::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
                     't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, PDO::PARAM_INT)
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
                 )
             )
             ->executeStatement();
@@ -131,7 +128,6 @@ abstract class AbstractDataHandler
 
     /**
      * @param string $table
-     * @return void
      */
     public function setTable(string $table): void
     {
@@ -148,7 +144,6 @@ abstract class AbstractDataHandler
 
     /**
      * @param int $pageUid
-     * @return void
      */
     public function setPageUid(int $pageUid): void
     {
@@ -165,7 +160,6 @@ abstract class AbstractDataHandler
 
     /**
      * @param int $contentUid
-     * @return void
      */
     public function setContentUid(int $contentUid): void
     {
@@ -182,7 +176,6 @@ abstract class AbstractDataHandler
 
     /**
      * @param DataHandler $dataHandler
-     * @return void
      */
     public function setTceMain(DataHandler $dataHandler): void
     {

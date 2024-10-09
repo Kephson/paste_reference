@@ -41,7 +41,10 @@ class AfterTcaCompilationEventListener
     public function __invoke(AfterTcaCompilationEvent $event): void
     {
         $extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference');
-        if (isset($extConf['enableExtendedShortcutPreviewRenderer']) && (int)$extConf['enableExtendedShortcutPreviewRenderer'] === 1) {
+        if (
+            isset($extConf['enableExtendedShortcutPreviewRenderer'])
+            && (int)$extConf['enableExtendedShortcutPreviewRenderer'] === 1
+        ) {
             $tca = $event->getTca();
             $tca['tt_content']['types']['shortcut']['previewRenderer'] = ShortcutPreviewRenderer::class;
             $event->setTca($tca);

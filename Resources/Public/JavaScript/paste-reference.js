@@ -103,18 +103,18 @@ Paste.activatePasteModal = (function (element) {
       {
         text: TYPO3.lang['tx_paste_reference_js.modal.button.pastecopy'] || 'Paste as copy',
         btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
-                            trigger: function (evt, modal) {
-                              modal.hideModal();
-                              DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt);
-                            }
+        trigger: function (evt, modal) {
+          modal.hideModal();
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt);
+        }
       },
       {
         text: TYPO3.lang['tx_paste_reference_js.modal.button.pastereference'] || 'Paste as reference',
         btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
-                            trigger: function (evt, modal) {
-                              modal.hideModal();
-                              DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt, 'reference');
-                            }
+        trigger: function (evt, modal) {
+          modal.hideModal();
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt, 'reference');
+        }
       }
     ];
     if (top.pasteReferenceAllowed * 1 !== 1) {
@@ -132,10 +132,10 @@ Paste.activatePasteModal = (function (element) {
       {
         text: TYPO3.lang['paste.modal.button.paste'] || 'Move',
         btnClass: 'btn-' + Severity.getCssClass(severity),
-                            trigger: function (evt, modal) {
-                              modal.hideModal();
-                              DragDrop.default.onDrop(top.itemOnClipboardUid, element, null);
-                            }
+        trigger: function (evt, modal) {
+          modal.hideModal();
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, null);
+        }
       }
     ];
   }
@@ -215,7 +215,7 @@ if (!document.querySelector('.typo3-TCEforms')) {
     DragDrop.default.onDrop(
       tableUid,
       document.querySelector('#' + elementId).querySelector('.t3js-paste-new'),
-                            'copyFromAnotherPage'
+      'copyFromAnotherPage'
     );
   });
 }

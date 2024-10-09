@@ -80,12 +80,6 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $infoArr = [];
         $this->getProcessedValue($item, 'header_position,header_layout,header_link', $infoArr);
         $tsConfig = BackendUtility::getPagesTSconfig($record['pid'])['mod.']['web_layout.']['tt_content.']['preview.'] ?? [];
-        if (!empty($tsConfig[$record['CType']]) || !empty($tsConfig[$record['CType'] . '.'])) {
-            $fluidPreview = $this->renderContentElementPreviewFromFluidTemplate($record);
-            if ($fluidPreview !== null) {
-                return $fluidPreview;
-            }
-        }
 
         if (!empty($record['records'])) {
             $shortCutRenderItems = $this->addShortcutRenderItems($item);
@@ -147,6 +141,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
+     *
+     * @todo: move this in a repository
      *
      * @param string $shortcutItem The single page to be used as the tree root
      * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data rows ordered by parent position, column position and sorting
@@ -212,6 +208,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * Collects tt_content data from a single tt_content element
+     *
+     * @todo: move this in a repository
      *
      * @param string $shortcutItem The tt_content element to fetch the data from
      * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row

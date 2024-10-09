@@ -15,8 +15,6 @@
  * based on jQuery UI
  */
 
-import $ from "jquery";
-import "jquery-ui/widgets/droppable.js";
 import DragDrop from "@typo3/backend/layout-module/drag-drop.js";
 import Paste from "@typo3/backend/layout-module/paste.js";
 import AjaxDataHandler from "@typo3/backend/ajax-data-handler.js";
@@ -55,110 +53,12 @@ DragDrop.default = {
       distance: 20,
       addClasses: 'active-drag',
       revert: 'invalid',
-      start: function () {
-        DragDrop.default.onDragStart($(this));
-      },
-      stop: function () {
-        DragDrop.default.onDragStop($(this));
-      }
     });
     $(DragDrop.default.dropZoneIdentifier).droppable({
       accept: this.contentIdentifier,
       scope: 'tt_content',
       tolerance: 'pointer',
-      over: function (evt, ui) {
-        DragDrop.default.onDropHoverOver($(ui.draggable), $(this));
-      },
-      out: function (evt, ui) {
-        DragDrop.default.onDropHoverOut($(ui.draggable), $(this));
-      },
-      drop: function (evt, ui) {
-        DragDrop.default.onDrop($(ui.draggable), $(this), evt);
-      }
     });
-  },
-
-  /**
-   * called when a draggable is selected to be moved
-   * @param $element a jQuery object for the draggable
-   * @private
-   */
-  onDragStart: function ($element) {
-    // Add css class for the drag shadow
-    DragDrop.default.originalStyles = $element.get(0).style.cssText;
-    DragDrop.default.drag = $element.children(DragDrop.default.drag);
-    DragDrop.default.drag.addClass('dragitem-shadow');
-    DragDrop.default.types = $element.find(DragDrop.default.cTypeIdentifier);
-    if ($element.closest(DragDrop.default.newContentElementWizardIdentifier).length === 0) {
-      $element.append('<div class="ui-draggable-copy-message">' + TYPO3.lang['dragdrop.copy.message'] + '</div>');
-    } else {
-      // all information about CType, list_type and other default values has to be fetched from onclick
-      DragDrop.default.newContentElementOnclick = $element.find('a:first').attr('onclick');
-      if (typeof DragDrop.default.newContentElementOnclick !== 'undefined') {
-        // this is the relevant part defining the default values for tt_content
-        // while creating content with the new element wizard the usual way
-        DragDrop.default.newContentElementOnclick = unescape(DragDrop.default.newContentElementOnclick.split('document.editForm.defValues.value=unescape(\'%26')[1].split('\');')[0]);
-        if (DragDrop.default.newContentElementOnclick.length) {
-          // if there are any default values, they have to be reformatted to an object/array
-          // this can be passed on as parameters during the onDrop action after dragging in new content
-          // CType is available for each element in the wizard, so this will be the identifier later on
-          DragDrop.default.newContentElementDefaultValues = $.parseJSON(
-            '{' + DragDrop.default.newContentElementOnclick.replace(/\&/g, '",').replace(/defVals\[tt_content\]\[/g, '"').replace(/\]\=/g, '":"') + '"}'
-          );
-          DragDrop.default.types.data('ctype', DragDrop.default.newContentElementDefaultValues.CType);
-          DragDrop.default.types.data('list_type', DragDrop.default.newContentElementDefaultValues.list_type);
-        }
-      }
-    }
-    // Hide create new element button
-    DragDrop.default.ownDropZone = $element.children(DragDrop.default.dropZoneIdentifier);
-    DragDrop.default.ownDropZone.addClass('drag-start');
-    DragDrop.default.column = $element.closest(DragDrop.default.columnIdentifier);
-    DragDrop.default.column.removeClass('active');
-
-    $element.parents(DragDrop.default.draggableIdentifier).addClass('move-to-front');
-    $element.parents(DragDrop.default.columnHolderIdentifier).find(DragDrop.default.addContentIdentifier).hide();
-    $element.find(DragDrop.default.dropZoneIdentifier).hide();
-
-    // make the drop zones visible
-    const siblingsDropZones = $element.parents(DragDrop.default.disabledNewContentIdentifier).find(DragDrop.default.dropZoneIdentifier);
-    const disabledDropZones = $(DragDrop.default.disabledNewContentIdentifier + ' > ' + DragDrop.default.contentWrapperIdentifier + ' > ' + DragDrop.default.contentIdentifier + ' > ' + DragDrop.default.dropZoneIdentifier);
-
-    $(DragDrop.default.dropZoneIdentifier).not(DragDrop.default.ownDropZone).each(function () {
-      $(this).addClass(DragDrop.default.validDropZoneClass);
-      if (($(this).not(disabledDropZones).length
-        || siblingsDropZones.length
-      ) &&
-      $(this).parent().find('.icon-actions-add').length
-      ) {
-        $(this).addClass(DragDrop.default.validDropZoneClass);
-      } else {
-        $(this).closest(DragDrop.default.contentIdentifier).find('> ' + DragDrop.default.addContentIdentifier + ', > > ' + DragDrop.default.addContentIdentifier).show();
-      }
-    });
-  },
-
-
-  /**
-   * called when a draggable is released
-   * @param $element a jQuery object for the draggable
-   * @private
-   */
-  onDragStop: function ($element) {
-    // Remove css class for the drag shadow
-    DragDrop.default.drag.removeClass('dragitem-shadow');
-    // Show create new element button
-    DragDrop.default.ownDropZone.removeClass('drag-start');
-    DragDrop.default.column.addClass('active');
-    $element.parents(DragDrop.default.draggableIdentifier).removeClass('move-to-front');
-    $element.parents(DragDrop.default.columnHolderIdentifier).find(DragDrop.default.addContentIdentifier).show();
-    $element.find(DragDrop.default.dropZoneIdentifier).show();
-    $element.find('.ui-draggable-copy-message').remove();
-
-    // Reset inline style
-    $element.get(0).style.cssText = DragDrop.default.originalStyles.replace('z-index: 100;', '');
-
-    $(DragDrop.default.dropZoneIdentifier + '.' + DragDrop.default.validDropZoneClass).removeClass(DragDrop.default.validDropZoneClass);
   },
 
   /**
@@ -171,42 +71,42 @@ DragDrop.default = {
    * @param reference if content should be pasted as copy or reference
    * @private
    */
-  onDrop: function ($draggableElement, $droppableElement, evt, reference) {
-    const newColumn = DragDrop.default.getColumnPositionForElement($droppableElement) ?? 0;
+  onDrop: function (draggableElement, droppableElement, evt, reference) {
+    const newColumn = DragDrop.default.getColumnPositionForElement(droppableElement) ?? 0;
 
-    $droppableElement.removeClass(DragDrop.default.dropPossibleHoverClass);
-    const $pasteAction = typeof $draggableElement === 'number' || typeof $draggableElement === 'undefined';
-    let $pasteElement = null;
-    if ($draggableElement) {
-      $pasteElement = $draggableElement;
+    droppableElement.classList.remove(DragDrop.default.dropPossibleHoverClass);
+    const pasteAction = typeof draggableElement === 'number' || typeof draggableElement === 'undefined';
+    let pasteElement = null;
+    if (draggableElement) {
+      pasteElement = draggableElement;
     } else if (typeof top.itemOnClipboardUid === 'number') {
-      $pasteElement = top.itemOnClipboardUid;
+      pasteElement = top.itemOnClipboardUid;
     }
     // send an AJAX request via the AjaxDataHandler
-    let contentElementUid = $pasteAction ? $pasteElement : null;
-    if (!contentElementUid && typeof $draggableElement.data === 'function') {
-      contentElementUid = parseInt($draggableElement.data('uid') ?? 0);
+    let contentElementUid = pasteAction ? pasteElement : null;
+    if (!contentElementUid && typeof draggableElement.dataset.uid !== 'undefined') {
+      contentElementUid = parseInt(draggableElement.dataset.uid ?? 0);
     }
-    if (contentElementUid > 0 || (DragDrop.default.newContentElementDefaultValues.CType && !$pasteAction)) {
+    if (contentElementUid > 0 || (DragDrop.default.newContentElementDefaultValues.CType && !pasteAction)) {
       let parameters = {};
       // add the information about a possible column position change
-      const targetFound = $droppableElement.closest(DragDrop.default.contentIdentifier).data('uid');
+      const targetFound = droppableElement.closest(DragDrop.default.contentIdentifier)?.dataset.uid;
       // the item was moved to the top of the colPos, so the page ID is used here
       let targetPid = 0;
       if (typeof targetFound === 'undefined') {
         // the actual page is needed
-        targetPid = $('.t3js-page-ce[data-page]').first().data('page');
+        targetPid = document.querySelector('.t3js-page-ce[data-page]').dataset.page;
       } else {
         // the negative value of the content element after where it should be moved
         targetPid = 0 - parseInt(targetFound);
       }
-      const $closestElementWithLanguage = $draggableElement || $droppableElement.closest('[data-language-uid]');
-      let language = $closestElementWithLanguage;
-      if (language !== parseInt($closestElementWithLanguage)) {
-        language = parseInt($closestElementWithLanguage.data('language-uid'));
+      const closestElementWithLanguage = draggableElement || droppableElement.closest('[data-language-uid]');
+      let language = closestElementWithLanguage;
+      if (language !== parseInt(closestElementWithLanguage)) {
+        language = parseInt(closestElementWithLanguage.dataset.language-uid);
       }
       if (language !== -1) {
-        language = parseInt($droppableElement.closest('[data-language-uid]').data('language-uid'));
+        language = parseInt(droppableElement.closest('[data-language-uid]').dataset.languageUid);
       }
       let colPos = 0;
       if (targetPid !== 0) {
@@ -214,7 +114,7 @@ DragDrop.default = {
       }
       parameters['cmd'] = {tt_content: {}};
       parameters['data'] = {tt_content: {}};
-      let copyAction = (evt && evt.originalEvent && evt.originalEvent.ctrlKey || $droppableElement.hasClass('t3js-paste-copy') || evt === 'copyFromAnotherPage');
+      let copyAction = (evt && evt.originalEvent && evt.originalEvent.ctrlKey || droppableElement.classList.contains('t3js-paste-copy') || evt === 'copyFromAnotherPage');
       if (DragDrop.default.newContentElementDefaultValues.CType) {
         parameters['data']['tt_content']['NEW234134'] = DragDrop.default.newContentElementDefaultValues;
         parameters['data']['tt_content']['NEW234134']['pid'] = targetPid;
@@ -231,16 +131,16 @@ DragDrop.default = {
         AjaxDataHandler.process(parameters).then(function (result) {
           if (!result.hasErrors) {
             // insert draggable on the new position
-            if (!$pasteAction) {
-              if (!$droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.dropZoneIdentifier));
+            if (!pasteAction) {
+              if (!droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.dropZoneIdentifier));
               } else {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.contentIdentifier));
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.contentIdentifier));
               }
             }
-            self.location.hash = $droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
+            self.location.hash = droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
             self.location.reload(true);
           }
         });
@@ -266,16 +166,16 @@ DragDrop.default = {
         AjaxDataHandler.process(parameters).then(function (result) {
           if (!result.hasErrors) {
             // insert draggable on the new position
-            if (!$pasteAction) {
-              if (!$droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.dropZoneIdentifier));
+            if (!pasteAction) {
+              if (!droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.dropZoneIdentifier));
               } else {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.contentIdentifier));
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.contentIdentifier));
               }
             }
-            self.location.hash = $droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
+            self.location.hash = droppableElement.closest(DragDrop.default.contentIdentifier).id;
             self.location.reload(true);
           }
         });
@@ -294,16 +194,16 @@ DragDrop.default = {
         AjaxDataHandler.process(parameters).then(function (result) {
           if (!result.hasErrors) {
             // insert draggable on the new position
-            if (!$pasteAction) {
-              if (!$droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.dropZoneIdentifier));
+            if (!pasteAction) {
+              if (!droppableElement.parent().hasClass(DragDrop.default.contentIdentifier.substring(1))) {
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.dropZoneIdentifier));
               } else {
-                $draggableElement.detach().css({top: 0, left: 0})
-                .insertAfter($droppableElement.closest(DragDrop.default.contentIdentifier));
+                draggableElement.detach().css({top: 0, left: 0})
+                .insertAfter(droppableElement.closest(DragDrop.default.contentIdentifier));
               }
             }
-            self.location.hash = $droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
+            self.location.hash = droppableElement.closest(DragDrop.default.contentIdentifier).attr('id');
             self.location.reload();
           }
         });
@@ -313,13 +213,13 @@ DragDrop.default = {
 
   /**
    * returns the next "upper" container colPos parameter inside the code
-   * @param $element
+   * @param element
    * @return int|boolean the colPos
    */
-  getColumnPositionForElement: function ($element) {
-    const $columnContainer = $element.closest('[data-colpos]');
-    if ($columnContainer.length && $columnContainer.data('colpos') !== 'undefined') {
-      return $columnContainer.data('colpos');
+  getColumnPositionForElement: function (element) {
+    const columnContainer = element && element.closest('[data-colpos]') ? element.closest('[data-colpos]') : [];
+    if (columnContainer.length && columnContainer.dataset.colpos !== 'undefined') {
+      return columnContainer.dataset.colpos;
     } else {
       return false;
     }

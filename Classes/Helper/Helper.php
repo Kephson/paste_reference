@@ -46,6 +46,8 @@ class Helper implements SingletonInterface
      *
      * @param int $uid the uid value of a tt_content record
      *
+     * @todo: move this in a repository
+     *
      * @return int
      * @throws DBALException|DBALDriverException
      */
@@ -69,6 +71,9 @@ class Helper implements SingletonInterface
 
     /**
      * @param string $table
+     *
+     * @todo: move this in a repository
+     *
      * @return QueryBuilder
      */
     public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder

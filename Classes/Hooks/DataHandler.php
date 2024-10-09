@@ -24,9 +24,9 @@ namespace EHAERER\PasteReference\Hooks;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
+use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
 
 /**
  * Class/Function which offers TCE main hook functions.
@@ -35,29 +35,27 @@ use TYPO3\CMS\Core\DataHandling\DataHandler as CoreDataHandler;
  */
 class DataHandler implements SingletonInterface
 {
-
     /**
      * Function to process the drag & drop copy action
      *
      * @param string $command The command to be handled by the command map
      * @param string $table The name of the table we are working on
      * @param int $id The id of the record that is going to be copied
-     * @param array|string $value The value that has been sent with the copy command
+     * @param array<non-empty-string, mixed>|string $value The value that has been sent with the copy command
      * @param bool $commandIsProcessed A switch to tell the parent object, if the record has been copied
      * @param CoreDataHandler $parentObj The parent object that triggered this hook
-     * @param bool|array $pasteUpdate Values to be updated after the record is pasted
+     * @param bool|array<non-empty-string, mixed> $pasteUpdate Values to be updated after the record is pasted
      * @throws DBALException|DBALDriverException
      */
     public function processCmdmap(
-        string          $command,
-        string          $table,
-        int             $id,
-        array|string    $value,
-        bool            &$commandIsProcessed,
+        string $command,
+        string $table,
+        int $id,
+        array|string $value,
+        bool &$commandIsProcessed,
         CoreDataHandler &$parentObj,
-        bool|array      $pasteUpdate
-    ): void
-    {
+        bool|array $pasteUpdate
+    ): void {
         if (!$parentObj->isImporting) {
             $hook = GeneralUtility::makeInstance(ProcessCmdmap::class);
             $hook->execute_processCmdmap($command, $table, $id, $value, $commandIsProcessed, $parentObj, $pasteUpdate);

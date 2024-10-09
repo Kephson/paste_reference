@@ -16,4 +16,3 @@ Documentation best practice
 	:titlesonly:
 
 	Examples/Index
-	CrossLink/Index

@@ -66,7 +66,6 @@ class PageLayoutController
     }
 
     /**
-     *
      * @return string
      */
     public function drawHeaderHook(): string

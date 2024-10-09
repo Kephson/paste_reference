@@ -12,7 +12,6 @@ final class ModifyPageLayoutContentListener
 {
     /**
      * @param ModifyPageLayoutContentEvent $event
-     * @return void
      */
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {

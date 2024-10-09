@@ -39,8 +39,8 @@ https://docs.typo3.org/
 
 .. attention::
 
-   Some directives of the Docutils have different
-   names in Sphinx or work differently.
+   Some directives of the ReST syntax have different
+   names or work differently.
 
 .. warning::
 
@@ -66,9 +66,9 @@ Property details
 
 .. only:: html
 
-	.. contents::
-		:local:
-		:depth: 1
+.. contents:: This page
+   :local:
+   :depth: 1
 
 
 .. _subst_elementUid`:

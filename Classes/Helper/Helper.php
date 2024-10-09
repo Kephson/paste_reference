@@ -21,6 +21,10 @@ namespace EHAERER\PasteReference\Helper;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Driver\Exception as DBALDriverException;
+use Doctrine\DBAL\Exception as DBALException;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
@@ -29,10 +33,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use Doctrine\DBAL\Driver\Exception as DBALDriverException;
-use Doctrine\DBAL\Exception as DBALException;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Database\Connection;
 
 /**
  * Paste reference helper class
@@ -54,6 +54,7 @@ class Helper implements SingletonInterface
     public function getPidFromUid(int $uid = 0): int
     {
         $queryBuilder = $this->getQueryBuilder();
+        /** @var array<non-empty-string, string|int|float|bool|null> $triggerElement */
         $triggerElement = $queryBuilder
             ->select('pid')
             ->from('tt_content')
@@ -65,7 +66,7 @@ class Helper implements SingletonInterface
             )
             ->executeQuery()
             ->fetchAssociative();
-        $pid = (int)$triggerElement['pid'];
+        $pid = (int)($triggerElement['pid'] ?? 0);
         return is_array($triggerElement) && $pid ? $pid : 0;
     }
 
@@ -92,14 +93,14 @@ class Helper implements SingletonInterface
      */
     public function getBackendUser(): ?BackendUserAuthentication
     {
-        return $GLOBALS['BE_USER'];
+        return $GLOBALS['BE_USER'] ?? null;
     }
 
     /**
-     * @return LanguageService|null
+     * @return LanguageService
      */
     public function getLanguageService(): ?LanguageService
     {
-        return $GLOBALS['LANG'];
+        return $GLOBALS['LANG'] ?? null;
     }
 }

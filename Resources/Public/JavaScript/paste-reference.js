@@ -82,7 +82,6 @@ const onReady = new OnReady;
  * generates the paste into / paste after modal
  */
 Paste.activatePasteModal = (function (element) {
-  // const $element = $(element);
   const url = element.dataset.url || null;
   const elementTitle = this.itemOnClipboardTitle != undefined ? this.itemOnClipboardTitle : "["+TYPO3.lang['tx_paste_reference_js.modal.labels.no_title']+"]";
   const title = (TYPO3.lang['paste.modal.title.paste'] || 'Paste record') + ': "' + elementTitle + '"';

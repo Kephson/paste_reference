@@ -88,7 +88,8 @@ class PageLayoutController
             $jsLines[] = 'top.copyMode = "' . $this->copyMode . '";';
         }
 
-        if (!(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
+        if (
+            !(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
             && !(bool)($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
         ) {
             $jsLines[] = 'top.copyFromAnotherPageLinkTemplate = ' . json_encode($this->getButtonTemplate()) . ';';

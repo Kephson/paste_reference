@@ -161,7 +161,11 @@ Paste.activatePasteIcons = function () {
 
       // sorting of the buttons is important, else the modal for the first one is not working correctly
       // OLD: $(this).append(top.copyFromAnotherPageLinkTemplate);
-      $(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate);
+      if ($(this).find('button.t3js-paste').length) {
+        $(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate);
+      } else {
+        $(this).append(top.copyFromAnotherPageLinkTemplate);
+      }
 
       // Add modal, functionality of the modal itself is not done here,
       // but rather in paste-reference-drag-drop and triggered by
@@ -174,6 +178,7 @@ Paste.activatePasteIcons = function () {
       }
     }
 
+    /*
     // disable default click-EventListener
     $(document).off('click', '.t3js-paste');
 
@@ -182,6 +187,7 @@ Paste.activatePasteIcons = function () {
       evt.preventDefault();
       Paste.activatePasteModal($(evt.currentTarget));
     });
+    */
   });
 };
 

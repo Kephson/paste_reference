@@ -42,40 +42,21 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class AbstractDataHandler
 {
-    /**
-     * @var Connection
-     */
-    protected Connection $connection;
-
-    /**
-     * @var string
-     */
-    protected string $table;
-
-    /**
-     * @var int
-     */
-    protected int $pageUid;
-
-    /**
-     * @var int
-     */
+    protected ?Connection $connection = null;
+    protected string $table = '';
+    protected int $pageUid = 0;
     protected int $contentUid = 0;
-
-    /**
-     * @var DataHandler
-     */
-    protected DataHandler $dataHandler;
+    protected ?DataHandler $dataHandler = null;
 
     /**
      * initializes this class
      *
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
-     * @param DataHandler $dataHandler
+     * @param DataHandler $dataHandler|null
      * @throws DBALException|DBALDriverException
      */
-    public function init(string $table, int $uidPid, DataHandler $dataHandler): void
+    public function init(string $table, int $uidPid, ?DataHandler $dataHandler): void
     {
         $this->setTable($table);
         if ($table === 'tt_content' && $uidPid < 0) {

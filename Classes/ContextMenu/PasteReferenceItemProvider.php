@@ -26,17 +26,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PasteReferenceItemProvider extends RecordProvider
 {
-    /**
-     * @var array<non-empty-string, array<non-empty-string, mixed>>
-     */
-    protected $itemsConfiguration = [
-        'pasteReference' => [
-            'type' => 'item',
-            'label' => 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_clickmenu_pastereference',
-            'iconIdentifier' => 'actions-document-paste-after',
-            'callbackAction' => 'pasteReference',
-        ],
-    ];
+    protected string $LLL = 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf';
+
+    protected string $callBackModule = '@ehaerer/paste-reference/context-menu-actions';
 
     /**
      * @return bool
@@ -80,16 +72,16 @@ class PasteReferenceItemProvider extends RecordProvider
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $attributes = $this->getPasteAdditionalAttributes('after');
         $attributes += [
-            'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
+            'data-callback-module' => $this->callBackModule,
             'data-action-url' => (string)$uriBuilder->buildUriFromRoute('tce_db', $urlParameters),
-            'data-title' => $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference'),
+            'data-title' => $this->languageService->sL($this->LLL . ':newContentElementReference'),
             'data-message' => 'my message here',
         ];
         if ($this->backendUser->jsConfirmation(JsConfirmation::COPY_MOVE_PASTE)) {
             $selItem = $this->clipboard->getSelectedRecord();
-            $title = $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference');
+            $title = $this->languageService->sL($this->LLL . ':newContentElementReference');
             $confirmMessage = sprintf(
-                $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:mess.reference_after'),
+                $this->languageService->sL($this->LLL . ':mess.reference_after'),
                 GeneralUtility::fixed_lgd_cs($selItem['_RECORD_TITLE'], (int)$this->backendUser->uc['titleLen']),
                 GeneralUtility::fixed_lgd_cs(BackendUtility::getRecordTitle($this->table, $this->record), (int)$this->backendUser->uc['titleLen'])
             );
@@ -111,8 +103,14 @@ class PasteReferenceItemProvider extends RecordProvider
      */
     public function addItems(array $items): array
     {
-        $this->initialize();
+        $this->itemsConfiguration['pasteReference'] = [
+            'type' => 'item',
+            'label' => $this->LLL . ':tx_paste_reference_clickmenu_pastereference',
+            'iconIdentifier' => 'actions-document-paste-after',
+            'callbackAction' => 'pasteReference',
+        ];
 
+        $this->initialize();
         $this->initDisabledItems();
         $localItems = $this->prepareItems($this->itemsConfiguration);
 

@@ -54,7 +54,6 @@ abstract class AbstractDataHandler
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
      * @param DataHandler $dataHandler|null
-     * @return void
      * @throws DBALException|DBALDriverException
      */
     public function init(string $table, int $uidPid, ?DataHandler $dataHandler): void

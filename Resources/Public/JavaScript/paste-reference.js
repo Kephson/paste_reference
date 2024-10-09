@@ -178,16 +178,6 @@ Paste.activatePasteIcons = function () {
       }
     }
 
-    /*
-    // disable default click-EventListener
-    $(document).off('click', '.t3js-paste');
-
-    // add custom click-EventListener
-    $(document).on('click', '.t3js-paste', (evt) => {
-      evt.preventDefault();
-      Paste.activatePasteModal($(evt.currentTarget));
-    });
-    */
   });
 };
 

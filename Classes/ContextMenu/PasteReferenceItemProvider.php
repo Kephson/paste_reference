@@ -103,16 +103,18 @@ class PasteReferenceItemProvider extends RecordProvider
      */
     public function addItems(array $items): array
     {
-        $this->itemsConfiguration['pasteReference'] = [
-            'type' => 'item',
-            'label' => $this->LLL . ':tx_paste_reference_clickmenu_pastereference',
-            'iconIdentifier' => 'actions-document-paste-after',
-            'callbackAction' => 'pasteReference',
+        $itemsConfiguration = [
+            'pasteReference' => [
+                'type' => 'item',
+                'label' => $this->LLL . ':tx_paste_reference_clickmenu_pastereference',
+                'iconIdentifier' => 'actions-document-paste-after',
+                'callbackAction' => 'pasteReference',
+            ]
         ];
 
         $this->initialize();
         $this->initDisabledItems();
-        $localItems = $this->prepareItems($this->itemsConfiguration);
+        $localItems = $this->prepareItems($itemsConfiguration);
 
         if (isset($items['pasteAfter'])) {
             // @todo Instead of simple typecasting to (int) non integer return values of

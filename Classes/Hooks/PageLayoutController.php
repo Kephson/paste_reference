@@ -54,7 +54,7 @@ class PageLayoutController
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public function __construct(?PageRenderer $pageRenderer, ?IconFactory $iconFactory)
+    public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
         $this->helper = GeneralUtility::makeInstance(Helper::class);

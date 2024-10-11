@@ -153,10 +153,6 @@ Paste.activatePasteIcons = function () {
       return true;
     }
 
-    // @todo: check what does it do in detail and why?
-    // this does not work, clases have the form ".t3js-page-lang-column-0" - ".t3js-page-lang-column-x"
-    $('.t3js-page-lang-column .t3-page-ce > .t3-page-ce').removeClass('t3js-page-ce');
-
     if (top.copyFromAnotherPageLinkTemplate) {
 
       // sorting of the buttons is important, else the modal for the first one is not working correctly

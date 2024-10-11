@@ -40,8 +40,6 @@ class PageLayoutController
 {
     /** @var array<string, mixed> */
     protected array $extensionConfiguration = [];
-    protected string $LLL = 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml';
-    protected string $jsScriptName = '@ehaerer/paste-reference/paste-reference.js';
     protected array $elFromTable = [];
     protected string $copyMode = '';
     protected ?Helper $helper = null;
@@ -70,8 +68,7 @@ class PageLayoutController
      */
     public function drawHeaderHook(): string
     {
-        $languageFile = str_starts_with($this->LLL, 'LLL:') ? substr($this->LLL, 4) : $this->LLL;
-        $this->pageRenderer->addInlineLanguageLabelFile($languageFile, 'tx_paste_reference_js');
+        $this->pageRenderer->addInlineLanguageLabelFile('EXT:paste_reference/Resources/Private/Language/locallang_db.xml', 'tx_paste_reference_js');
 
         $jsLines = [];
 
@@ -96,14 +93,14 @@ class PageLayoutController
 
         $javaScript = implode("\n", $jsLines);
         $this->pageRenderer->addJsInlineCode('pasteReference', $javaScript, true, false, true);
-        $this->pageRenderer->loadJavaScriptModule($this->jsScriptName);
+        $this->pageRenderer->loadJavaScriptModule('@ehaerer/paste-reference/paste-reference.js');
 
         return '';
     }
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL($this->LLL . ':tx_paste_reference_js.copyfrompage');
+        $title = $this->helper->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', Icon::SIZE_SMALL)->render();
         // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';
@@ -111,7 +108,7 @@ class PageLayoutController
 
     protected function addJavaScriptModuleInstruction(): void
     {
-        $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create($this->jsScriptName);
+        $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-reference.js');
         /** @var \TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(

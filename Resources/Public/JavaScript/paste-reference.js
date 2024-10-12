@@ -156,32 +156,34 @@ Paste.activatePasteIcons = function () {
     if (top.copyFromAnotherPageLinkTemplate) {
 
       // sorting of the buttons is important, else the modal for the first one is not working correctly
-      // OLD: $(this).append(top.copyFromAnotherPageLinkTemplate);
-      if ($(this).find('button.t3js-paste').length) {
-        $(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate);
-      } else {
-        $(this).append(top.copyFromAnotherPageLinkTemplate);
-      }
-
-      // Add modal, functionality of the modal itself is not done here,
-      // but rather in paste-reference-drag-drop and triggered by
-      // the custom EventListener 'message' (see downwards)
-      if ($(this).find('button.t3js-paste-new').length) {
-        $(this).find('button.t3js-paste-new').on('click', function (evt) {
-          evt.preventDefault();
-          onReady.copyFromAnotherPage($(this));
-        });
-      }
-
-      // disable default click-EventListener
-      $(document).off('click', '.t3js-paste');
-
-      // add custom click-EventListener
-      $(document).on('click', '.t3js-paste', (evt) => {
-        evt.preventDefault();
-        Paste.activatePasteModal($(evt.currentTarget));
-      });
+      // therefore the buttons are added by promises
+      $.when($(this).find('button.t3js-paste'))
+        .then(() => {
+          $.when($(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate))
+            .then(() => {
+              // Add modal, functionality of the modal itself is not done here,
+              // but rather in paste-reference-drag-drop and triggered by
+              // the custom EventListener 'message' (see downwards)
+              if ($(this).find('button.t3js-paste-new').length) {
+                $(this).find('button.t3js-paste-new').on('click', function (evt) {
+                  evt.preventDefault();
+                  onReady.copyFromAnotherPage($(this));
+                });
+              }
+            })
+            .catch((error) => {console.error(error)});
+        })
+        .catch((error) => {console.error(error)});
     }
+
+    // disable default *click-EventListener
+    $(document).off('click', '.t3js-paste');
+
+    // add custom click-EventListener
+    $(document).on('click', '.t3js-paste', (evt) => {
+      evt.preventDefault();
+      Paste.activatePasteModal($(evt.currentTarget));
+    });
   });
 };
 

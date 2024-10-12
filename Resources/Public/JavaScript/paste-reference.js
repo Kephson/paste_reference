@@ -176,7 +176,7 @@ Paste.activatePasteIcons = function () {
         .catch((error) => {console.error(error)});
     }
 
-    // disable default *click-EventListener
+    // disable default click-EventListener
     $(document).off('click', '.t3js-paste');
 
     // add custom click-EventListener

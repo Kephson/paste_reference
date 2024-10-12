@@ -105,7 +105,7 @@ class PasteReferenceItemProvider extends RecordProvider
                 'label' => 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_clickmenu_pastereference',
                 'iconIdentifier' => 'actions-document-paste-after',
                 'callbackAction' => 'pasteReference',
-            ]
+            ],
         ];
 
         $this->initialize();

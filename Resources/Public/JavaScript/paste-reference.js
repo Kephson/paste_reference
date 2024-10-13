@@ -169,7 +169,17 @@ Paste.activatePasteIcons = function () {
       // sorting of the buttons is important, else the modal for the first one is not working correctly
       // therefore the buttons are added by promises
       $.when($(this).find('button.t3js-paste'))
-        .then(() => {
+      .then(() => {
+
+          // disable default click-EventListener
+          $(document).off('click', '.t3js-paste');
+
+          // add custom click-EventListener
+          $(document).on('click', '.t3js-paste', (evt) => {
+            evt.preventDefault();
+            Paste.activatePasteModal($(evt.currentTarget));
+          });
+
           $.when($(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate))
             .then(
               onReady.initClickEventListener($(this))
@@ -184,15 +194,6 @@ Paste.activatePasteIcons = function () {
       $(this).append(top.copyFromAnotherPageLinkTemplate);
       onReady.initClickEventListener($(this));
     }
-
-    // disable default click-EventListener
-    $(document).off('click', '.t3js-paste');
-
-    // add custom click-EventListener
-    $(document).on('click', '.t3js-paste', (evt) => {
-      evt.preventDefault();
-      Paste.activatePasteModal($(evt.currentTarget));
-    });
   });
 };
 

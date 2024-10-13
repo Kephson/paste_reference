@@ -153,7 +153,7 @@ Paste.activatePasteIcons = function () {
       return true;
     }
 
-    if (top.copyFromAnotherPageLinkTemplate) {
+    if (top.itemOnClipboardUid) {
 
       // sorting of the buttons is important, else the modal for the first one is not working correctly
       // therefore the buttons are added by promises
@@ -174,6 +174,8 @@ Paste.activatePasteIcons = function () {
             .catch((error) => {console.error(error)});
         })
         .catch((error) => {console.error(error)});
+    } else {
+      $(this).append(top.copyFromAnotherPageLinkTemplate);
     }
 
     // disable default click-EventListener

@@ -53,10 +53,10 @@ abstract class AbstractDataHandler
      *
      * @param string $table The name of the table the data should be saved to
      * @param int $uidPid The uid of the record or page we are currently working on
-     * @param DataHandler $dataHandler|null
+     * @param DataHandler $dataHandler
      * @throws DBALException|DBALDriverException
      */
-    public function init(string $table, int $uidPid, ?DataHandler $dataHandler): void
+    public function init(string $table, int $uidPid, DataHandler $dataHandler): void
     {
         $this->setTable($table);
         if ($table === 'tt_content' && $uidPid < 0) {

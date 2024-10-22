@@ -46,16 +46,16 @@ class OnReady {
       const resolvedBody = await response.resolve();
       if (resolvedBody.success === true) {
         let data = resolvedBody.data;
-        let record = resolvedBody.data.tabs[0].items[0];
-        let identifier = record.identifier;
-        let table = identifier.split('|')[0];
-        let uid = identifier.split('|')[1];
-        let title = record.title.replace(/<[^>]*>?/gm, '');
+        let record = data ? resolvedBody.data.tabs[0].items[0] : [];
+        let identifier = record ? record.identifier : '';
+        let table = identifier ? identifier.split('|')[0] : '';
+        let uid = identifier ? identifier.split('|')[1] : 0;
+        let title = record ? record.title.replace(/<[^>]*>?/gm, '') : '';
         let clipboardData = {
           copyMode: resolvedBody.data.copyMode,
           data: record,
           itemOnClipboardUid: uid * 1,
-          itemOnClipboardTitleHtml: record.title,
+          itemOnClipboardTitleHtml: record ? record.title : '',
           itemOnClipboardTitle: title,
           itemOnClipboardTable: table,
         };
@@ -75,6 +75,17 @@ class OnReady {
       };
     });
   };
+  initClickEventListener($element) {
+    // Add modal, functionality of the modal itself is not done here,
+    // but rather in paste-reference-drag-drop and triggered by
+    // the custom EventListener 'message' (see downwards)
+    if ($element.find('button.t3js-paste-new').length) {
+      $element.find('button.t3js-paste-new').on('click', function (evt) {
+        evt.preventDefault();
+        onReady.copyFromAnotherPage($element);
+      });
+    }
+  }
 }
 const onReady = new OnReady;
 
@@ -185,7 +196,6 @@ Paste.initializeEvents = (function () {
     onReady.copyFromAnotherPage(target);
   }).delegateTo(document, '.t3js-paste-new');
 });
-
 
 /**
  * gives back the data from the popup window with record-selection to the copy action

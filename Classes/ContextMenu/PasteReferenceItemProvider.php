@@ -21,7 +21,7 @@ use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Type\Bitmask\JsConfirmation;
+use TYPO3\CMS\Core\Authentication\JsConfirmation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PasteReferenceItemProvider extends RecordProvider

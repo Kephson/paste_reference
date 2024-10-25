@@ -7,7 +7,6 @@ return [
         'backend.contextmenu',
     ],
     'imports' => [
-        'jquery-ui/' => 'EXT:core/Resources/Public/JavaScript/Contrib/jquery-ui/',
         '@ehaerer/paste-reference/' => 'EXT:paste_reference/Resources/Public/JavaScript/',
     ],
 ];

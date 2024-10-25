@@ -100,7 +100,7 @@ class PageLayoutController
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL($this->LLL . ':tx_paste_reference_js.copyfrompage');
+        $title = $this->helper->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', IconSize::SMALL)->render();
         // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';
@@ -109,7 +109,6 @@ class PageLayoutController
     protected function addJavaScriptModuleInstruction(): void
     {
         $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-reference.js');
-        /** @var \TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(
             $JavaScriptModuleInstruction->instance(

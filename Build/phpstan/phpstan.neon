@@ -14,7 +14,6 @@ parameters:
   paths:
     - ../../Classes
     - ../../Tests
-    - ../../ext_localconf.php
     - ../../ext_tables.php
 
   excludePaths:

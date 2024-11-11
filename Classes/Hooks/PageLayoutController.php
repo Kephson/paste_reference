@@ -100,7 +100,7 @@ class PageLayoutController
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL($this->LLL . ':tx_paste_reference_js.copyfrompage');
+        $title = $this->helper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', IconSize::SMALL)->render();
         // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';

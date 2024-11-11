@@ -56,6 +56,7 @@ class PasteReferenceItemProvider extends RecordProvider
             'CB[pad]' => 'normal',
             'CB[update]' => [
                 'colPos' => $this->record['colPos'],
+				'sys_language_uid' => $this->record['sys_language_uid'],
             ],
             'reference' => 1,
         ];

@@ -109,7 +109,6 @@ class PageLayoutController
     protected function addJavaScriptModuleInstruction(): void
     {
         $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-reference.js');
-        /** @var \TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(
             $JavaScriptModuleInstruction->instance(

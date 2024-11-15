@@ -10,12 +10,14 @@
  *
  * The TYPO3 project - inspiring people to share!
  */
-import $ from "jquery";
+
 import AjaxRequest from '@typo3/core/ajax/ajax-request.js';
+import DocumentService from '@typo3/core/document-service.js';
 import { default as Modal } from "@typo3/backend/modal.js";
 import Paste from "@typo3/backend/layout-module/paste.js";
 import DragDrop from "@ehaerer/paste-reference/paste-reference-drag-drop.js";
 import { MessageUtility } from "@typo3/backend/utility/message-utility.js";
+import RegularEvent from '@typo3/core/event/regular-event.js';
 
 class OnReady {
   openedPopupWindow = [];
@@ -24,7 +26,11 @@ class OnReady {
    * generates the paste into / paste after modal
    */
   copyFromAnotherPage(element) {
-    const url = top.browserUrl + '&mode=db&bparams=' + element.parent().attr('id') + '|||tt_content|';
+    let idString = '';
+    if (element.offsetParent && element.offsetParent.id) {
+      idString = element.offsetParent.id
+    }
+    const url = top.browserUrl + '&mode=db&bparams=' + idString + '|||tt_content|';
     const configurationIframe = {
       type: Modal.types.iframe,
       content: url,
@@ -32,6 +38,7 @@ class OnReady {
     };
     Modal.advanced(configurationIframe);
   };
+
   getClipboardData() {
     (new AjaxRequest(top.TYPO3.settings.Clipboard.moduleUrl))
     .withQueryArguments({ action: 'getClipboardData' })
@@ -68,17 +75,25 @@ class OnReady {
         itemOnClipboardTable: '',
       };
     });
-  };
-  initClickEventListener($element) {
-    // Add modal, functionality of the modal itself is not done here,
-    // but rather in paste-reference-drag-drop and triggered by
-    // the custom EventListener 'message' (see downwards)
-    if ($element.find('button.t3js-paste-new').length) {
-      $element.find('button.t3js-paste-new').on('click', function (evt) {
-        evt.preventDefault();
-        onReady.copyFromAnotherPage($element);
+  }
+
+  waitForElm(elementAbove, selector) {
+    return new Promise(resolve => {
+      if (elementAbove.querySelector(selector)) {
+        return resolve(elementAbove.querySelector(selector));
+      }
+      const observer = new MutationObserver(mutations => {
+        if (elementAbove.querySelector(selector)) {
+          observer.disconnect();
+          resolve(elementAbove.querySelector(selector));
+        }
       });
-    }
+      // If you get "parameter 1 is not of type 'Node'" error, see https://stackoverflow.com/a/77855838/492336
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    });
   }
 }
 const onReady = new OnReady;
@@ -86,16 +101,15 @@ const onReady = new OnReady;
 /**
  * generates the paste into / paste after modal
  */
-Paste.activatePasteModal = function (element) {
-  const $element = $(element);
-  const url = $element.data('url') || null;
-  const elementTitle = top.itemOnClipboardTitle != undefined ? top.itemOnClipboardTitle : "["+TYPO3.lang['tx_paste_reference_js.modal.labels.no_title']+"]";
+Paste.activatePasteModal = function(element) {
+  const url = element.dataset.url || null;
+  const elementTitle = this.itemOnClipboardTitle != undefined ? this.itemOnClipboardTitle : "["+TYPO3.lang['tx_paste_reference_js.modal.labels.no_title']+"]";
   const title = (TYPO3.lang['paste.modal.title.paste'] || 'Paste record') + ': "' + elementTitle + '"';
-  const severity = (typeof top.TYPO3.Severity[$element.data('severity')] !== 'undefined') ? top.TYPO3.Severity[$element.data('severity')] : top.TYPO3.Severity.info;
+  const severity = (typeof top.TYPO3.Severity[element.dataset.severity] !== 'undefined') ? top.TYPO3.Severity[element.dataset.severity] : top.TYPO3.Severity.info;
   let buttons = [];
   let content = '';
 
-  if ($element.hasClass('t3js-paste-copy')) {
+  if (element.classList.contains('t3js-paste-copy')) {
     content = TYPO3.lang['tx_paste_reference_js.modal.pastecopy'] || 'How do you want to paste that clipboard content here?';
     buttons = [
       {
@@ -107,17 +121,17 @@ Paste.activatePasteModal = function (element) {
       {
         text: TYPO3.lang['tx_paste_reference_js.modal.button.pastecopy'] || 'Paste as copy',
         btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
-        trigger: function (evt, modal) {
+        trigger: function(evt, modal) {
           modal.hideModal();
-          DragDrop.default.onDrop(top.itemOnClipboardUid, $element, evt);
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt);
         }
       },
       {
         text: TYPO3.lang['tx_paste_reference_js.modal.button.pastereference'] || 'Paste as reference',
         btnClass: 'text-white btn-' + top.TYPO3.Severity.getCssClass(severity),
-        trigger: function (evt, modal) {
+        trigger: function(evt, modal) {
           modal.hideModal();
-          DragDrop.default.onDrop(top.itemOnClipboardUid, $element, evt, 'reference');
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, evt, 'reference');
         }
       }
     ];
@@ -136,9 +150,9 @@ Paste.activatePasteModal = function (element) {
       {
         text: TYPO3.lang['paste.modal.button.paste'] || 'Move',
         btnClass: 'btn-' + Severity.getCssClass(severity),
-        trigger: function (evt, modal) {
+        trigger: function(evt, modal) {
           modal.hideModal();
-          DragDrop.default.onDrop(top.itemOnClipboardUid, $element, null);
+          DragDrop.default.onDrop(top.itemOnClipboardUid, element, null);
         }
       }
     ];
@@ -155,48 +169,59 @@ Paste.activatePasteModal = function (element) {
 /**
  * activates the paste into / paste after and fetch copy from another page icons outside of the context menus
  */
-Paste.activatePasteIcons = function () {
-  onReady.getClipboardData();
+Paste.activatePasteIcons = function() {
+  if (top.copyFromAnotherPageLinkTemplate) {
+    const allElements = document.querySelectorAll('.t3js-page-new-ce');
+    allElements.forEach((element, index) => {
+      if (element.querySelector('.icon-actions-plus')) {
+        const copyFromAnotherPageLink = document.createRange().createContextualFragment(top.copyFromAnotherPageLinkTemplate);
 
-  $('.t3js-page-new-ce').each(function () {
+        // if any item is in the clipboard
+        if (top.itemOnClipboardUid > 0) {
 
-    if (!$(this).find('.icon-actions-plus').length) {
-      return true;
-    }
+          // waiting till default paste-buttons are created
+          onReady.waitForElm(element, '.t3js-paste').then((pasteButton) => {
+              // add additional button
+              pasteButton.after(copyFromAnotherPageLink);
 
-    if (top.itemOnClipboardUid) {
-
-      // sorting of the buttons is important, else the modal for the first one is not working correctly
-      // therefore the buttons are added by promises
-      $.when($(this).find('button.t3js-paste'))
-      .then(() => {
-
-          // disable default click-EventListener
-          $(document).off('click', '.t3js-paste');
-
-          // add custom click-EventListener
-          $(document).on('click', '.t3js-paste', (evt) => {
-            evt.preventDefault();
-            Paste.activatePasteModal($(evt.currentTarget));
+              // 1) remove class from the default button and consequentally the click-EventHandler
+              // 2) add class to the default button to attach an own click-EventHandler
+              pasteButton.classList.replace('t3js-paste', 't3js-paste-default');
           });
-
-          $.when($(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate))
-            .then(
-              onReady.initClickEventListener($(this))
-            )
-            .catch(
-              (error) => {console.error(error)}
-            );
-        })
-        .catch((error) => {console.error(error)});
-
-    } else {
-      $(this).append(top.copyFromAnotherPageLinkTemplate);
-      onReady.initClickEventListener($(this));
-    }
-  });
+        } else {
+            // add additional button without waiting for default button
+            // as that one won't be shown with empty clipboard
+            element.append(copyFromAnotherPageLink);
+        }
+        // Assigning id to first button-bar as it's missing because
+        // it's not connected to a distinct content-element but required for modal
+        if (index === 0 && !element.parentElement.id) {
+          let tmpId = allElements[index + 1].parentElement.id;
+          let regex = /tt_content-[0-9]+/;
+          let id = tmpId.replace(regex, 'tt_content-0');
+          element.parentElement.setAttribute('id', id);
+        }
+      };
+    });
+  };
 };
 
+Paste.initializeEvents = function() {
+  if (top.itemOnClipboardUid > 0) {
+    onReady.waitForElm(document, '.t3js-paste-default').then(() => {
+      new RegularEvent('click', (evt, target) => {
+        evt.preventDefault();
+        this.activatePasteModal(target);
+      }).delegateTo(document, '.t3js-paste-default');
+    });
+  }
+  onReady.waitForElm(document, '.t3js-paste-new').then(() => {
+    new RegularEvent('click', (evt, target) => {
+      evt.preventDefault();
+      onReady.copyFromAnotherPage(target);
+    }).delegateTo(document, '.t3js-paste-new');
+  });
+};
 
 /**
  * gives back the data from the popup window with record-selection to the copy action
@@ -204,8 +229,8 @@ Paste.activatePasteIcons = function () {
  * $('.typo3-TCEforms') is not relevant here as it exists on
  * detail pages for single records only.
  */
-if (!$('.typo3-TCEforms').length) {
-  window.addEventListener('message', function (evt) {
+if (!document.querySelector('.typo3-TCEforms')) {
+  window.addEventListener('message', function(evt) {
 
     if (!MessageUtility.verifyOrigin(evt.origin)) {
       throw 'Denied message sent by ' + evt.origin;
@@ -222,10 +247,18 @@ if (!$('.typo3-TCEforms').length) {
     const result = evt.data.value;
     const tableUid = result.replace('tt_content_', '') * 1;
     const elementId = evt.data.fieldName;
-    DragDrop.default.onDrop(tableUid, $('#' + elementId).find('.t3js-paste-new'), 'copyFromAnotherPage');
+    DragDrop.default.onDrop(
+      tableUid,
+      document.querySelector('#' + elementId).querySelector('.t3js-paste-new'),
+      'copyFromAnotherPage'
+    );
   });
 }
 
-Paste.activatePasteIcons();
+DocumentService.ready().then(() => {
+  onReady.getClipboardData();
+  Paste.activatePasteIcons();
+  Paste.initializeEvents();
+});
 
 export default OnReady;

@@ -30,8 +30,8 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
 use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Imaging\IconSize;
 use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -100,8 +100,8 @@ class PageLayoutController
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
-        $icon = $this->iconFactory->getIcon('actions-insert-reference', Icon::SIZE_SMALL)->render();
+        $title = $this->helper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
+        $icon = $this->iconFactory->getIcon('actions-insert-reference', IconSize::SMALL)->render();
         // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';
     }
@@ -109,7 +109,6 @@ class PageLayoutController
     protected function addJavaScriptModuleInstruction(): void
     {
         $JavaScriptModuleInstruction = JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-reference.js');
-        /** @var \TYPO3\CMS\Core\Page\JavaScriptRenderer $javaScriptRenderer */
         $javaScriptRenderer = $this->pageRenderer->getJavaScriptRenderer();
         $javaScriptRenderer->addJavaScriptModuleInstruction(
             $JavaScriptModuleInstruction->instance(

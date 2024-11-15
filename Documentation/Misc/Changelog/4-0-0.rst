@@ -1,4 +1,4 @@
-3.0.1 - November 15, 2024
+4.0.0 - November 15, 2024
 =========================
 
 .. include:: ../../Includes.txt
@@ -17,4 +17,4 @@ All Changes
 -----------
 This is a list of all changes in this release: ::
 
-- [CHG] included pull request from @zoranilic and fixed problems with translations when pasting a reference
+- New release of this extension for TYPO3 version 13

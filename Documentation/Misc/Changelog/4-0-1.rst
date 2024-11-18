@@ -1,0 +1,20 @@
+4.0.1 - November 18, 2024
+=========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [BUGFIX] fix eventHandler to show modal window for moving elements

@@ -11,10 +11,9 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Paste reference for content elements',
     'description' => 'Paste reference instead of copy for content elements',
     'category' => 'plugin',
-    'version' => '4.0.0',
+    'version' => '4.0.1',
     'constraints' => [
         'depends' => [
-            // 13.3.1 was a security release
             'typo3' => '13.3.1-13.4.99',
         ],
         'conflicts' => [

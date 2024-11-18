@@ -135,7 +135,7 @@ Paste.activatePasteModal = function (element) {
       },
       {
         text: TYPO3.lang['paste.modal.button.paste'] || 'Move',
-        btnClass: 'btn-' + Severity.getCssClass(severity),
+        btnClass: 'btn-' + top.TYPO3.Severity.getCssClass(severity),
         trigger: function (evt, modal) {
           modal.hideModal();
           DragDrop.default.onDrop(top.itemOnClipboardUid, $element, null);

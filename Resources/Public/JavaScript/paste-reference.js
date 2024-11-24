@@ -171,16 +171,16 @@ Paste.activatePasteIcons = function () {
       $.when($(this).find('button.t3js-paste'))
       .then(() => {
 
-          // disable default click-EventListener
-          $(document).off('click', '.t3js-paste');
+          // replace class and in consequence the corresponding EventListener
+          $(this).find('button.t3js-paste').addClass('t3js-paste-default').removeClass('t3js-paste');
 
           // add custom click-EventListener
-          $(document).on('click', '.t3js-paste', (evt) => {
+          $(this).on('click', '.t3js-paste-default', (evt) => {
             evt.preventDefault();
             Paste.activatePasteModal($(evt.currentTarget));
           });
 
-          $.when($(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate))
+          $.when($(this).find('button.t3js-paste-default').after(top.copyFromAnotherPageLinkTemplate))
             .then(
               onReady.initClickEventListener($(this))
             )

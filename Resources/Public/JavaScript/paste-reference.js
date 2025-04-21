@@ -160,9 +160,9 @@ Paste.activatePasteIcons = function () {
 
   $('.t3js-page-new-ce').each(function () {
 
-    // '.icon-actions-plus belogs to default template
+    // '.icon-actions-plus belongs to default template
     // '.icon-actions-add' belongs to EXT:contaier
-    if (!$(this).find('.icon-actions-plus').length && !$(this).find('.icon-actions-add').length) {
+    if (!$(this).find('.icon-actions-plus, .icon-actions-add').length) {
       return true;
     }
 
@@ -173,17 +173,17 @@ Paste.activatePasteIcons = function () {
       $.when($(this).find('button.t3js-paste'))
       .then(() => {
 
-          // disable default click-EventListener on default paste button
-          $(document).off('click', '.t3js-paste');
+          // replace class and in consequence the corresponding EventListener
+          $(this).find('button.t3js-paste').addClass('t3js-paste-default').removeClass('t3js-paste');
 
           // add custom click-EventListener on default paste button
-          $(document).on('click', '.t3js-paste', (evt) => {
+          $(this).on('click', '.t3js-paste-default', (evt) => {
             evt.preventDefault();
             Paste.activatePasteModal($(evt.currentTarget));
           });
 
           // promise to add custom button and eventHandler if 'button.t3js-paste' is found
-          $.when($(this).find('button.t3js-paste').after(top.copyFromAnotherPageLinkTemplate))
+          $.when($(this).find('button.t3js-paste-default').after(top.copyFromAnotherPageLinkTemplate))
             .then(
               onReady.initClickEventListener($(this))
             )

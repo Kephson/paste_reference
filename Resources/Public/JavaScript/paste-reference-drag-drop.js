@@ -126,10 +126,9 @@ DragDrop.default = {
 
     $(DragDrop.default.dropZoneIdentifier).not(DragDrop.default.ownDropZone).each(function () {
       $(this).addClass(DragDrop.default.validDropZoneClass);
-      if (($(this).not(disabledDropZones).length
-        || siblingsDropZones.length
-      ) &&
-      $(this).parent().find('.icon-actions-add').length
+      if (
+        ($(this).not(disabledDropZones).length || siblingsDropZones.length)
+        && $(this).parent().find('.icon-actions-add').length
       ) {
         $(this).addClass(DragDrop.default.validDropZoneClass);
       } else {
@@ -262,7 +261,7 @@ DragDrop.default = {
         if (evt === 'copyFromAnotherPage') {
           parameters['CB'] = {setCopyMode: 1};
         }
-        if (containerParent){
+        if (containerParent) {
           parameters['cmd']['tt_content'][contentElementUid]['copy']['update']['tx_container_parent'] = containerParent;
         }
         // fire the request, and show a message if it has failed
@@ -294,7 +293,7 @@ DragDrop.default = {
             }
           }
         };
-        if (containerParent){
+        if (containerParent) {
           parameters['cmd']['tt_content'][contentElementUid]['move']['update']['tx_container_parent'] = containerParent;
         }
         // fire the request, and show a message if it has failed

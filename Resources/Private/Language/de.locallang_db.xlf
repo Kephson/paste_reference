@@ -20,7 +20,7 @@
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.drophere">
         <source>Drop Here</source>
-        <target state="translated">Hier Ablegen</target>
+        <target state="translated">Hier ablegen</target>
       </trans-unit>
       <trans-unit id="tx_paste_reference_js.missingcontenttemplate">
         <source>Missing Content Template</source>
@@ -68,7 +68,7 @@
       </trans-unit>
       <trans-unit id="mess.reference_after" resname="mess.reference_after">
         <source>Copy "%s" as reference after "%s"?</source>
-        <target state="translated">Kopiere "%s" als Referenz nach "%s "?</target>
+        <target state="translated">Kopiere "%s" als Referenz nach "%s"?</target>
       </trans-unit>
     </body>
   </file>

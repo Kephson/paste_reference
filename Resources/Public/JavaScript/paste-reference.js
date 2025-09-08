@@ -168,7 +168,8 @@ class PasteReference {
           throw 'Denied message sent by ' + evt.origin;
         }
         if (typeof evt.data.fieldName === 'undefined') {
-          throw 'fieldName not defined in message';
+          // throw 'fieldName not defined in message';
+          console.log('fieldName not defined in message');
         }
         if (typeof evt.data.value === 'undefined') {
           throw 'value not defined in message';

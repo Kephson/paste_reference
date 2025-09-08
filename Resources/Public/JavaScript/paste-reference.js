@@ -17,13 +17,6 @@ import Paste from "@typo3/backend/layout-module/paste.js";
 import DragDrop from "@ehaerer/paste-reference/paste-reference-drag-drop.js";
 import { MessageUtility } from "@typo3/backend/utility/message-utility.js";
 
-// import ContextMenuActions from "@typo3/backend/context-menu-actions.js";
-import Viewport from "@typo3/backend/viewport.js";
-import { default as CoreContextMenuActions } from "@typo3/backend/context-menu-actions.js";
-// import { default as ContextMenuActions } from "@ehaerer/paste-reference/context-menu-actions.js";
-
-import { default as Topbar } from "@typo3/backend/viewport/topbar.js";
-
 class PasteReference {
 
   openedPopupWindow = [];

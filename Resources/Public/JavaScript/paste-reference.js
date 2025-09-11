@@ -17,13 +17,25 @@ import Paste from "@typo3/backend/layout-module/paste.js";
 import DragDrop from "@ehaerer/paste-reference/paste-reference-drag-drop.js";
 import { MessageUtility } from "@typo3/backend/utility/message-utility.js";
 
+/**
+ * Module: @ehaerer/paste-reference/paste-reference.js
+ */
+
+'use strict';
+
+/**
+ * @exports @ehaerer/paste-reference/paste-reference.js
+ */
 class PasteReference {
 
-  openedPopupWindow = [];
+  static instanceCount = 0;
+
+  // openedPopupWindow = [];
 
   constructor() {
-    this.initModalEventListener();
+    PasteReference.instanceCount++;
     this.activatePasteIcons();
+    this.initModalEventListener();
   }
 
   /**
@@ -61,12 +73,6 @@ class PasteReference {
     this.getClipboardData();
 
     $('.t3js-page-new-ce').each(function () {
-      // '.icon-actions-plus belongs to default template
-      // '.icon-actions-add' belongs to EXT:contaier
-      if (!$(this).find('.icon-actions-plus, .icon-actions-add').length) {
-        return true;
-      }
-
       const addButton = this;
       if (top.itemOnClipboardUid) {
         // sorting of the buttons is important, else the modal
@@ -75,7 +81,12 @@ class PasteReference {
         $.when($(this).find('button.t3js-paste'))
         .then(() => {
             thisClass.alterDefaultPasteButton(this);
-            thisClass.addPasteReferenceButton(addButton, $(this).find('button.t3js-paste-default'));
+            // avoid that button is added twice in container elements
+            // console.log(this, this.querySelectorAll('.t3js-paste-new').length);
+            if (this.querySelectorAll('.t3js-paste-new').length < 1) {
+              // add additional button
+              thisClass.addPasteReferenceButton(addButton, $(this).find('button.t3js-paste-default'));
+            }
           })
           .catch((error) => {console.error(error)});
 
@@ -148,9 +159,13 @@ class PasteReference {
     if (url !== null) {
       const separator = (url.indexOf('?') > -1) ? '&' : '?';
       const params = $.param({data: $element.data()});
-      Modal.loadUrl(title, severity, buttons, url + separator + params);
+      if (document.querySelectorAll('.typo3-backend-modal').length < 1) {
+        Modal.loadUrl(title, severity, buttons, url + separator + params);
+      }
     } else {
-      Modal.show(title, content, severity, buttons);
+      if (document.querySelectorAll('.typo3-backend-modal').length < 1) {
+        Modal.show(title, content, severity, buttons);
+      }
     }
   }
 
@@ -211,7 +226,7 @@ class PasteReference {
         )
         .catch((error) => {console.error(error)});
     } else {
-      addButton.append($pasteReferenceButton);
+      $(addButton).append($pasteReferenceButton);
       thisClass.initClickEventListener($pasteReferenceButton);
     }
   }
@@ -251,3 +266,12 @@ Paste.activatePasteModal = function (element) {}
 Paste.activatePasteIcons = function () {}
 
 export default PasteReference;
+
+if (PasteReference.instanceCount === 0 && top.pasteReferenceAllowed) {
+  const pollTime = 100;
+  window.setTimeout(function() {
+    if (PasteReference.instanceCount === 0) {
+      const pasteReference = new PasteReference({});
+    }
+  }, pollTime);
+}

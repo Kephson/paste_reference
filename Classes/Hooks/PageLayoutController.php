@@ -68,7 +68,7 @@ class PageLayoutController
      */
     public function drawHeaderHook(): string
     {
-        $this->pageRenderer->addInlineLanguageLabelFile('EXT:paste_reference/Resources/Private/Language/locallang_db.xml', 'tx_paste_reference_js');
+        $this->pageRenderer->addInlineLanguageLabelFile('EXT:paste_reference/Resources/Private/Language/locallang_db.xlf', 'tx_paste_reference_js');
 
         $jsLines = [];
 
@@ -78,6 +78,7 @@ class PageLayoutController
             $jsLines[] = 'top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
+
 
         if (!empty($this->elFromTable)) {
             $this->addJavaScriptModuleInstruction();
@@ -100,7 +101,7 @@ class PageLayoutController
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xml:tx_paste_reference_js.copyfrompage');
+        $title = $this->helper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', IconSize::SMALL)->render();
         // the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';

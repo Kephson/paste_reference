@@ -126,10 +126,9 @@ DragDrop.default = {
 
     $(DragDrop.default.dropZoneIdentifier).not(DragDrop.default.ownDropZone).each(function () {
       $(this).addClass(DragDrop.default.validDropZoneClass);
-      if (($(this).not(disabledDropZones).length
-        || siblingsDropZones.length
-      ) &&
-      $(this).parent().find('.icon-actions-add').length
+      if (
+        ($(this).not(disabledDropZones).length || siblingsDropZones.length)
+        && $(this).parent().find('.icon-actions-add').length
       ) {
         $(this).addClass(DragDrop.default.validDropZoneClass);
       } else {
@@ -173,6 +172,7 @@ DragDrop.default = {
    */
   onDrop: function ($draggableElement, $droppableElement, evt, reference) {
     const newColumn = DragDrop.default.getColumnPositionForElement($droppableElement) ?? 0;
+    const containerParent = DragDrop.default.getContainerParentForElement($droppableElement) ?? 0;
 
     $droppableElement.removeClass(DragDrop.default.dropPossibleHoverClass);
     const $pasteAction = typeof $draggableElement === 'number' || typeof $draggableElement === 'undefined';
@@ -261,6 +261,9 @@ DragDrop.default = {
         if (evt === 'copyFromAnotherPage') {
           parameters['CB'] = {setCopyMode: 1};
         }
+        if (containerParent) {
+          parameters['cmd']['tt_content'][contentElementUid]['copy']['update']['tx_container_parent'] = containerParent;
+        }
         // fire the request, and show a message if it has failed
         // This is adding a copy from another page "to this [selected] place".
         AjaxDataHandler.process(parameters).then(function (result) {
@@ -290,6 +293,9 @@ DragDrop.default = {
             }
           }
         };
+        if (containerParent) {
+          parameters['cmd']['tt_content'][contentElementUid]['move']['update']['tx_container_parent'] = containerParent;
+        }
         // fire the request, and show a message if it has failed
         AjaxDataHandler.process(parameters).then(function (result) {
           if (!result.hasErrors) {
@@ -320,6 +326,20 @@ DragDrop.default = {
     const $columnContainer = $element.closest('[data-colpos]');
     if ($columnContainer.length && $columnContainer.data('colpos') !== 'undefined') {
       return $columnContainer.data('colpos');
+    } else {
+      return false;
+    }
+  },
+
+  /**
+   * returns the next "upper" container parent parameter inside the code
+   * @param $element
+   * @return int|boolean the containerParent
+   */
+  getContainerParentForElement: function ($element) {
+    const $gridContainer = $element.closest('[data-tx-container-parent]');
+    if ($gridContainer.length && $gridContainer.data('txContainerParent') !== 'undefined') {
+      return $gridContainer.data('txContainerParent');
     } else {
       return false;
     }

@@ -1,0 +1,21 @@
+3.0.4 - October 13, 2025
+========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- implemented pull request #83 with updates for TYPO3 12.4
+- added better compatibility with TYPO3 12.4

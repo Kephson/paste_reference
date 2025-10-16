@@ -69,7 +69,8 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      *
      * @param $item GridColumnItem
      * @return string
-     * @throws DBALException|JsonException
+     * @throws DBALException
+     * @throws JsonException
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
@@ -143,22 +144,23 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
      *
-     * @todo: move this in a repository
-     *
      * @param string $shortcutItem The single page to be used as the tree root
      * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
+     * @todo: move this in a repository
+     *
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array &$collectedItems,
-        int $recursive = 0,
-        int $parentUid = 0,
-        int $language = 0
-    ): void {
+        array  &$collectedItems,
+        int    $recursive = 0,
+        int    $parentUid = 0,
+        int    $language = 0
+    ): void
+    {
         $itemList = str_replace('pages_', '', $shortcutItem);
         $itemList = GeneralUtility::intExplode(',', $itemList);
 
@@ -166,9 +168,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $result = $queryBuilder
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
-                'pid',
-                $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
-            ) . ' AS inSet')
+                    'pid',
+                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
+                ) . ' AS inSet')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->neq(
@@ -210,13 +212,13 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
     /**
      * Collects tt_content data from a single tt_content element
      *
-     * @todo: move this in a repository
-     *
      * @param string $shortcutItem The tt_content element to fetch the data from
      * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
+     * @todo: move this in a repository
+     *
      */
     protected function collectContentData(string $shortcutItem, array &$collectedItems, int $parentUid, int $language): void
     {

@@ -79,6 +79,7 @@ class PageLayoutController
         } catch (RouteNotFoundException $e) {
         }
 
+
         if (!empty($this->elFromTable)) {
             $this->addJavaScriptModuleInstruction();
             $jsLines[] = 'top.copyMode = "' . $this->copyMode . '";';

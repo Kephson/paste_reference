@@ -6,7 +6,7 @@ namespace EHAERER\PasteReference\EventListener;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
+ *  (c) 2021-2025 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is

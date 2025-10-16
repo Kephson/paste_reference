@@ -6,7 +6,7 @@ namespace EHAERER\PasteReference\DataHandler;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2023 Ephraim Härer <mail@ephra.im>
+ *  (c) 2023-2025 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  (c) 2013 Stefan Froemken <froemken@gmail.com>
  *  All rights reserved

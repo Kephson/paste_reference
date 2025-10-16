@@ -6,6 +6,7 @@ namespace EHAERER\PasteReference\Hooks;
 
 /***************************************************************
  *  Copyright notice
+ *  (c) 2023-2025 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>, Tobias Ferger <tobi@tt36.de>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -78,7 +79,6 @@ class PageLayoutController
             $jsLines[] = 'top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
-
 
         if (!empty($this->elFromTable)) {
             $this->addJavaScriptModuleInstruction();

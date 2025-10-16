@@ -26,6 +26,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\Helper\Helper;
+use JsonException;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -68,7 +69,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      *
      * @param $item GridColumnItem
      * @return string
-     * @throws DBALException
+     * @throws DBALException|JsonException
      */
     public function renderPageModulePreviewContent(GridColumnItem $item): string
     {

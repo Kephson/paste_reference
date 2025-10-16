@@ -1,0 +1,20 @@
+3.0.5 - October 16, 2025
+========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [BUGFIX] corrected path to translation file

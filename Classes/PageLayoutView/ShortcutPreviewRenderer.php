@@ -151,11 +151,10 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      */
     protected function collectContentDataFromPages(
         string $shortcutItem,
-        array  &$collectedItems,
-        int    $parentUid = 0,
-        int    $language = 0
-    ): void
-    {
+        array &$collectedItems,
+        int $parentUid = 0,
+        int $language = 0
+    ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
         $itemList = GeneralUtility::intExplode(',', $itemList);
 
@@ -163,9 +162,9 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $result = $queryBuilder
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
-                    'pid',
-                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
-                ) . ' AS inSet')
+                'pid',
+                $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
+            ) . ' AS inSet')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->neq(

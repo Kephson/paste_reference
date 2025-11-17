@@ -283,7 +283,7 @@ console.log({
     containerParent = null
   ) {
     if (containerParent) {
-      parameters.cmd.tt_content.contentElementUid.move.update.tx_container_parent = containerParent;
+      parameters.CB.update.tx_container_parent = containerParent;
     }
     // let jsonString = JSON.stringify(parameters);
 
@@ -318,7 +318,7 @@ console.log({
    * @return int|boolean the colPos
    */
   getColumnPositionForElement: function (element) {
-    const columnContainer = element && element.closest('[data-colpos]') ? element.closest('[data-colpos]') : [];
+    const columnContainer = element && element.closest('[data-colpos]') ? element.closest('[data-colpos]') : null;
     let result = false;
     if (columnContainer && columnContainer.dataset['colpos'] !== 'undefined') {
       result = (columnContainer.dataset['colpos']) * 1;
@@ -334,9 +334,9 @@ console.log({
   getContainerParentForElement: function (element) {
     const gridContainer = element && element.closest('[data-tx-container-parent]')
       ? element.closest('[data-tx-container-parent]')
-      : [];
+      : null;
     let result = false;
-    if (gridContainer.length && gridContainer.dataset['txContainerParent'] !== 'undefined') {
+    if (gridContainer && gridContainer.dataset['txContainerParent'] !== 'undefined') {
       result = gridContainer.dataset['txContainerParent'];
     }
     return result;

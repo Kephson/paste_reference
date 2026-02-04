@@ -8,7 +8,7 @@ run-name: "[Multi-Version] TYPO3 v${{ matrix.typo3-version }} with PHP ${{ matri
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, v5-dev ]
     paths:
       - 'Classes/**'
       - 'Resources/**'

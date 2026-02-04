@@ -130,7 +130,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
-            
+
             // The extension currently calls getRow() which doesn't exist on RecordInterface
             // This test documents the API compatibility issue by checking if the method exists
             if (method_exists($record, 'getRow')) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Additional configuration for TYPO3 v14 test environment
  */
@@ -12,7 +13,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['exceptionalErrors'] = E_ALL & ~(E_STRICT | E
 $GLOBALS['TYPO3_CONF_VARS']['LOG']['TYPO3']['CMS']['Core']['Resource']['ResourceStorage']['writerConfiguration'] = [
     \TYPO3\CMS\Core\Log\LogLevel::ERROR => [
         \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-            'logFile' => 'var/log/typo3_test.log'
+            'logFile' => 'var/log/typo3_test.log',
         ],
     ],
 ];
@@ -48,7 +49,7 @@ $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['paste_reference'] = serialize([
 $GLOBALS['TYPO3_CONF_VARS']['LOG']['TYPO3']['CMS']['deprecations']['writerConfiguration'] = [
     \TYPO3\CMS\Core\Log\LogLevel::NOTICE => [
         \TYPO3\CMS\Core\Log\Writer\FileWriter::class => [
-            'logFile' => 'var/log/deprecations.log'
+            'logFile' => 'var/log/deprecations.log',
         ],
     ],
 ];

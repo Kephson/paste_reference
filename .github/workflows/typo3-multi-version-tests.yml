@@ -52,59 +52,16 @@ on:
 
 jobs:
   #---------------------------------------------------------------------------------------------------------------------
-  # Detect changes to determine which tests to run
-  #---------------------------------------------------------------------------------------------------------------------
-  detect-changes:
-    name: "Detect file changes"
-    runs-on: ubuntu-latest
-    outputs:
-      php-changed: ${{ steps.changes.outputs.php }}
-      js-changed: ${{ steps.changes.outputs.js }}
-      config-changed: ${{ steps.changes.outputs.config }}
-      test-changed: ${{ steps.changes.outputs.test }}
-      force-full: ${{ github.event.inputs.force_full_test == 'true' }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Detect changes
-        uses: dorny/paths-filter@v3
-        id: changes
-        with:
-          filters: |
-            php:
-              - 'Classes/**/*.php'
-              - 'ext_emconf.php'
-              - 'ext_tables.php'
-              - 'composer.json'
-            js:
-              - 'Resources/Public/JavaScript/**'
-              - 'package.json'
-              - 'package-lock.json'
-            config:
-              - 'Configuration/**'
-              - 'ext_conf_template.txt'
-            test:
-              - 'Tests/**'
-              - '.github/workflows/typo3-multi-version-tests.yml'
-
-  #---------------------------------------------------------------------------------------------------------------------
   # Multi-version compatibility testing ensures the extension works across supported TYPO3 versions
   #---------------------------------------------------------------------------------------------------------------------
   multi-version-tests:
     name: "TYPO3 v${{ matrix.typo3-version }} | PHP ${{ matrix.php-version }}"
     runs-on: ubuntu-latest
     continue-on-error: false
-    needs: detect-changes
+    # Remove the complex change detection and always run on relevant events
     if: |
-      needs.detect-changes.outputs.force-full == 'true' ||
-      needs.detect-changes.outputs.php-changed == 'true' ||
-      needs.detect-changes.outputs.js-changed == 'true' ||
-      needs.detect-changes.outputs.config-changed == 'true' ||
-      needs.detect-changes.outputs.test-changed == 'true' ||
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
       github.event_name == 'workflow_dispatch'
 
     strategy:
@@ -200,41 +157,21 @@ jobs:
           Tests/Scripts/seed-test-data.sh ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 
       - name: Run JavaScript unit tests
-        if: |
-          needs.detect-changes.outputs.force-full == 'true' ||
-          needs.detect-changes.outputs.js-changed == 'true' ||
-          needs.detect-changes.outputs.test-changed == 'true'
         run: |
           npm test -- --run --reporter=verbose
         env:
           TYPO3_VERSION: ${{ matrix.typo3-version }}
 
       - name: Run PHP unit tests
-        if: |
-          needs.detect-changes.outputs.force-full == 'true' ||
-          needs.detect-changes.outputs.php-changed == 'true' ||
-          needs.detect-changes.outputs.config-changed == 'true' ||
-          needs.detect-changes.outputs.test-changed == 'true'
         run: |
           chmod +x Tests/Scripts/run-tests.sh
           Tests/Scripts/run-tests.sh unit ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 
       - name: Run functional tests
-        if: |
-          needs.detect-changes.outputs.force-full == 'true' ||
-          needs.detect-changes.outputs.php-changed == 'true' ||
-          needs.detect-changes.outputs.config-changed == 'true' ||
-          needs.detect-changes.outputs.test-changed == 'true'
         run: |
           Tests/Scripts/run-tests.sh functional ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 
       - name: Run integration tests
-        if: |
-          needs.detect-changes.outputs.force-full == 'true' ||
-          needs.detect-changes.outputs.php-changed == 'true' ||
-          needs.detect-changes.outputs.js-changed == 'true' ||
-          needs.detect-changes.outputs.config-changed == 'true' ||
-          needs.detect-changes.outputs.test-changed == 'true'
         run: |
           Tests/Scripts/run-tests.sh integration ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 

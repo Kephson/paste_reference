@@ -262,7 +262,8 @@ final class ApiCompatibilityTest extends FunctionalTestCase
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             self::assertInstanceOf(\TYPO3\CMS\Core\Domain\RecordInterface::class, $record);
-            self::assertTrue(method_exists($record, 'getRow'), 'RecordInterface should have getRow() method in v14+');
+            self::assertTrue(method_exists($record, 'toArray'), 'RecordInterface should have toArray() method in v14+');
+            self::assertTrue(method_exists($record, 'getUid'), 'RecordInterface should have getUid() method in v14+');
 
         } else {
             // Test TYPO3 v13 compatibility

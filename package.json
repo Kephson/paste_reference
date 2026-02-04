@@ -1,0 +1,20 @@
+{
+  "name": "paste-reference-container-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for TYPO3 paste-reference container functionality",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "test:container": "vitest --run Tests/Integration/ContainerWorkflow.test.js",
+    "validate:workflow": "node Tests/Integration/ContainerWorkflowValidator.js"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "jsdom": "^23.0.0",
+    "@vitest/ui": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

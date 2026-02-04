@@ -229,9 +229,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         $hasGetRecordCall = str_contains($content, 'getRecord()');
 
         // The renderer should handle both API versions
-        if ($hasGetRowCall || $hasGetRecordCall) {
-            self::assertTrue($hasGetRowCall || $hasGetRecordCall, 'Renderer should handle version-specific record methods');
-        }
+        self::assertTrue($hasGetRowCall || $hasGetRecordCall, 'Renderer should handle version-specific record methods');
 
         // Check for proper version branching in getDataRow method
         self::assertStringContainsString('if ($this->majorTypo3Version > 13)', $content, 'Should have version check for API differences');

@@ -42,7 +42,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
             '/\$GLOBALS\[\'TSFE\'\]->sys_page/',  // Should use context API
             '/\$GLOBALS\[\'TCA\'\]/',  // Should use TCA service
         ];
-        
+
         $violations = [];
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
@@ -52,7 +52,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
                 }
             }
         }
-        
+
         self::assertEmpty($violations, 'No deprecated global variable access should be used: ' . implode(', ', $violations));
     }
 
@@ -62,21 +62,21 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         $extensionFiles = $this->getExtensionPhpFiles();
         $modernApiUsage = false;
         $deprecatedApiUsage = false;
-        
+
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
-            
+
             // Check for modern ConnectionPool usage
-            if (strpos($content, 'ConnectionPool') !== false) {
+            if (str_contains($content, 'ConnectionPool')) {
                 $modernApiUsage = true;
             }
-            
+
             // Check for deprecated database API
-            if (strpos($content, '$GLOBALS[\'TYPO3_DB\']') !== false) {
+            if (str_contains($content, '$GLOBALS[\'TYPO3_DB\']')) {
                 $deprecatedApiUsage = true;
             }
         }
-        
+
         self::assertTrue($modernApiUsage, 'Extension should use modern ConnectionPool API');
         self::assertFalse($deprecatedApiUsage, 'Extension should not use deprecated database API');
     }
@@ -87,26 +87,26 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         $extensionFiles = $this->getExtensionPhpFiles();
         $usesModernEvents = false;
         $usesDeprecatedHooks = false;
-        
+
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
-            
+
             // Check for modern event system usage
-            if (strpos($content, 'Event') !== false && strpos($content, 'EventListener') !== false) {
+            if (str_contains($content, 'Event')   && str_contains($content, 'EventListener')) {
                 $usesModernEvents = true;
             }
-            
+
             // Check for deprecated hook usage patterns
             if (preg_match('/\$GLOBALS\[\'TYPO3_CONF_VARS\'\]\[\'SC_OPTIONS\'\]/', $content)) {
                 $usesDeprecatedHooks = true;
             }
         }
-        
+
         // Extension should use modern event system where applicable
         if ($usesModernEvents) {
             self::assertTrue($usesModernEvents, 'Extension uses modern event system');
         }
-        
+
         // If hooks are still used, they should be documented as necessary
         if ($usesDeprecatedHooks) {
             self::markTestIncomplete('Extension uses hooks - verify if migration to events is possible');
@@ -122,17 +122,17 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
             'GeneralUtility::makeInstanceClassName',  // Deprecated
             'GeneralUtility::callUserFunction',  // Often deprecated usage
         ];
-        
+
         $violations = [];
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
             foreach ($deprecatedMethods as $method) {
-                if (strpos($content, $method) !== false) {
+                if (str_contains($content, $method)) {
                     $violations[] = "Deprecated method {$method} found in {$file}";
                 }
             }
         }
-        
+
         self::assertEmpty($violations, 'No deprecated utility methods should be used: ' . implode(', ', $violations));
     }
 
@@ -141,24 +141,24 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
     {
         $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         $majorVersion = $typo3Version->getMajorVersion();
-        
+
         // Test that extension can detect and handle version differences
         self::assertContains($majorVersion, [13, 14], 'Extension should support current TYPO3 versions');
-        
+
         // Check if extension has version-specific code handling
         $extensionFiles = $this->getExtensionPhpFiles();
         $hasVersionHandling = false;
-        
+
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
-            if (strpos($content, 'Typo3Version') !== false || 
-                strpos($content, 'version_compare') !== false ||
-                strpos($content, 'getMajorVersion') !== false) {
+            if (str_contains($content, 'Typo3Version')   ||
+                str_contains($content, 'version_compare')   ||
+                str_contains($content, 'getMajorVersion')) {
                 $hasVersionHandling = true;
                 break;
             }
         }
-        
+
         // Version handling is optional but good practice
         if ($hasVersionHandling) {
             self::assertTrue($hasVersionHandling, 'Extension has version-specific handling');
@@ -173,17 +173,17 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
             'TYPO3\\CMS\\Extbase\\Mvc\\Controller\\ActionController',  // Changed in newer versions
             'TYPO3\\CMS\\Frontend\\Plugin\\AbstractPlugin',  // Deprecated
         ];
-        
+
         $violations = [];
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
             foreach ($incompatibleNamespaces as $namespace) {
-                if (strpos($content, $namespace) !== false) {
+                if (str_contains($content, $namespace)) {
                     $violations[] = "Potentially incompatible namespace {$namespace} found in {$file}";
                 }
             }
         }
-        
+
         self::assertEmpty($violations, 'No incompatible namespaces should be used: ' . implode(', ', $violations));
     }
 
@@ -196,17 +196,17 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
             'TYPO3_version',  // Use Typo3Version class instead
             'TYPO3_branch',  // Use Typo3Version class instead
         ];
-        
+
         $violations = [];
         foreach ($extensionFiles as $file) {
             $content = file_get_contents($file);
             foreach ($removedConstants as $constant) {
-                if (strpos($content, $constant) !== false) {
+                if (str_contains($content, $constant)) {
                     $violations[] = "Removed constant {$constant} found in {$file}";
                 }
             }
         }
-        
+
         self::assertEmpty($violations, 'No removed constants should be used: ' . implode(', ', $violations));
     }
 
@@ -214,40 +214,40 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
     public function shortcutPreviewRendererHandlesVersionSpecificApis(): void
     {
         $shortcutRendererFile = dirname(__DIR__, 2) . '/Classes/PageLayoutView/ShortcutPreviewRenderer.php';
-        
+
         if (!file_exists($shortcutRendererFile)) {
             self::markTestSkipped('ShortcutPreviewRenderer file not found');
         }
-        
+
         $content = file_get_contents($shortcutRendererFile);
-        
+
         // Check that the renderer properly handles version differences
         self::assertStringContainsString('$this->majorTypo3Version', $content, 'Renderer should check TYPO3 version');
-        
+
         // Check for version-specific method calls
-        $hasGetRowCall = strpos($content, 'getRow()') !== false;
-        $hasGetRecordCall = strpos($content, 'getRecord()') !== false;
-        
+        $hasGetRowCall = str_contains($content, 'getRow()');
+        $hasGetRecordCall = str_contains($content, 'getRecord()');
+
         // The renderer should handle both API versions
         if ($hasGetRowCall || $hasGetRecordCall) {
             self::assertTrue($hasGetRowCall || $hasGetRecordCall, 'Renderer should handle version-specific record methods');
         }
-        
+
         // Check for proper version branching in getDataRow method
         self::assertStringContainsString('if ($this->majorTypo3Version > 13)', $content, 'Should have version check for API differences');
-        
+
         // Check that RecordFactory is used conditionally
-        $hasRecordFactoryUsage = strpos($content, 'RecordFactory') !== false;
+        $hasRecordFactoryUsage = str_contains($content, 'RecordFactory');
         if ($hasRecordFactoryUsage) {
             self::assertTrue($hasRecordFactoryUsage, 'RecordFactory usage should be version-aware');
         }
-        
+
         // Verify no hardcoded version assumptions
         $problematicPatterns = [
             '/getRow\(\)(?!\s*;)/',  // getRow() without version check
             '/getRecord\(\)(?!\s*;)/',  // getRecord() without version check
         ];
-        
+
         $violations = [];
         foreach ($problematicPatterns as $pattern) {
             if (preg_match($pattern, $content)) {
@@ -258,19 +258,19 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
                         // Look for version check in surrounding lines
                         $hasVersionCheck = false;
                         for ($i = max(0, $lineNum - 10); $i <= min(count($lines) - 1, $lineNum + 5); $i++) {
-                            if (strpos($lines[$i], 'majorTypo3Version') !== false) {
+                            if (str_contains($lines[$i], 'majorTypo3Version')) {
                                 $hasVersionCheck = true;
                                 break;
                             }
                         }
                         if (!$hasVersionCheck) {
-                            $violations[] = "Line " . ($lineNum + 1) . ": Version-specific API call without version check";
+                            $violations[] = 'Line ' . ($lineNum + 1) . ': Version-specific API call without version check';
                         }
                     }
                 }
             }
         }
-        
+
         // Allow some violations as they might be in version-conditional blocks
         if (count($violations) > 2) {
             self::fail('Too many version-specific API calls without proper version checks: ' . implode(', ', $violations));
@@ -286,18 +286,18 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         if (!is_dir($classesDir)) {
             return [];
         }
-        
+
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($classesDir)
         );
-        
+
         $phpFiles = [];
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->getExtension() === 'php') {
                 $phpFiles[] = $file->getPathname();
             }
         }
-        
+
         return $phpFiles;
     }
 }

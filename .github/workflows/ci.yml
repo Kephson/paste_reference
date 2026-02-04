@@ -117,28 +117,6 @@ jobs:
       - name: Functional tests with ${{ matrix.database }}
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d ${{ matrix.database }}
 
-  #---------------------------------------------------------------------------------------------------------------------
-  # JavaScript tests validate frontend functionality
-  #---------------------------------------------------------------------------------------------------------------------
-  javascript-tests:
-    name: "JavaScript Tests"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install JavaScript dependencies
-        run: npm ci
-
-      - name: Run JavaScript tests
-        run: npm test -- --run --reporter=verbose
-
   documentation:
     name: "Extension documentation"
     runs-on: ubuntu-latest

@@ -50,7 +50,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         parent::setUp();
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
         $this->containerExtensionAvailable = ExtensionManagementUtility::isLoaded('container');
-        
+
         // Import test data including container elements
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
         $this->importCSVDataSet(__DIR__ . '/../Fixtures/container_elements.csv');
@@ -60,25 +60,25 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
     public function containerExtensionCompatibilityCheck(): void
     {
         $majorVersion = $this->typo3Version->getMajorVersion();
-        
+
         // Test that container extension detection works across versions
         if ($this->containerExtensionAvailable) {
             self::assertTrue(ExtensionManagementUtility::isLoaded('container'));
-            
+
             // Test container-specific TCA fields exist
             $tcaColumns = $GLOBALS['TCA']['tt_content']['columns'] ?? [];
             self::assertArrayHasKey('tx_container_parent', $tcaColumns, 'Container parent field should exist in TCA');
-            
+
             // Test container CTypes are available
             $containerCTypes = $GLOBALS['TCA']['tt_content']['columns']['CType']['config']['items'] ?? [];
             $containerTypeFound = false;
             foreach ($containerCTypes as $item) {
-                if (isset($item[1]) && strpos($item[1], 'container_') === 0) {
+                if (isset($item[1]) && str_starts_with($item[1], 'container_')) {
                     $containerTypeFound = true;
                     break;
                 }
             }
-            
+
             if ($containerTypeFound) {
                 self::assertTrue($containerTypeFound, 'Container CTypes should be available');
             }
@@ -127,7 +127,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         // Test paste operation into container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
         $processCmdmap = GeneralUtility::makeInstance(ProcessCmdmap::class);
-        
+
         // Initialize ProcessCmdmap with container context
         $processCmdmap->init('tt_content', 1, $dataHandler);
 
@@ -187,7 +187,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
 
         // Test container parent parameter handling in different TYPO3 versions
         $queryBuilder = $helper->getQueryBuilder('tt_content');
-        
+
         // Test query with container parent filter
         $result = $queryBuilder
             ->select('uid', 'tx_container_parent', 'colPos')
@@ -202,7 +202,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         foreach ($containerElements as $element) {
             self::assertGreaterThan(0, $element['tx_container_parent'], 'Container parent should be positive integer');
             self::assertIsNumeric($element['colPos'], 'ColPos should be numeric');
-            
+
             // Test version-specific handling
             if ($majorVersion >= 13) {
                 // In v13+, ensure proper type casting
@@ -301,10 +301,10 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         // Test that ShortcutPreviewRenderer handles container context
         if (class_exists(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class)) {
             $renderer = GeneralUtility::makeInstance(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class);
-            
+
             // Test that renderer can handle container-aware elements
             self::assertInstanceOf(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class, $renderer);
-            
+
             // The renderer should set tx_paste_reference_container field
             $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
             $shortcutElement = $queryBuilder
@@ -359,7 +359,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
 
         // Simulate drag-drop move operation into container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        
+
         $cmdArray = [
             'tt_content' => [
                 $sourceUid => [
@@ -453,7 +453,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
 
         // Paste at first position in container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        
+
         $cmdArray = [
             'tt_content' => [
                 $newElementUid => [
@@ -486,7 +486,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->fetchAllAssociative();
 
         self::assertCount(4, $containerElements, 'Should have 4 elements in container');
-        
+
         // First element should be the newly pasted one (or have lowest sorting)
         $firstElement = $containerElements[0];
         self::assertLessThanOrEqual($containerElements[1]['sorting'], $firstElement['sorting'], 'First element should have lowest sorting');
@@ -544,7 +544,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
 
         // Paste into translated container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-        
+
         $cmdArray = [
             'tt_content' => [
                 $sourceUid => [
@@ -591,7 +591,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         }
 
         $majorVersion = $this->typo3Version->getMajorVersion();
-        
+
         // Test workspace compatibility (if workspaces are available)
         if ($majorVersion >= 13) {
             $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
@@ -614,7 +614,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             // Test that container elements work in workspace context
             $helper = GeneralUtility::makeInstance(Helper::class);
             $queryBuilder = $helper->getQueryBuilder('tt_content');
-            
+
             // Query should handle workspace overlays correctly
             $result = $queryBuilder
                 ->select('uid', 'tx_container_parent', 't3ver_wsid')

@@ -108,7 +108,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $containerData);
-        $containerUid = (int)$connection->lastInsertId('tt_content');
+        $containerUid = (int)$connection->lastInsertId();
 
         // Create content element to be pasted
         $sourceData = [
@@ -122,7 +122,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $sourceData);
-        $sourceUid = (int)$connection->lastInsertId('tt_content');
+        $sourceUid = (int)$connection->lastInsertId();
 
         // Test paste operation into container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
@@ -160,9 +160,9 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('*')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('colPos', $queryBuilder->createNamedParameter(101, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->neq('uid', $queryBuilder->createNamedParameter($sourceUid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid)),
+                $queryBuilder->expr()->eq('colPos', $queryBuilder->createNamedParameter(101)),
+                $queryBuilder->expr()->neq('uid', $queryBuilder->createNamedParameter($sourceUid))
             )
             ->executeQuery()
             ->fetchAllAssociative();
@@ -233,7 +233,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $containerData);
-        $containerUid = (int)$connection->lastInsertId('tt_content');
+        $containerUid = (int)$connection->lastInsertId();
 
         // Create nested element
         $nestedData = [
@@ -246,7 +246,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $nestedData);
-        $nestedUid = (int)$connection->lastInsertId('tt_content');
+        $nestedUid = (int)$connection->lastInsertId();
 
         // Test that nested elements are properly associated
         $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
@@ -254,7 +254,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('*')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid))
             )
             ->executeQuery()
             ->fetchAllAssociative();
@@ -268,7 +268,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('*')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($containerUid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($containerUid))
             )
             ->executeQuery()
             ->fetchAssociative();
@@ -296,7 +296,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $shortcutData);
-        $shortcutUid = (int)$connection->lastInsertId('tt_content');
+        $shortcutUid = (int)$connection->lastInsertId();
 
         // Test that ShortcutPreviewRenderer handles container context
         if (class_exists(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class)) {
@@ -311,7 +311,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
                 ->select('*')
                 ->from('tt_content')
                 ->where(
-                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($shortcutUid, \PDO::PARAM_INT))
+                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($shortcutUid))
                 )
                 ->executeQuery()
                 ->fetchAssociative();
@@ -342,7 +342,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $containerData);
-        $containerUid = (int)$connection->lastInsertId('tt_content');
+        $containerUid = (int)$connection->lastInsertId();
 
         // Create element to be moved
         $sourceData = [
@@ -355,7 +355,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $sourceData);
-        $sourceUid = (int)$connection->lastInsertId('tt_content');
+        $sourceUid = (int)$connection->lastInsertId();
 
         // Simulate drag-drop move operation into container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
@@ -388,7 +388,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('*')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($sourceUid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($sourceUid))
             )
             ->executeQuery()
             ->fetchAssociative();
@@ -419,7 +419,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $containerData);
-        $containerUid = (int)$connection->lastInsertId('tt_content');
+        $containerUid = (int)$connection->lastInsertId();
 
         // Create multiple elements in container with different sorting
         $elements = [];
@@ -435,7 +435,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ];
 
             $connection->insert('tt_content', $elementData);
-            $elements[] = (int)$connection->lastInsertId('tt_content');
+            $elements[] = (int)$connection->lastInsertId();
         }
 
         // Test paste operation at first position (sorting = 0)
@@ -449,7 +449,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $newElementData);
-        $newElementUid = (int)$connection->lastInsertId('tt_content');
+        $newElementUid = (int)$connection->lastInsertId();
 
         // Paste at first position in container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
@@ -479,7 +479,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('uid', 'header', 'sorting')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($containerUid))
             )
             ->orderBy('sorting', 'ASC')
             ->executeQuery()
@@ -513,7 +513,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $containerData);
-        $containerUid = (int)$connection->lastInsertId('tt_content');
+        $containerUid = (int)$connection->lastInsertId();
 
         // Create translated container (if language support is available)
         $translatedContainerData = [
@@ -527,7 +527,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $translatedContainerData);
-        $translatedContainerUid = (int)$connection->lastInsertId('tt_content');
+        $translatedContainerUid = (int)$connection->lastInsertId();
 
         // Test paste operation in translated container
         $sourceData = [
@@ -540,7 +540,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ];
 
         $connection->insert('tt_content', $sourceData);
-        $sourceUid = (int)$connection->lastInsertId('tt_content');
+        $sourceUid = (int)$connection->lastInsertId();
 
         // Paste into translated container
         $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
@@ -570,8 +570,8 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ->select('*')
             ->from('tt_content')
             ->where(
-                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($translatedContainerUid, \PDO::PARAM_INT)),
-                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT))
+                $queryBuilder->expr()->eq('tx_container_parent', $queryBuilder->createNamedParameter($translatedContainerUid)),
+                $queryBuilder->expr()->eq('sys_language_uid', $queryBuilder->createNamedParameter(1))
             )
             ->executeQuery()
             ->fetchAllAssociative();
@@ -609,7 +609,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             ];
 
             $connection->insert('tt_content', $containerData);
-            $containerUid = (int)$connection->lastInsertId('tt_content');
+            $containerUid = (int)$connection->lastInsertId();
 
             // Test that container elements work in workspace context
             $helper = GeneralUtility::makeInstance(Helper::class);
@@ -620,7 +620,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
                 ->select('uid', 'tx_container_parent', 't3ver_wsid')
                 ->from('tt_content')
                 ->where(
-                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($containerUid, \PDO::PARAM_INT))
+                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($containerUid))
                 )
                 ->executeQuery()
                 ->fetchAssociative();

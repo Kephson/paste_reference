@@ -67,8 +67,10 @@ The workflows are designed to work together:
 
 Current matrix configuration:
 - TYPO3 versions: 13.4, 14.1
-- PHP versions: 8.1, 8.2, 8.3
-- Excludes: TYPO3 v13 with PHP 8.4 (not supported)
+- PHP versions: 8.2, 8.3, 8.4, 8.5
+- Exclusions: 
+  - TYPO3 v13.4 with PHP 8.4+ (not supported)
+  - TYPO3 v14.1 with PHP 8.5 (compatibility pending verification)
 
 ### Manual Dispatch Parameters
 
@@ -100,6 +102,10 @@ To add support for a new TYPO3 version:
 2. **Test timeouts**: Increase timeout values or optimize test execution
 3. **Cache issues**: Clear caches or update cache keys
 4. **Permission errors**: Ensure proper file permissions in Docker containers
+5. **PHP version not supported**: If you get "Invalid option" errors for PHP versions, check:
+   - The `Build/Scripts/runTests.sh` script supports the PHP version (update regex if needed)
+   - TYPO3 core testing Docker images are available for that PHP version
+   - TYPO3 version compatibility with the PHP version
 
 ### Debugging
 

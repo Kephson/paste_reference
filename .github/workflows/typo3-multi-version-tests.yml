@@ -1,0 +1,303 @@
+#=======================================================================================================================
+name: TYPO3 Multi-Version Tests
+run-name: "[Multi-Version] TYPO3 v${{ matrix.typo3-version }} with PHP ${{ matrix.php-version }} requested by @${{ github.actor }}"
+#-----------------------------------------------------------------------------------------------------------------------
+# This workflow tests the paste-reference extension against multiple TYPO3 versions to ensure compatibility
+# and prevent regressions when making changes. It runs in parallel with the main CI workflow.
+#=======================================================================================================================
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'Classes/**'
+      - 'Resources/**'
+      - 'Configuration/**'
+      - 'Tests/**'
+      - 'composer.json'
+      - 'ext_emconf.php'
+      - 'ext_tables.php'
+      - '.github/workflows/typo3-multi-version-tests.yml'
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - 'Classes/**'
+      - 'Resources/**'
+      - 'Configuration/**'
+      - 'Tests/**'
+      - 'composer.json'
+      - 'ext_emconf.php'
+      - 'ext_tables.php'
+      - '.github/workflows/typo3-multi-version-tests.yml'
+  workflow_dispatch:
+    inputs:
+      typo3_versions:
+        description: 'TYPO3 versions to test (comma-separated)'
+        required: false
+        default: '13.4,14.1'
+      php_versions:
+        description: 'PHP versions to test (comma-separated)'
+        required: false
+        default: '8.1,8.2,8.3'
+      force_full_test:
+        description: 'Force full test suite (ignore file change detection)'
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  #---------------------------------------------------------------------------------------------------------------------
+  # Detect changes to determine which tests to run
+  #---------------------------------------------------------------------------------------------------------------------
+  detect-changes:
+    name: "Detect file changes"
+    runs-on: ubuntu-latest
+    outputs:
+      php-changed: ${{ steps.changes.outputs.php }}
+      js-changed: ${{ steps.changes.outputs.js }}
+      config-changed: ${{ steps.changes.outputs.config }}
+      test-changed: ${{ steps.changes.outputs.test }}
+      force-full: ${{ github.event.inputs.force_full_test == 'true' }}
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            php:
+              - 'Classes/**/*.php'
+              - 'ext_emconf.php'
+              - 'ext_tables.php'
+              - 'composer.json'
+            js:
+              - 'Resources/Public/JavaScript/**'
+              - 'package.json'
+              - 'package-lock.json'
+            config:
+              - 'Configuration/**'
+              - 'ext_conf_template.txt'
+            test:
+              - 'Tests/**'
+              - '.github/workflows/typo3-multi-version-tests.yml'
+
+  #---------------------------------------------------------------------------------------------------------------------
+  # Multi-version compatibility testing ensures the extension works across supported TYPO3 versions
+  #---------------------------------------------------------------------------------------------------------------------
+  multi-version-tests:
+    name: "TYPO3 v${{ matrix.typo3-version }} | PHP ${{ matrix.php-version }}"
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.force-full == 'true' ||
+      needs.detect-changes.outputs.php-changed == 'true' ||
+      needs.detect-changes.outputs.js-changed == 'true' ||
+      needs.detect-changes.outputs.config-changed == 'true' ||
+      needs.detect-changes.outputs.test-changed == 'true' ||
+      github.event_name == 'workflow_dispatch'
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3-version: ['13.4', '14.1']
+        php-version: ['8.1', '8.2', '8.3']
+        exclude:
+          # TYPO3 v13 doesn't support PHP 8.4 yet
+          - typo3-version: '13.4'
+            php-version: '8.4'
+    
+    env:
+      TYPO3_VERSION: ${{ matrix.typo3-version }}
+      PHP_VERSION: ${{ matrix.php-version }}
+      EXTENSION_KEY: paste_reference
+      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker environment variables
+        run: |
+          echo "DOCKER_TAG=typo3-v$(echo ${{ matrix.typo3-version }} | cut -d. -f1)" >> $GITHUB_ENV
+          echo "TEST_CONTAINER_NAME=typo3-test-${{ matrix.typo3-version }}-php${{ matrix.php-version }}-${{ github.run_id }}" >> $GITHUB_ENV
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-typo3-${{ matrix.typo3-version }}-${{ hashFiles('Tests/Docker/typo3-v*/Dockerfile') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-typo3-${{ matrix.typo3-version }}-
+            ${{ runner.os }}-buildx-
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.composer/cache
+            .Build/.cache/composer
+          key: ${{ runner.os }}-composer-typo3-${{ matrix.typo3-version }}-php${{ matrix.php-version }}-${{ hashFiles('Tests/Docker/typo3-v*/composer.json') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-typo3-${{ matrix.typo3-version }}-php${{ matrix.php-version }}-
+            ${{ runner.os }}-composer-typo3-${{ matrix.typo3-version }}-
+            ${{ runner.os }}-composer-
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build TYPO3 test environment
+        run: |
+          cd Tests/Docker/${{ env.DOCKER_TAG }}
+          docker build -t ${{ env.TEST_CONTAINER_NAME }} \
+            --build-arg PHP_VERSION=${{ matrix.php-version }} \
+            --build-arg TYPO3_VERSION=${{ matrix.typo3-version }} \
+            .
+
+      - name: Start TYPO3 test environment
+        run: |
+          cd Tests/Docker/${{ env.DOCKER_TAG }}
+          docker-compose -f docker-compose.yml up -d
+          # Wait for TYPO3 to be ready
+          timeout 300 bash -c 'until curl -f http://localhost:8080/typo3/install.php; do sleep 5; done'
+
+      - name: Install extension in test environment
+        run: |
+          chmod +x Tests/Scripts/install-extension.sh
+          Tests/Scripts/install-extension.sh ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Set up test data
+        run: |
+          chmod +x Tests/Scripts/seed-test-data.sh
+          Tests/Scripts/seed-test-data.sh ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Run JavaScript unit tests
+        if: |
+          needs.detect-changes.outputs.force-full == 'true' ||
+          needs.detect-changes.outputs.js-changed == 'true' ||
+          needs.detect-changes.outputs.test-changed == 'true'
+        run: |
+          npm test -- --run --reporter=verbose
+        env:
+          TYPO3_VERSION: ${{ matrix.typo3-version }}
+
+      - name: Run PHP unit tests
+        if: |
+          needs.detect-changes.outputs.force-full == 'true' ||
+          needs.detect-changes.outputs.php-changed == 'true' ||
+          needs.detect-changes.outputs.config-changed == 'true' ||
+          needs.detect-changes.outputs.test-changed == 'true'
+        run: |
+          chmod +x Tests/Scripts/run-tests.sh
+          Tests/Scripts/run-tests.sh unit ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Run functional tests
+        if: |
+          needs.detect-changes.outputs.force-full == 'true' ||
+          needs.detect-changes.outputs.php-changed == 'true' ||
+          needs.detect-changes.outputs.config-changed == 'true' ||
+          needs.detect-changes.outputs.test-changed == 'true'
+        run: |
+          Tests/Scripts/run-tests.sh functional ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Run integration tests
+        if: |
+          needs.detect-changes.outputs.force-full == 'true' ||
+          needs.detect-changes.outputs.php-changed == 'true' ||
+          needs.detect-changes.outputs.js-changed == 'true' ||
+          needs.detect-changes.outputs.config-changed == 'true' ||
+          needs.detect-changes.outputs.test-changed == 'true'
+        run: |
+          Tests/Scripts/run-tests.sh integration ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Collect test results
+        if: always()
+        run: |
+          mkdir -p test-results/${{ matrix.typo3-version }}-php${{ matrix.php-version }}
+          # Copy test results and logs
+          docker cp ${{ env.TEST_CONTAINER_NAME }}:/var/www/html/typo3temp/var/tests/ test-results/${{ matrix.typo3-version }}-php${{ matrix.php-version }}/tests/ || true
+          docker logs ${{ env.TEST_CONTAINER_NAME }} > test-results/${{ matrix.typo3-version }}-php${{ matrix.php-version }}/container.log 2>&1 || true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-typo3-${{ matrix.typo3-version }}-php${{ matrix.php-version }}
+          path: test-results/
+          retention-days: 30
+
+      - name: Clean up test environment
+        if: always()
+        run: |
+          cd Tests/Docker/${{ env.DOCKER_TAG }}
+          docker-compose down -v || true
+          docker rm -f ${{ env.TEST_CONTAINER_NAME }} || true
+
+  #---------------------------------------------------------------------------------------------------------------------
+  # Aggregate results from all matrix jobs and provide unified status
+  #---------------------------------------------------------------------------------------------------------------------
+  test-results-summary:
+    name: "Multi-Version Test Results Summary"
+    runs-on: ubuntu-latest
+    needs: multi-version-tests
+    if: always()
+    
+    steps:
+      - name: Check test results
+        run: |
+          echo "Multi-version test results:"
+          echo "=========================="
+          
+          # Check if any jobs failed
+          if [[ "${{ needs.multi-version-tests.result }}" == "failure" ]]; then
+            echo "❌ Some multi-version tests failed"
+            echo "Please check the individual job results for details"
+            exit 1
+          elif [[ "${{ needs.multi-version-tests.result }}" == "success" ]]; then
+            echo "✅ All multi-version tests passed"
+          else
+            echo "⚠️  Multi-version tests completed with status: ${{ needs.multi-version-tests.result }}"
+          fi
+
+      - name: Set status check
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const status = '${{ needs.multi-version-tests.result }}' === 'success' ? 'success' : 'failure';
+            const description = status === 'success' 
+              ? 'All TYPO3 versions tested successfully' 
+              : 'Some TYPO3 version tests failed';
+            
+            github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: status,
+              target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              description: description,
+              context: 'TYPO3 Multi-Version Tests'
+            });

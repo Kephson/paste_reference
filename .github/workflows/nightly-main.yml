@@ -20,3 +20,9 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh workflow run ci.yml --ref main
+
+      - name: Execute multi-version tests on 'main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run typo3-multi-version-tests.yml --ref main -f force_full_test=true

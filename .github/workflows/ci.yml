@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '8.2', '8.3' , '8.4' ]
+        php: [ '8.2', '8.3' , '8.4' , '8.5' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -84,7 +84,7 @@ jobs:
     name: "Multi-version compatibility check"
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,7 +100,7 @@ jobs:
                 repo: context.repo.repo,
                 filename: 'typo3-multi-version-tests.yml'
               });
-              
+
               console.log('Multi-version workflow found, it will run automatically based on the same triggers');
             } catch (error) {
               console.log('Multi-version workflow not found, skipping multi-version tests');
@@ -114,7 +114,7 @@ jobs:
             const maxWaitTime = 30 * 60 * 1000; // 30 minutes
             const pollInterval = 30 * 1000; // 30 seconds
             const startTime = Date.now();
-            
+
             while (Date.now() - startTime < maxWaitTime) {
               const runs = await github.rest.actions.listWorkflowRuns({
                 owner: context.repo.owner,
@@ -123,11 +123,11 @@ jobs:
                 head_sha: context.sha,
                 per_page: 1
               });
-              
+
               if (runs.data.workflow_runs.length > 0) {
                 const run = runs.data.workflow_runs[0];
                 console.log(`Multi-version test status: ${run.status} (${run.conclusion})`);
-                
+
                 if (run.status === 'completed') {
                   if (run.conclusion === 'success') {
                     console.log('✅ Multi-version tests passed');
@@ -137,10 +137,10 @@ jobs:
                   }
                 }
               }
-              
+
               await new Promise(resolve => setTimeout(resolve, pollInterval));
             }
-            
+
             throw new Error('⏰ Multi-version tests did not complete within the timeout period');
 
 # @todo Add unit test execution after use-full tests has been added

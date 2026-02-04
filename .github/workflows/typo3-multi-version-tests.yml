@@ -43,7 +43,7 @@ on:
       php_versions:
         description: 'PHP versions to test (comma-separated)'
         required: false
-        default: '8.1,8.2,8.3'
+        default: '8.2,8.3,8.4,8.5'
       force_full_test:
         description: 'Force full test suite (ignore file change detection)'
         type: boolean
@@ -63,7 +63,7 @@ jobs:
       config-changed: ${{ steps.changes.outputs.config }}
       test-changed: ${{ steps.changes.outputs.test }}
       force-full: ${{ github.event.inputs.force_full_test == 'true' }}
-      
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -106,22 +106,22 @@ jobs:
       needs.detect-changes.outputs.config-changed == 'true' ||
       needs.detect-changes.outputs.test-changed == 'true' ||
       github.event_name == 'workflow_dispatch'
-    
+
     strategy:
       fail-fast: false
       matrix:
         typo3-version: ['13.4', '14.1']
-        php-version: ['8.1', '8.2', '8.3']
+        php-version: ['8.2', '8.3', '8.4', '8.5']
         exclude:
           # TYPO3 v13 doesn't support PHP 8.4 yet
           - typo3-version: '13.4'
             php-version: '8.4'
-    
+
     env:
       TYPO3_VERSION: ${{ matrix.typo3-version }}
       PHP_VERSION: ${{ matrix.php-version }}
       EXTENSION_KEY: paste_reference
-      
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -264,13 +264,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: multi-version-tests
     if: always()
-    
+
     steps:
       - name: Check test results
         run: |
           echo "Multi-version test results:"
           echo "=========================="
-          
+
           # Check if any jobs failed
           if [[ "${{ needs.multi-version-tests.result }}" == "failure" ]]; then
             echo "❌ Some multi-version tests failed"
@@ -288,10 +288,10 @@ jobs:
         with:
           script: |
             const status = '${{ needs.multi-version-tests.result }}' === 'success' ? 'success' : 'failure';
-            const description = status === 'success' 
-              ? 'All TYPO3 versions tested successfully' 
+            const description = status === 'success'
+              ? 'All TYPO3 versions tested successfully'
               : 'Some TYPO3 version tests failed';
-            
+
             github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,

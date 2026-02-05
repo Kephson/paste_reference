@@ -116,6 +116,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js for JavaScript tests
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
       - name: Composer install
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install
 

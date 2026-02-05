@@ -105,16 +105,21 @@ jobs:
   # Unit and functional tests provide core functionality validation
   #---------------------------------------------------------------------------------------------------------------------
   tests:
-    name: "Extended Tests (PHP ${{ matrix.php }})"
+    name: "Extended Tests (PHP ${{ matrix.php }}, ${{ matrix.database }})"
     runs-on: ubuntu-latest
     needs: [quick-tests]
     strategy:
       matrix:
         php: [ '8.2', '8.3' ]
         database: [ 'mariadb', 'mysql', 'postgres' ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Start MySQL (for mariadb and mysql tests)
+        if: matrix.database == 'mariadb' || matrix.database == 'mysql'
+        run: sudo systemctl start mysql
 
       - name: Composer install
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install

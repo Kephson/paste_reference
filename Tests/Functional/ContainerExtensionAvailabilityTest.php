@@ -24,7 +24,7 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
         if (class_exists('B13\\Container\\Tca\\Registry')) {
             $this->testExtensionsToLoad[] = 'b13/container';
         }
-        
+
         parent::setUp();
     }
 
@@ -36,7 +36,7 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
             class_exists('B13\\Container\\Tca\\Registry'),
             'Container extension Registry class should be available after composer install'
         );
-        
+
         self::assertTrue(
             class_exists('B13\\Container\\Tca\\ContainerConfiguration'),
             'Container extension ContainerConfiguration class should be available'
@@ -63,12 +63,12 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
 
         // After proper setup, the extension should be loaded
         $isLoaded = ExtensionManagementUtility::isLoaded('container');
-        
+
         if (!$isLoaded) {
             // Provide helpful debug information
             $loadedExtensions = ExtensionManagementUtility::getLoadedExtensionListArray();
             self::fail(
-                'Container extension is not loaded. Available extensions: ' . 
+                'Container extension is not loaded. Available extensions: ' .
                 implode(', ', $loadedExtensions)
             );
         }

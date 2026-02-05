@@ -73,9 +73,11 @@ jobs:
 
       - name: Unit tests
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
+        timeout-minutes: 5
 
       - name: Functional tests (SQLite)
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d sqlite
+        timeout-minutes: 10
 
   #---------------------------------------------------------------------------------------------------------------------
   # JavaScript tests validate frontend functionality
@@ -122,6 +124,7 @@ jobs:
 
       - name: Functional tests with ${{ matrix.database }}
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d ${{ matrix.database }}
+        timeout-minutes: 15
 
   documentation:
     name: "Extension documentation"

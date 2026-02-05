@@ -54,9 +54,11 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
 
     protected function tearDown(): void
     {
-        // Clean up any error handlers that might have been set during tests
-        while (set_error_handler(null) !== null) {
+        // Properly clean up error handlers without infinite loops
+        $errorHandler = set_error_handler(null);
+        if ($errorHandler !== null) {
             restore_error_handler();
+            // Only restore once - if there are nested handlers, let parent handle them
         }
         parent::tearDown();
     }

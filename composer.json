@@ -36,6 +36,7 @@
 		"b13/container": "Extension to use cuszom container elements."
 	},
 	"require-dev": {
+		"b13/container": "^3.0",
 		"ergebnis/composer-normalize": "^2.31",
 		"friendsofphp/php-cs-fixer": "^3.64.0",
 		"phpstan/phpstan": "^1.12.5",

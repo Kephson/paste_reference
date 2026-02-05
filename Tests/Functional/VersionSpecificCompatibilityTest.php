@@ -27,7 +27,9 @@ use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -46,7 +48,67 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
+        $this->setupGlobalVariables();
+        $this->createTestData();
+    }
+
+    private function setupGlobalVariables(): void
+    {
+        // Set up global variables that are expected by TYPO3 backend classes
+        if (!isset($GLOBALS['LANG'])) {
+            // Create a mock LanguageService for testing
+            $languageService = $this->createMock(LanguageService::class);
+            $languageService->method('sL')->willReturn('Test Label');
+            $GLOBALS['LANG'] = $languageService;
+        }
+
+        if (!isset($GLOBALS['BE_USER'])) {
+            // Create a mock BackendUserAuthentication for testing
+            $backendUser = $this->createMock(BackendUserAuthentication::class);
+            $backendUser->method('check')->willReturn(true);
+            $GLOBALS['BE_USER'] = $backendUser;
+        }
+    }
+
+    private function createTestData(): void
+    {
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connection = $connectionPool->getConnectionForTable('tt_content');
+
+        // Create basic test content elements
+        $testData = [
+            [
+                'uid' => 1,
+                'pid' => 1,
+                'tstamp' => 1577836800,
+                'crdate' => 1577836800,
+                'deleted' => 0,
+                'hidden' => 0,
+                'CType' => 'text',
+                'header' => 'Test Content Element',
+                'bodytext' => '<p>This is a test content element for API compatibility testing.</p>',
+                'colPos' => 0,
+                'sys_language_uid' => 0,
+            ],
+            [
+                'uid' => 2,
+                'pid' => 1,
+                'tstamp' => 1577836800,
+                'crdate' => 1577836800,
+                'deleted' => 0,
+                'hidden' => 0,
+                'CType' => 'shortcut',
+                'header' => 'Reference Element',
+                'records' => '1',
+                'colPos' => 0,
+                'sys_language_uid' => 0,
+            ],
+        ];
+
+        // Insert test data
+        foreach ($testData as $data) {
+            $connection->insert('tt_content', $data);
+        }
     }
 
     #[Test]

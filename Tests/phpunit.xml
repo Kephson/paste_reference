@@ -11,11 +11,8 @@
     stopOnSkipped="false"
     beStrictAboutTestsThatDoNotTestAnything="false"
     beStrictAboutOutputDuringTests="false"
-    beStrictAboutTodoAnnotatedTests="false"
-    beStrictAboutCoversAnnotation="false"
     executionOrder="random"
-    resolveDependencies="true"
-    verbose="false">
+    resolveDependencies="true">
 
     <testsuites>
         <testsuite name="unit">

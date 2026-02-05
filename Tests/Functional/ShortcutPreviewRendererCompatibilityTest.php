@@ -27,6 +27,7 @@ use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -48,9 +49,50 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->importCSVDataSet(__DIR__ . '/../Fixtures/tt_content.csv');
+        $this->createTestData();
         $this->renderer = GeneralUtility::makeInstance(ShortcutPreviewRenderer::class);
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+    }
+
+    private function createTestData(): void
+    {
+        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
+        $connection = $connectionPool->getConnectionForTable('tt_content');
+
+        // Create basic test content elements
+        $testData = [
+            [
+                'uid' => 1,
+                'pid' => 1,
+                'tstamp' => 1577836800,
+                'crdate' => 1577836800,
+                'deleted' => 0,
+                'hidden' => 0,
+                'CType' => 'text',
+                'header' => 'Test Content Element',
+                'bodytext' => '<p>This is a test content element for API compatibility testing.</p>',
+                'colPos' => 0,
+                'sys_language_uid' => 0,
+            ],
+            [
+                'uid' => 2,
+                'pid' => 1,
+                'tstamp' => 1577836800,
+                'crdate' => 1577836800,
+                'deleted' => 0,
+                'hidden' => 0,
+                'CType' => 'shortcut',
+                'header' => 'Reference Element',
+                'records' => '1',
+                'colPos' => 0,
+                'sys_language_uid' => 0,
+            ],
+        ];
+
+        // Insert test data
+        foreach ($testData as $data) {
+            $connection->insert('tt_content', $data);
+        }
     }
 
     #[Test]

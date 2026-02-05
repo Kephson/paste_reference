@@ -146,12 +146,22 @@ jobs:
           # Wait for TYPO3 to be ready
           timeout 300 bash -c 'until curl -f http://localhost:8080/typo3/install.php; do sleep 5; done'
 
-      - name: Install extension in test environment
+      - name: Install container extension (dependency)
+        run: |
+          cd Tests/Docker/${{ env.DOCKER_TAG }}
+          if [[ "${{ matrix.typo3-version }}" == "13.4" ]]; then
+            docker exec ${{ env.TEST_CONTAINER_NAME }} composer require "b13/container:^3.0" --no-interaction
+          else
+            docker exec ${{ env.TEST_CONTAINER_NAME }} composer require "b13/container:^3.0" --no-interaction
+          fi
+          docker exec ${{ env.TEST_CONTAINER_NAME }} php vendor/bin/typo3 extension:activate container || true
+
+      - name: Install paste-reference extension
         run: |
           chmod +x Tests/Scripts/install-extension.sh
           Tests/Scripts/install-extension.sh ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 
-      - name: Set up test data
+      - name: Set up test data (including container elements)
         run: |
           chmod +x Tests/Scripts/seed-test-data.sh
           Tests/Scripts/seed-test-data.sh ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
@@ -170,6 +180,10 @@ jobs:
       - name: Run functional tests
         run: |
           Tests/Scripts/run-tests.sh functional ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
+
+      - name: Run container extension compatibility tests
+        run: |
+          Tests/Scripts/run-tests.sh container-tests ${{ env.TEST_CONTAINER_NAME }} ${{ matrix.typo3-version }}
 
       - name: Run integration tests
         run: |

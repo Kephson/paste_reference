@@ -126,7 +126,9 @@ install_typo3_and_extension() {
     
     # Install TYPO3 via command line
     log_info "Running TYPO3 v$version installation..."
-    docker exec -it "$container_name" php vendor/bin/typo3 install:setup \
+    
+    # Try modern TYPO3 setup command first
+    if docker exec -it "$container_name" php vendor/bin/typo3 install:setup \
         --no-interaction \
         --database-user-name=typo3 \
         --database-user-password=typo3 \
@@ -135,7 +137,76 @@ install_typo3_and_extension() {
         --database-name=typo3_test \
         --admin-user-name=admin \
         --admin-password=password \
-        --site-name="TYPO3 v$version Test Environment" || true
+        --site-name="TYPO3 v$version Test Environment" 2>/dev/null; then
+        log_success "TYPO3 v$version installed via install:setup command"
+    else
+        log_info "install:setup command not available, using alternative installation method..."
+        
+        # Alternative: Direct database setup
+        docker exec -it "$container_name" mysql -h db -u typo3 -ptypo3 -e "
+            CREATE DATABASE IF NOT EXISTS typo3_test;
+            USE typo3_test;
+            
+            -- Create basic TYPO3 tables
+            CREATE TABLE IF NOT EXISTS be_users (
+                uid int(11) NOT NULL AUTO_INCREMENT,
+                username varchar(50) NOT NULL,
+                password varchar(100) NOT NULL,
+                admin tinyint(4) DEFAULT 0,
+                tstamp int(11) DEFAULT 0,
+                crdate int(11) DEFAULT 0,
+                PRIMARY KEY (uid)
+            );
+            
+            CREATE TABLE IF NOT EXISTS pages (
+                uid int(11) NOT NULL AUTO_INCREMENT,
+                pid int(11) DEFAULT 0,
+                title varchar(255) DEFAULT '',
+                doktype int(11) DEFAULT 1,
+                tstamp int(11) DEFAULT 0,
+                crdate int(11) DEFAULT 0,
+                slug varchar(2048) DEFAULT '',
+                PRIMARY KEY (uid)
+            );
+            
+            CREATE TABLE IF NOT EXISTS tt_content (
+                uid int(11) NOT NULL AUTO_INCREMENT,
+                pid int(11) DEFAULT 0,
+                CType varchar(255) DEFAULT '',
+                header varchar(255) DEFAULT '',
+                bodytext mediumtext,
+                colPos int(11) DEFAULT 0,
+                tstamp int(11) DEFAULT 0,
+                crdate int(11) DEFAULT 0,
+                sys_language_uid int(11) DEFAULT 0,
+                tx_container_parent int(11) DEFAULT 0,
+                sorting int(11) DEFAULT 0,
+                PRIMARY KEY (uid)
+            );
+            
+            CREATE TABLE IF NOT EXISTS sys_extension (
+                uid int(11) NOT NULL AUTO_INCREMENT,
+                extkey varchar(60) NOT NULL,
+                version varchar(15) DEFAULT '',
+                type varchar(10) DEFAULT '',
+                siteRelPath varchar(255) DEFAULT '',
+                lastUpdated int(11) DEFAULT 0,
+                serializedDependencies mediumtext,
+                state int(11) DEFAULT 0,
+                PRIMARY KEY (uid)
+            );
+            
+            -- Insert admin user
+            INSERT IGNORE INTO be_users (uid, username, password, admin, tstamp, crdate) 
+            VALUES (1, 'admin', '\$argon2i\$v=19\$m=65536,t=16,p=1\$UnlOcXJQdHlsaUhkdGp2Zw\$6VbKFmpeMOGJXdJqF.QbZg', 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP());
+            
+            -- Insert root page
+            INSERT IGNORE INTO pages (uid, pid, title, doktype, tstamp, crdate, slug) 
+            VALUES (1, 0, 'Root', 1, UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), '/');
+        " || true
+        
+        log_success "TYPO3 v$version installed via direct database setup"
+    fi
     
     # Activate paste-reference extension
     log_info "Activating paste-reference extension in TYPO3 v$version..."

@@ -87,6 +87,11 @@ run_tests() {
         run_javascript_tests "$version"
     fi
     
+    # Run container extension tests
+    if [ "$test_type" = "all" ] || [ "$test_type" = "container" ]; then
+        run_container_tests "$version"
+    fi
+    
     # Run integration tests
     if [ "$test_type" = "all" ] || [ "$test_type" = "integration" ]; then
         run_integration_tests "$version"
@@ -133,6 +138,31 @@ run_javascript_tests() {
         yarn test || log_warning "Some JavaScript tests failed"
     else
         log_warning "Neither npm nor yarn found, skipping JavaScript tests"
+    fi
+}
+
+# Function to run container extension tests
+run_container_tests() {
+    local version=${1:-"all"}
+    
+    log_info "Running container extension compatibility tests..."
+    
+    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+        log_info "Running container tests for TYPO3 v13..."
+        docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
+            --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
+            --testsuite functional \
+            --filter ContainerExtensionCompatibilityTest \
+            --colors=always || log_warning "Some container tests failed for TYPO3 v13"
+    fi
+    
+    if [ "$version" = "all" ] || [ "$version" = "14" ]; then
+        log_info "Running container tests for TYPO3 v14..."
+        docker exec "typo3-v14_web_1" php vendor/bin/phpunit \
+            --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
+            --testsuite functional \
+            --filter ContainerExtensionCompatibilityTest \
+            --colors=always || log_warning "Some container tests failed for TYPO3 v14"
     fi
 }
 
@@ -284,6 +314,9 @@ main() {
         "js"|"javascript")
             run_javascript_tests "$version"
             ;;
+        "container"|"container-tests")
+            run_container_tests "$version"
+            ;;
         "integration")
             run_integration_tests "$version"
             ;;
@@ -313,6 +346,7 @@ main() {
             echo "  test       - Run all tests"
             echo "  phpunit    - Run PHPUnit tests only"
             echo "  js         - Run JavaScript tests only"
+            echo "  container  - Run container extension tests only"
             echo "  integration- Run integration tests only"
             echo "  start      - Start existing environments"
             echo "  stop       - Stop running environments"

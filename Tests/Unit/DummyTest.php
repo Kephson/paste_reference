@@ -32,6 +32,7 @@ final class DummyTest extends UnitTestCase
     #[Test]
     public function dummy(): void
     {
-        self::assertTrue((new Typo3Version())->getMajorVersion() === 12);
+        $majorVersion = (new Typo3Version())->getMajorVersion();
+        self::assertContains($majorVersion, [13, 14], 'TYPO3 version should be 13 or 14');
     }
 }

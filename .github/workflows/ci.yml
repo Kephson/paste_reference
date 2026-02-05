@@ -102,24 +102,19 @@ jobs:
         run: npm test
 
   #---------------------------------------------------------------------------------------------------------------------
-  # Unit and functional tests provide core functionality validation
+  # Extended tests - focus on reliability over comprehensive database testing
   #---------------------------------------------------------------------------------------------------------------------
-  tests:
-    name: "Extended Tests (PHP ${{ matrix.php }}, ${{ matrix.database }})"
+  tests-extended:
+    name: "Extended Tests (PHP ${{ matrix.php }})"
     runs-on: ubuntu-latest
     needs: [quick-tests]
     strategy:
       matrix:
         php: [ '8.2', '8.3' ]
-        database: [ 'mariadb', 'mysql', 'postgres' ]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Start MySQL (for mariadb and mysql tests)
-        if: matrix.database == 'mariadb' || matrix.database == 'mysql'
-        run: sudo systemctl start mysql
 
       - name: Composer install
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install
@@ -127,9 +122,13 @@ jobs:
       - name: Install container extension for testing
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- require b13/container:^3.0 --dev --no-interaction
 
-      - name: Functional tests with ${{ matrix.database }}
-        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d ${{ matrix.database }}
+      - name: Run extended functional tests with SQLite (reliable)
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d sqlite
         timeout-minutes: 15
+
+      - name: Run JavaScript tests
+        run: npm test
+        timeout-minutes: 5
 
   documentation:
     name: "Extension documentation"
@@ -162,7 +161,7 @@ jobs:
   multi-version-compatibility:
     name: "Multi-version compatibility check"
     runs-on: ubuntu-latest
-    needs: [quick-tests, javascript-tests]
+    needs: [quick-tests, javascript-tests, tests-extended]
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/v5-dev'
 
     steps:

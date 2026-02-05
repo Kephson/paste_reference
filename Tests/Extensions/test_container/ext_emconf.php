@@ -1,5 +1,6 @@
 <?php
 
+/** @var string $_EXTKEY */
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Test Container Extension',
     'description' => 'Minimal container extension for testing paste-reference functionality',

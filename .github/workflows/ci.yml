@@ -68,6 +68,9 @@ jobs:
       - name: Composer install
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install
 
+      - name: Install container extension for testing
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- require b13/container:^3.0 --dev --no-interaction
+
       - name: Unit tests
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s unit
 
@@ -113,6 +116,9 @@ jobs:
 
       - name: Composer install
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- install
+
+      - name: Install container extension for testing
+        run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s composer -- require b13/container:^3.0 --dev --no-interaction
 
       - name: Functional tests with ${{ matrix.database }}
         run: Build/Scripts/runTests.sh -p ${{ matrix.php }} -s functional -d ${{ matrix.database }}

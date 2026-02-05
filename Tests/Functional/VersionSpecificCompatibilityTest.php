@@ -52,6 +52,15 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
         $this->createTestData();
     }
 
+    protected function tearDown(): void
+    {
+        // Clean up any error handlers that might have been set during tests
+        while (set_error_handler(null) !== null) {
+            restore_error_handler();
+        }
+        parent::tearDown();
+    }
+
     private function setupGlobalVariables(): void
     {
         // Set up global variables that are expected by TYPO3 backend classes

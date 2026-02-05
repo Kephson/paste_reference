@@ -60,10 +60,10 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             $this->testExtensionsToLoad[] = 'b13/container';
             $this->testExtensionsToLoad[] = 'Tests/Extensions/test_container';
         }
-        
+
         parent::setUp();
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        
+
         // Check if container extension is available
         $this->containerExtensionAvailable = ExtensionManagementUtility::isLoaded('container');
 

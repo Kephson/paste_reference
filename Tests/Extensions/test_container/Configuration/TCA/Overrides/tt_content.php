@@ -8,7 +8,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 // Only register if container extension is loaded
 if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('container')) {
-    
+
     $containerRegistry = GeneralUtility::makeInstance(Registry::class);
 
     // Register a simple two-column container for testing
@@ -19,8 +19,8 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('container')) {
         [
             [
                 ['name' => 'Left Column', 'colPos' => 101],
-                ['name' => 'Right Column', 'colPos' => 102]
-            ]
+                ['name' => 'Right Column', 'colPos' => 102],
+            ],
         ] // grid configuration
     );
 
@@ -40,8 +40,8 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('container')) {
             ],
             [
                 ['name' => 'Sub Left', 'colPos' => 202],
-                ['name' => 'Sub Right', 'colPos' => 203]
-            ]
+                ['name' => 'Sub Right', 'colPos' => 203],
+            ],
         ] // grid configuration
     );
 
@@ -59,7 +59,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('container')) {
             'value' => 'test_container_2col',
             'icon' => 'content-container-columns-2',
             'group' => 'container',
-            'description' => 'Two column container for testing'
+            'description' => 'Two column container for testing',
         ]
     );
 
@@ -71,7 +71,7 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('container')) {
             'value' => 'test_container_nested',
             'icon' => 'content-container-columns-3',
             'group' => 'container',
-            'description' => 'Nested container for testing'
+            'description' => 'Nested container for testing',
         ]
     );
 }

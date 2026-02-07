@@ -26,13 +26,7 @@ namespace EHAERER\PasteReference\DataHandler;
 use Doctrine\DBAL\Driver\Exception as DBALDriverException;
 use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
-// use EHAERER\PasteReference\Helper\Helper;
 use TYPO3\CMS\Core\Database\Connection;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryBuilder;
-use TYPO3\CMS\Core\Database\Query\Restriction\EndTimeRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
-use TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -58,7 +52,11 @@ abstract class AbstractDataHandler
      * @param DataHandler $dataHandler
      * @throws DBALException|DBALDriverException
      */
-    public function init(string $table, int $uidPid, DataHandler $dataHandler): void
+    public function init(
+        string $table,
+        int $uidPid,
+        DataHandler $dataHandler
+    ): void
     {
         $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
         $this->setTable($table);

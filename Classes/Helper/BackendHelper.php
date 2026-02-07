@@ -4,8 +4,8 @@ namespace EHAERER\PasteReference\Helper;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
- *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
+ *  (c) 2021-2026 Ephraim Härer <mail@ephra.im>
+ *
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -23,9 +23,8 @@ namespace EHAERER\PasteReference\Helper;
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Localization\LanguageService;
-// use TYPO3\CMS\Core\SingletonInterface;
 
-class BackendHelper // implements SingletonInterface
+class BackendHelper
 {
     /**
      * @return BackendUserAuthentication|null

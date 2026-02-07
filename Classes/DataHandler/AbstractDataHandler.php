@@ -56,8 +56,7 @@ abstract class AbstractDataHandler
         string $table,
         int $uidPid,
         DataHandler $dataHandler
-    ): void
-    {
+    ): void {
         $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
         $this->setTable($table);
         if ($table === 'tt_content' && $uidPid < 0) {

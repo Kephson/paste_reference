@@ -232,7 +232,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         self::assertTrue($hasGetRowCall || $hasGetRecordCall, 'Renderer should handle version-specific record methods');
 
         // Check for proper version branching in getDataRow method
-        self::assertStringContainsString('if ($this->majorTypo3Version > 13)', $content, 'Should have version check for API differences');
+        self::assertStringContainsString('if ($this->majorTypo3Version >= 14)', $content, 'Should have version check for API differences');
 
         // Check that RecordFactory is used conditionally
         $hasRecordFactoryUsage = str_contains($content, 'RecordFactory');

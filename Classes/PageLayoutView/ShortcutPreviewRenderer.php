@@ -39,13 +39,14 @@ use TYPO3\CMS\Core\Domain\RecordInterface;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements PreviewRendererInterface
+class ShortcutPreviewRenderer implements PreviewRendererInterface
 {
     /** @var array<string, mixed> */
     protected array $extensionConfiguration = [];
     protected int $majorTypo3Version = 0;
     protected TtContentRepository $ttContentRepository;
     protected BackendHelper $backendHelper;
+    protected StandardContentPreviewRenderer $standardContentPreviewRenderer;
 
     /**
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -59,6 +60,13 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $this->majorTypo3Version = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
         $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
         $this->backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
+        $this->standardContentPreviewRenderer = GeneralUtility::makeInstance(StandardContentPreviewRenderer::class);;
+    }
+
+    public function renderPageModulePreviewHeader(GridColumnItem $item): string
+    {
+        // $this->runtimeCache->set('tx_container_current_gridColumItem', $item);
+        return $this->standardContentPreviewRenderer->renderPageModulePreviewHeader($item);
     }
 
     /**
@@ -76,7 +84,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         $infoArr = [];
         $tsConfigPage = [];
         $tsConfig = [];
-        $this->getProcessedValue($gridColumnItem, 'header_position,header_layout,header_link', $infoArr);
+        // $this->standardContentPreviewRenderer->getProcessedValue($gridColumnItem, 'header_position,header_layout,header_link', $infoArr);
         $dataRow = $this->getDataRow($gridColumnItem);
 
         if (!empty($dataRow['pid']) && $tsConfigPage = BackendUtility::getPagesTSconfig($dataRow['pid'])) {
@@ -101,7 +109,24 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             }
             return $preview;
         }
-        return parent::renderPageModulePreviewContent($gridColumnItem);
+        return $this->standardContentPreviewRenderer->renderPageModulePreviewContent($gridColumnItem);
+    }
+
+    public function renderPageModulePreviewFooter(GridColumnItem $item): string
+    {
+        return $this->standardContentPreviewRenderer->renderPageModulePreviewFooter($item);
+    }
+
+    public function wrapPageModulePreview(
+        string $previewHeader,
+        string $previewContent,
+        GridColumnItem $item
+    ): string {
+        return $this->standardContentPreviewRenderer->wrapPageModulePreview(
+            $previewHeader,
+            $previewContent,
+            $item
+        );
     }
 
     protected function getRenderedPreviewItem($url, $actionLabel, $content)

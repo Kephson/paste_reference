@@ -24,6 +24,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
  ***************************************************************/
 
 use Doctrine\DBAL\Exception as DBALException;
+// use Doctrine\DBAL\DriverException as DBALDriverException;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use EHAERER\PasteReference\Helper\BackendHelper;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
@@ -175,13 +176,12 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             }
             if ($this->majorTypo3Version >= 14) {
                 $recordObj = $this->getContentRecordObj($dataRow);
+                $record = $gridColumnItem->getRecord();
+                $gridColumnItem->setRecord($record);
             } else {
                 $record = $gridColumnItem->getRecord();
-                $recordObj = $record->getRecord();
+                $gridColumnItem->setRecord($record);
             }
-            // TODO: here php-stan says an array is expected, that's not correct:
-            // @phpstan-ignore-next-line
-            $gridColumnItem->setRecord($recordObj);
         }
         return $renderItems;
     }

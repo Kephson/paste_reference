@@ -23,8 +23,9 @@ namespace EHAERER\PasteReference\Tests\Functional;
  ***************************************************************/
 
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
+use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use EHAERER\PasteReference\EventListener\AfterTcaCompilationEventListener;
-use EHAERER\PasteReference\Helper\Helper;
+use EHAERER\PasteReference\Helper\BackendHelper;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -139,24 +140,30 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function helperClassUsesCompatibleApis(): void
+    public function BackendHelperClassUsesCompatibleApis(): void
     {
-        $helper = GeneralUtility::makeInstance(Helper::class);
+        $backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
 
-        // Test that Helper class can be instantiated and uses compatible APIs
-        self::assertInstanceOf(Helper::class, $helper);
-
-        // Test database query methods
-        $queryBuilder = $helper->getQueryBuilder('tt_content');
-        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\QueryBuilder::class, $queryBuilder);
+        // Test that BackendHelper class can be instantiated and uses compatible APIs
+        self::assertInstanceOf(BackendHelper::class, $backendHelper);
 
         // Test backend user access
-        $backendUser = $helper->getBackendUser();
+        $backendUser = $backendHelper->getBackendUser();
         // Backend user might be null in testing context, but method should exist
-        self::assertTrue(method_exists($helper, 'getBackendUser'));
+        self::assertTrue(method_exists($backendHelper, 'getBackendUser'));
 
         // Test language service access
-        self::assertTrue(method_exists($helper, 'getLanguageService'));
+        self::assertTrue(method_exists($backendHelper, 'getLanguageService'));
+    }
+
+    #[Test]
+    public function TtContentRepositoryUsesCompatibleApis(): void
+    {
+        $ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
+
+        // Test database query methods
+        $queryBuilder = $ttContentRepository->getQueryBuilder('tt_content');
+        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\QueryBuilder::class, $queryBuilder);
     }
 
     #[Test]
@@ -237,8 +244,8 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function databaseQueryRestrictionsAreCompatible(): void
     {
-        $helper = GeneralUtility::makeInstance(Helper::class);
-        $queryBuilder = $helper->getQueryBuilder('tt_content');
+        $ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
+        $queryBuilder = $ttContentRepository->getQueryBuilder('tt_content');
 
         // Test that restriction removal methods exist and work
         $restrictions = $queryBuilder->getRestrictions();
@@ -274,8 +281,8 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         self::assertTrue(method_exists(GeneralUtility::class, 'fixed_lgd_cs'));
 
         // Test that makeInstance works with extension classes
-        $helper = GeneralUtility::makeInstance(Helper::class);
-        self::assertInstanceOf(Helper::class, $helper);
+        $backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
+        self::assertInstanceOf(BackendHelper::class, $backendHelper);
     }
 
     #[Test]

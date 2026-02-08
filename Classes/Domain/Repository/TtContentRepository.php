@@ -26,6 +26,7 @@ namespace EHAERER\PasteReference\Domain\Repository;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 use EHAERER\PasteReference\Helper\BackendHelper;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -49,6 +50,7 @@ class TtContentRepository implements SingletonInterface
     protected array $extensionConfiguration = [];
     protected bool $showHidden = true;
     protected BackendHelper $backendHelper;
+    protected string $table = 'tt_content';
 
     public function __construct()
     {

@@ -173,6 +173,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
+            // TODO fixMe
             // The extension currently calls getRow() which doesn't exist on RecordInterface
             // This test documents the API compatibility issue by checking if the method exists
             if (method_exists($record, 'getRow')) {
@@ -193,6 +194,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'header' => 'Test Record',
             ];
 
+            // TODO fixMe
             // Create a mock object that has getRecord() method for v13
             $mockRecord = new class ($testData) {
                 private array $data;
@@ -399,8 +401,8 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         $majorVersion = $this->typo3Version->getMajorVersion();
 
         // Test GeneralUtility::makeInstance works
-        $helper = GeneralUtility::makeInstance(\EHAERER\PasteReference\Helper\Helper::class);
-        self::assertInstanceOf(\EHAERER\PasteReference\Helper\Helper::class, $helper);
+        $backendHelper = GeneralUtility::makeInstance(\EHAERER\PasteReference\Helper\BackendHelper::class);
+        self::assertInstanceOf(\EHAERER\PasteReference\Helper\BackendHelper::class, $backendHelper);
 
         // Test Typo3Version access
         $version = GeneralUtility::makeInstance(Typo3Version::class);

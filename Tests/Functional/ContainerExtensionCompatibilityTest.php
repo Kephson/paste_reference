@@ -75,8 +75,8 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
 
         // Check if container extension is available after setup
-        $this->containerExtensionAvailable = class_exists('B13\\Container\\Tca\\Registry') &&
-                                           ExtensionManagementUtility::isLoaded('container');
+        $this->containerExtensionAvailable = class_exists('B13\\Container\\Tca\\Registry')
+                                           && ExtensionManagementUtility::isLoaded('container');
 
         // Create test data programmatically
         $this->createTestData();
@@ -372,8 +372,8 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
 
         // Test workspace compatibility basics
         if ($majorVersion >= 13) {
-            $helper = GeneralUtility::makeInstance(\EHAERER\PasteReference\Helper\Helper::class);
-            self::assertInstanceOf(\EHAERER\PasteReference\Helper\Helper::class, $helper);
+            $backendHelper = GeneralUtility::makeInstance(\EHAERER\PasteReference\Helper\BackendHelper::class);
+            self::assertInstanceOf(\EHAERER\PasteReference\Helper\BackendHelper::class, $backendHelper);
         }
 
         self::assertTrue(true, 'Container workspace compatibility test completed');

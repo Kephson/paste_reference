@@ -125,7 +125,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             $rawRecord = $gridColumnItem->getRecord()->getRawRecord();
             $dataRow = $rawRecord->toArray();
         } else {
-            $dataRow = $gridColumnItem->getRow();
+            $dataRow = $gridColumnItem->getRecord();
         }
         return $dataRow;
     }

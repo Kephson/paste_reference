@@ -308,7 +308,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
     public function pasteReferenceContainerFieldHandling(): void
     {
         // Test basic shortcut functionality (works without container extension)
-        self::assertTrue(class_exists(\EHAERER\PasteReference\Helper\Helper::class));
+        self::assertTrue(class_exists(\EHAERER\PasteReference\Helper\BackendHelper::class));
 
         // Test that ShortcutPreviewRenderer can be instantiated
         if (class_exists(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class)) {

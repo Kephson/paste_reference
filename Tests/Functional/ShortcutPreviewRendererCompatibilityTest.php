@@ -73,6 +73,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'bodytext' => '<p>This is a test content element for API compatibility testing.</p>',
                 'colPos' => 0,
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ],
             [
                 'uid' => 2,
@@ -86,6 +87,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'records' => '1',
                 'colPos' => 0,
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ],
         ];
 
@@ -124,6 +126,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'shortcut',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
                 'header' => 'Test Shortcut',
                 'records' => '2',
             ];
@@ -170,6 +173,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'shortcut',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -194,6 +198,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'shortcut',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -235,6 +240,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'text',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
                 'header' => 'Test Content',
             ];
 
@@ -266,6 +272,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'pid' => 1,
             'CType' => 'shortcut',
             'sys_language_uid' => 0,
+            'l18n_parent' => 0,
             'header' => 'Reference Element',
             'records' => '1',
         ];
@@ -323,6 +330,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'text',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);

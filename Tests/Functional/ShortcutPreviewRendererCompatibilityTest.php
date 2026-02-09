@@ -321,11 +321,10 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             $testData = [
                 'uid' => 1,
                 'pid' => 1,
-                'CType' => 'text'
+                'CType' => 'text',
                 'sys_language_uid' => 0,
             ];
 
-                        ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             self::assertInstanceOf(RecordInterface::class, $record);

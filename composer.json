@@ -41,7 +41,6 @@
 		"friendsofphp/php-cs-fixer": "^3.65.0",
 		"phpstan/phpstan": "^2.0.2",
 		"phpstan/phpstan-phpunit": "^2.0.1",
-		"phpunit/phpunit": "^10.5.35",
 		"typo3/cms-adminpanel": "^14.2 || dev-main",
 		"typo3/cms-belog": "^14.2 || dev-main",
 		"typo3/cms-beuser": "^14.2 || dev-main",

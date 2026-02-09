@@ -306,7 +306,12 @@ final class ApiCompatibilityTest extends FunctionalTestCase
 
             // Test that RecordFactory can create records
             $recordFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Domain\RecordFactory::class);
-            $testData = ['uid' => 1, 'pid' => 1, 'CType' => 'shortcut'];
+            $testData = [
+                'uid' => 1,
+                'pid' => 1,
+                'CType' => 'shortcut',
+                'sys_language_uid' => 0,
+            ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             self::assertInstanceOf(\TYPO3\CMS\Core\Domain\RecordInterface::class, $record);

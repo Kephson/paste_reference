@@ -123,6 +123,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'shortcut',
+                'sys_language_uid' => 0,
                 'header' => 'Test Shortcut',
                 'records' => '2',
             ];
@@ -168,6 +169,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'shortcut',
+                'sys_language_uid' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -191,6 +193,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'shortcut',
+                'sys_language_uid' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -231,6 +234,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'text',
+                'sys_language_uid' => 0,
                 'header' => 'Test Content',
             ];
 
@@ -261,6 +265,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'uid' => 2,
             'pid' => 1,
             'CType' => 'shortcut',
+            'sys_language_uid' => 0,
             'header' => 'Reference Element',
             'records' => '1',
         ];
@@ -313,7 +318,13 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             self::assertInstanceOf(RecordFactory::class, $recordFactory);
 
             // Test that it can create records for tt_content
-            $testData = ['uid' => 1, 'pid' => 1, 'CType' => 'text'];
+            $testData = [
+                'uid' => 1,
+                'pid' => 1,
+                'CType' => 'text'
+                'sys_language_uid' => 0,
+
+                        ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             self::assertInstanceOf(RecordInterface::class, $record);

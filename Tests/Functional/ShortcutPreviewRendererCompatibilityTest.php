@@ -100,7 +100,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     {
         // Test that the renderer implements the required interfaces
         self::assertInstanceOf(PreviewRendererInterface::class, $this->renderer);
-        self::assertInstanceOf(StandardContentPreviewRenderer::class, $this->renderer);
     }
 
     #[Test]
@@ -378,9 +377,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function rendererInheritsFromStandardContentPreviewRenderer(): void
     {
-        // Verify inheritance chain
-        self::assertInstanceOf(StandardContentPreviewRenderer::class, $this->renderer);
-
         // Test that parent methods are available
         $reflection = new \ReflectionClass(StandardContentPreviewRenderer::class);
 

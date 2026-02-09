@@ -60,7 +60,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         $this->majorTypo3Version = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
         $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
         $this->backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
-        $this->standardContentPreviewRenderer = GeneralUtility::makeInstance(StandardContentPreviewRenderer::class);;
+        $this->standardContentPreviewRenderer = GeneralUtility::makeInstance(StandardContentPreviewRenderer::class);
     }
 
     public function renderPageModulePreviewHeader(GridColumnItem $item): string

@@ -10,12 +10,27 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass'][] = DataHandler::class;
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['moveRecordClass'][] = DataHandler::class;
 
+    /* replaced by code below comment
+    /* @see #108843
     $GLOBALS['TYPO3_USER_SETTINGS']['columns']['disableCopyFromPageButton'] = [
         'type' => 'check',
         'label' => 'LLL:EXT:paste_reference/Resources/Private/Language/locallang.xlf:disableCopyFromPageButton',
     ];
-
     ExtensionManagementUtility::addFieldsToUserSettings(
         '--div--;LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:pasteReference,disableCopyFromPageButton',
+    );
+    */
+
+        // In Configuration/TCA/Overrides/be_users.php
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserSetting(
+        'disableCopyFromPageButton',
+        [
+            'label' => '--div--;LLL:EXT:paste_reference/Resources/Private/Language/locallang.xlf:disableCopyFromPageButton',
+            'config' => [
+                'type' => 'check',
+                'renderType' => 'checkboxToggle',
+            ],
+        ],
+        // 'after:emailMeAtLogin'
     );
 })();

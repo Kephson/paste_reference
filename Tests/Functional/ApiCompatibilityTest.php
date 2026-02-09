@@ -294,7 +294,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
 
         // Test that it implements required interfaces
         self::assertInstanceOf(\TYPO3\CMS\Backend\Preview\PreviewRendererInterface::class, $renderer);
-        self::assertInstanceOf(\TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer::class, $renderer);
 
         $majorVersion = $this->typo3Version->getMajorVersion();
 

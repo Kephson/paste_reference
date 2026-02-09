@@ -73,6 +73,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 'bodytext' => '<p>This is a test content element for API compatibility testing.</p>',
                 'colPos' => 0,
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ],
             [
                 'uid' => 2,
@@ -86,6 +87,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 'records' => '1',
                 'colPos' => 0,
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ],
         ];
 
@@ -311,6 +313,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'shortcut',
                 'sys_language_uid' => 0,
+                'l18n_parent' => 0,
             ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 

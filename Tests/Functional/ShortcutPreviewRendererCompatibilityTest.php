@@ -323,6 +323,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'pid' => 1,
                 'CType' => 'text'
                 'sys_language_uid' => 0,
+            ];
 
                         ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);

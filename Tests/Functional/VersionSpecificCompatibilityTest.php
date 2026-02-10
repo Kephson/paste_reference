@@ -125,7 +125,7 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function contextMenuItemProviderWorksInCurrentVersion(): void
     {
-        $provider = GeneralUtility::makeInstance(PasteReferenceItemProvider::class);
+        $provider = new PasteReferenceItemProvider();
 
         // Test that the provider extends the correct base class
         self::assertInstanceOf(RecordProvider::class, $provider);

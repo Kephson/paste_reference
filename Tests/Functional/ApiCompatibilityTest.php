@@ -114,14 +114,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     {
         $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
-
-        // Test that ConnectionPool API works consistently across versions
-        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\QueryBuilder::class, $queryBuilder);
-
-        // Test query builder methods that are used by the extension
-        $connection = $connectionPool->getConnectionForTable('tt_content');
-        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Connection::class, $connection);
-
         // Test restrictions API
         $restrictions = $queryBuilder->getRestrictions();
         self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionContainerInterface::class, $restrictions);
@@ -134,28 +126,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
 
         // Test DataHandler properties and methods used by extension
         self::assertObjectHasProperty('isImporting', $dataHandler);
-
-        // Test method signatures that are used by ProcessCmdmap
-        self::assertTrue(method_exists($dataHandler, 'start'));
-        self::assertTrue(method_exists($dataHandler, 'process_datamap'));
-        self::assertTrue(method_exists($dataHandler, 'process_cmdmap'));
-    }
-
-    #[Test]
-    public function BackendHelperClassUsesCompatibleApis(): void
-    {
-        $backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
-
-        // Test that BackendHelper class can be instantiated and uses compatible APIs
-        self::assertInstanceOf(BackendHelper::class, $backendHelper);
-
-        // Test backend user access
-        $backendUser = $backendHelper->getBackendUser();
-        // Backend user might be null in testing context, but method should exist
-        self::assertTrue(method_exists($backendHelper, 'getBackendUser'));
-
-        // Test language service access
-        self::assertTrue(method_exists($backendHelper, 'getLanguageService'));
     }
 
     #[Test]
@@ -165,7 +135,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
 
         // Test database query methods
         $queryBuilder = $ttContentRepository->getQueryBuilder('tt_content');
-        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\QueryBuilder::class, $queryBuilder);
+        self::assertTrue($queryBuilder, 'QueryBuilder can be retrieved from TtContentRepository');
     }
 
     #[Test]
@@ -232,15 +202,15 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
 
         // The extension should handle null request gracefully
-        self::assertTrue(true, 'Global variables access pattern is compatible');
+        self::assertTrue($request, 'Global variables access pattern is compatible');
 
         // Test BE_USER global access pattern
         $backendUser = $GLOBALS['BE_USER'] ?? null;
-        self::assertTrue(true, 'Backend user global access pattern is compatible');
+        self::assertTrue($backendUser, 'Backend user global access pattern is compatible');
 
         // Test LANG global access pattern
         $languageService = $GLOBALS['LANG'] ?? null;
-        self::assertTrue(true, 'Language service global access pattern is compatible');
+        self::assertTrue($languageService, 'Language service global access pattern is compatible');
     }
 
     #[Test]

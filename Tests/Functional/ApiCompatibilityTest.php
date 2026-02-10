@@ -135,7 +135,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
 
         // Test database query methods
         $queryBuilder = $ttContentRepository->getQueryBuilder('tt_content');
-        self::assertTrue($queryBuilder, 'QueryBuilder can be retrieved from TtContentRepository');
+        self::assertTrue(is_object($queryBuilder), 'QueryBuilder can be retrieved from TtContentRepository');
     }
 
     #[Test]
@@ -202,7 +202,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
 
         // The extension should handle null request gracefully
-        self::assertTrue($request, 'Global variables access pattern is compatible');
+        self::assertTrue(is_object($request), 'Global variables access pattern is compatible');
 
         // Test BE_USER global access pattern
         $backendUser = $GLOBALS['BE_USER'] ?? null;
@@ -284,6 +284,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 'CType' => 'shortcut',
                 'sys_language_uid' => 0,
                 'l18n_parent' => 0,
+                't3ver_wsid' => 0,
             ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 

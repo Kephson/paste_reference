@@ -241,6 +241,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'CType' => 'text',
                 'sys_language_uid' => 0,
                 'l18n_parent' => 0,
+                't3ver_wsid' => 0,
                 'header' => 'Test Content',
             ];
 
@@ -273,6 +274,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'CType' => 'shortcut',
             'sys_language_uid' => 0,
             'l18n_parent' => 0,
+            't3ver_wsid' => 0,
             'header' => 'Reference Element',
             'records' => '1',
         ];
@@ -331,6 +333,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'CType' => 'text',
                 'sys_language_uid' => 0,
                 'l18n_parent' => 0,
+                't3ver_wsid' => 0,
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);

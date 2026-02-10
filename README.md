@@ -7,8 +7,9 @@
 [![Monthly Downloads](https://poser.pugx.org/ehaerer/paste-reference/d/monthly)](//packagist.org/packages/ehaerer/paste-reference)
 [![CI - main](https://github.com/Kephson/paste_reference/actions/workflows/ci.yml/badge.svg)](https://github.com/Kephson/paste_reference/actions/workflows/ci.yml)
 
-> This extension brings the extracted functions from gridelements to copy and paste content elements also as reference and not only as copy.
-> A lot of TYPO3 users love these features but don't know that this aren't core features.
+> This extension brings the extracted functions from gridelements to copy and paste
+> content elements also as reference and not only as copy. A lot of TYPO3 users love
+> these features but don't know that this aren't core features.
 
 ## 1 Features
 
@@ -55,9 +56,10 @@ Please look into the [official extension documentation in changelog chapter][4].
 ### 4.3 Release Management
 
 Paste reference uses [**semantic versioning**][5], which means, that
-* **bugfix updates** (e.g. 1.0.0 => 1.0.1) just includes small bugfixes or security relevant stuff without breaking changes,
+
+* **bugfix updates** (e.g. 1.0.0 => 1.0.1) just includes small bug-fixes or security relevant stuff without breaking changes,
 * **minor updates** (e.g. 1.0.0 => 1.1.0) includes new features and smaller tasks without breaking changes,
-* and **major updates** (e.g. 1.0.0 => 2.0.0) breaking changes wich can be refactorings, features or bugfixes.
+* **major updates** (e.g. 1.0.0 => 2.0.0) breaking changes which can be refactoring, features or bug-fixes.
 
 #### 4.3.1 Releases
 
@@ -66,7 +68,9 @@ Paste reference uses [**semantic versioning**][5], which means, that
 * for TYPO3 v11: [2.0.5](https://github.com/Kephson/paste_reference/releases/tag/2.0.5)
 * for TYPO3 v10: [1.0.3](https://github.com/Kephson/paste_reference/releases/tag/1.0.3)
 
-To get the most recent development for the branch 4, consider installing the branch instead of the release. The branch [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) supports also TYPO3 v14 and includes unreleased bug-fixes.
+To get the most recent development for the branch 4, consider installing the branch instead
+of the release. The branch [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev)
+supports also TYPO3 v14 and includes unreleased bug-fixes.
 
 #### 4.3.2 Branches
 
@@ -77,7 +81,7 @@ The following branches are of interest:
 * for TYPO3 v11: [TYPO3_11-5](https://github.com/Kephson/paste_reference/tree/TYPO3_11-5)
 * for TYPO3 v10: [TYPO3_10-4](https://github.com/Kephson/paste_reference/tree/TYPO3_10-4)
 
-Note, that releases are usually to prefer, if possible.  
+Note, that releases are usually to prefer, if possible.
 The branch [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) is ahead of the releases currently,
 so in this case using the branch is better and gives you most recent development changes.
 
@@ -97,8 +101,8 @@ describing the faulty behavior or problem and proposing a better solution perhap
 even more complicated in usability for an edge case feature. It helps to have a discussion about a new feature before you open a pull request.
 
 **Financial support**
-Development takes time and your financial support can enable developers to take the required time.  
-Even small donations are a nice way to say "thank you for the development!".  
+Development takes time and your financial support can enable developers to take the required time.
+Even small donations are a nice way to say "thank you for the development!".
 If you need invoices for the donations, please reach out to the according developers.
 
 Currently the following active developers seek support:
@@ -109,11 +113,11 @@ Currently the following active developers seek support:
 
 ### 5.1 Overview
 
-This repository contains a so-called [Extension for the TYPO3 CMS](https://github.com/typo3) which cannot be used on its
-own but has been prepared to install required dependency to provide a TYPO3 v12 composer based installation within the
+This repository contains a so-called Extension for the [TYPO3 CMS](https://github.com/typo3) which cannot be used on its
+own but has been prepared to install required dependency to provide a TYPO3 composer based installation within the
 untracked `.Build/` folder with `.Build/public/` being the doc-root to point a web-server on.
 
-For simpler onboarding a generic [ddev project configuration]() is included to quickstart a local TYPO3 v12 instance
+For simpler onboarding a generic [ddev project configuration]() is included to quickstart a local TYPO3 instance
 in a predefined environment along with data set. See [5.2](#52-use-ddev-to-setup-a-local-development-instance) for how
 to use ddev.
 
@@ -151,7 +155,7 @@ ddev start \
 which creates a instance with two different hidden page trees and a admin user without asking for it.
 Adjust the `--admin-*` arguments to match your needs.
 
-#### 5.2.2 Splitted startup commands
+#### 5.2.2 Startup commands step by step
 
 **First startup and composer package installation**
 
@@ -162,6 +166,8 @@ ddev start \
 ```
 
 **Setup TYPO3 using typo3 setup command**
+
+**1) Using individual credentials**
 
 > Note that the following command is interactive and asks for admin user credential, name and email.
 > Ensure to remember the values you enter here for later login into the TYPO3 backend.
@@ -177,6 +183,35 @@ ddev typo3 setup \
     --server-type=apache \
     --force \
   && ddev restart
+```
+
+**2) Using default credentials**
+
+For local development there exist default credentials, which are also
+applied above in *`5.2.1 Single command start-up`*. If you want to use
+them you can execute the code-block below.
+
+Note that you could use also individual values for the according
+variables, starting with `--admin-` and the `--project-name`.
+The other variables shouldn't be changed, if you don't know exactly
+what you do. You still had the benefit of non-interactive setup.
+
+```bash
+ddev typo3 setup \
+        --driver=mysqli \
+        --host=db \
+        --port=3306 \
+        --dbname=db \
+        --username=db \
+        --password=db \
+        --admin-username=john-doe \
+        --admin-user-password='John-Doe-1701D.' \
+        --admin-email="john.doe@example.com" \
+        --project-name='ext-paste-reference' \
+        --no-interaction \
+        --server-type=apache \
+        --force \
+  && ddev restart \
 ```
 
 **Use `EXT:styleguide` to create page trees**

@@ -110,8 +110,8 @@ class TtContentRepository implements SingletonInterface
             ->addOrderBy('sorting')
             ->executeQuery();
 
+        /** @var array<non-empty-string, string|int|float|bool|null> $item */
         while ($item = $result->fetchAssociative()) {
-            /** @var array<non-empty-string, string|int|float|bool|null> $item */
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
                 $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
                 if (is_array($translatedItem) && $translatedItem !== []) {

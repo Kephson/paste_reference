@@ -130,6 +130,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 't3ver_wsid' => 0,
                 't3ver_oid' => 0,
                 't3ver_state' => 0,
+                't3ver_stage' => 0,
                 'header' => 'Test Shortcut',
                 'records' => '2',
             ];
@@ -180,6 +181,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 't3ver_wsid' => 0,
                 't3ver_oid' => 0,
                 't3ver_state' => 0,
+                't3ver_stage' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -208,6 +210,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 't3ver_wsid' => 0,
                 't3ver_oid' => 0,
                 't3ver_state' => 0,
+                't3ver_stage' => 0,
                 'header' => 'Test Record',
             ];
 
@@ -253,6 +256,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 't3ver_wsid' => 0,
                 't3ver_oid' => 0,
                 't3ver_state' => 0,
+                't3ver_stage' => 0,
                 'header' => 'Test Content',
             ];
 
@@ -288,6 +292,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             't3ver_wsid' => 0,
             't3ver_oid' => 0,
             't3ver_state' => 0,
+            't3ver_stage' => 0,
             'header' => 'Reference Element',
             'records' => '1',
         ];
@@ -348,6 +353,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'l18n_parent' => 0,
                 't3ver_wsid' => 0,
                 't3ver_state' => 0,
+                't3ver_stage' => 0,
                 't3ver_oid' => 0,
             ];
 

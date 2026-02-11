@@ -288,6 +288,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 't3ver_oid' => 0,
                 't3ver_state' => 0,
                 't3ver_stage' => 0,
+                'crdate' => 0,
             ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 

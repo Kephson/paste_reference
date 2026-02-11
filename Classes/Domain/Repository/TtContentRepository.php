@@ -123,6 +123,7 @@ class TtContentRepository implements SingletonInterface
                 BackendUtility::workspaceOL('tt_content', $item, $this->backendHelper->getBackendUser()->workspace);
             }
             $item['tx_paste_reference_container'] = $item['pid'];
+            /** @var array<int, array<non-empty-string, mixed>> $collectedItems */
             $collectedItems[] = $item;
         }
     }
@@ -179,6 +180,7 @@ class TtContentRepository implements SingletonInterface
                     $this->backendHelper->getBackendUser()->workspace
                 );
             }
+            /** @var array<int, array<non-empty-string, mixed>> $collectedItems */
             $collectedItems[] = $item;
         }
     }

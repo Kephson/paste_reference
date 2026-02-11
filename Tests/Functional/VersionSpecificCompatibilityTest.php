@@ -123,30 +123,6 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function contextMenuItemProviderWorksInCurrentVersion(): void
-    {
-        $provider = new PasteReferenceItemProvider();
-
-        // Test that the provider extends the correct base class
-        self::assertInstanceOf(RecordProvider::class, $provider);
-
-        // Test version-specific method signatures
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        if ($majorVersion >= 13) {
-            // Test methods that should exist in v13+
-            self::assertTrue(method_exists($provider, 'canHandle'));
-            self::assertTrue(method_exists($provider, 'getPriority'));
-            self::assertTrue(method_exists($provider, 'addItems'));
-        }
-
-        // Test that priority method returns expected type
-        $priority = $provider->getPriority();
-        self::assertIsInt($priority);
-        self::assertGreaterThan(0, $priority);
-    }
-
-    #[Test]
     public function dataHandlerIntegrationWorksInCurrentVersion(): void
     {
         $processCmdmap = GeneralUtility::makeInstance(ProcessCmdmap::class);

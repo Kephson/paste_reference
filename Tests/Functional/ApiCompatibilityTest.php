@@ -202,7 +202,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
 
         // The extension should handle null request gracefully
-        self::assertTrue(!is_empty($request), 'Global variables access pattern is compatible');
+        self::assertTrue(!empty($request), 'Global variables access pattern is compatible');
 
         // Test BE_USER global access pattern
         $backendUser = $GLOBALS['BE_USER'] ?? null;
@@ -286,6 +286,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
                 'l18n_parent' => 0,
                 't3ver_wsid' => 0,
                 't3ver_oid' => 0,
+                't3ver_state' => 0,
             ];
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 

@@ -6,7 +6,7 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2024 Ephraim Härer <mail@ephra.im>
+ *  (c) 2024-2026 Ephraim Härer <mail@ephra.im>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
  *  free software; you can redistribute it and/or modify
@@ -24,10 +24,7 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
-use EHAERER\PasteReference\EventListener\AfterTcaCompilationEventListener;
-use EHAERER\PasteReference\Helper\BackendHelper;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;

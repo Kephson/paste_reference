@@ -7,7 +7,7 @@ namespace EHAERER\PasteReference\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *  (c) 2026 David Bruchmann <david.bruchmann@gmail.com>
- *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
+ *  (c) 2021-2026 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -110,7 +110,7 @@ class TtContentRepository implements SingletonInterface
             ->addOrderBy('sorting')
             ->executeQuery();
 
-        /** @var array<non-empty-string, string|int|float|bool|null> $item */
+        /** @var array<string,mixed>|false $item */
         while ($item = $result->fetchAssociative()) {
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
                 $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];

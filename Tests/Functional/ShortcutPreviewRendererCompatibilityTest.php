@@ -136,7 +136,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'fe_group' => 0,
             ];
 
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             // Test the actual methods that work
@@ -191,7 +191,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'fe_group' => 0,
             ];
 
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             // TODO fixMe
@@ -278,7 +278,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'fe_group' => 0,
             ];
 
-            // @phpstan-ignore-next-line
             $result = $getContentRecordObjMethod->invoke($this->renderer, $testData);
 
             // Test the correct RecordInterface methods
@@ -327,7 +326,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         if ($majorVersion >= 14) {
             // Test with RecordInterface for v14+
             $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             // Verify the record has the expected methods
@@ -394,7 +393,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'fe_group' => 0,
             ];
 
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
         }
     }

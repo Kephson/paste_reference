@@ -24,7 +24,6 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 use EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Database\ConnectionPool;

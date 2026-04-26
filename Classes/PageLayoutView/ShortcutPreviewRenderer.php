@@ -132,7 +132,7 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
 
     /**
      * @param GridColumnItem $gridColumnItem
-     * @return array<int, array<non-empty-string, mixed>>
+     * @return array
      * @throws DBALException
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array

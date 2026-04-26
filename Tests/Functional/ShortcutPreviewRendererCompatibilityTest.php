@@ -139,6 +139,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'tstamp' => 0,
                 'starttime' => 0,
                 'endtime' => 0,
+                'deleted' => 0,
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
@@ -193,6 +194,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'tstamp' => 0,
                 'starttime' => 0,
                 'endtime' => 0,
+                'deleted' => 0,
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
@@ -273,6 +275,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'tstamp' => 0,
                 'starttime' => 0,
                 'endtime' => 0,
+                'deleted' => 0,
             ];
 
             $result = $getContentRecordObjMethod->invoke($this->renderer, $testData);
@@ -314,6 +317,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'tstamp' => 0,
             'starttime' => 0,
             'endtime' => 0,
+            'deleted' => 0,
         ];
 
         if ($majorVersion >= 14) {
@@ -378,6 +382,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'tstamp' => 0,
                 'starttime' => 0,
                 'endtime' => 0,
+                'deleted' => 0,
             ];
 
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);

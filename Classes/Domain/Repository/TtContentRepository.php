@@ -134,7 +134,7 @@ class TtContentRepository implements SingletonInterface
      * @todo: move this in a repository
      *
      * @param string $shortcutItem The tt_content element to fetch the data from
-     * @param-out array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row
+     * @param-out array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException

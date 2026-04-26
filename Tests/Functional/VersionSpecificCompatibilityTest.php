@@ -286,7 +286,7 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
 
             // Test icon identifier usage pattern
             $iconIdentifier = 'actions-document-paste-after';
-            self::assertIsString($iconIdentifier);
+            // self::assertIsString($iconIdentifier);
 
             // The extension uses standard TYPO3 icon identifiers which should be stable
             $standardIcons = [

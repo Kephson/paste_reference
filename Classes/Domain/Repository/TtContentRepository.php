@@ -66,7 +66,7 @@ class TtContentRepository implements SingletonInterface
      * @todo: move this in a repository
      *
      * @param string $shortcutItem The single page to be used as the tree root
-     * @param-out array $collectedItems The collected item data rows ordered by parent position, column position and sorting // array<int, array<non-empty-string, mixed>>
+     * @param-out array $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record

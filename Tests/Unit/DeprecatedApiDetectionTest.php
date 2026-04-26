@@ -161,7 +161,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
 
         // Version handling is optional but good practice
         if ($hasVersionHandling) {
-            self::assertTrue($hasVersionHandling, 'Extension has version-specific handling');
+            // self::assertTrue($hasVersionHandling, 'Extension has version-specific handling');
         }
     }
 
@@ -236,9 +236,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
 
         // Check that RecordFactory is used conditionally
         $hasRecordFactoryUsage = str_contains($content, 'RecordFactory');
-        if ($hasRecordFactoryUsage) {
-            self::assertTrue($hasRecordFactoryUsage, 'RecordFactory usage should be version-aware');
-        }
+        self::assertTrue($hasRecordFactoryUsage, 'RecordFactory usage should be version-aware');
 
         // Verify no hardcoded version assumptions
         $problematicPatterns = [

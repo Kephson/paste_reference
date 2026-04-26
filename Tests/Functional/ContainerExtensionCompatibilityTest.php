@@ -272,7 +272,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
             self::fail('Container configuration cannot be created: ' . $e->getMessage());
         }
 
-        self::assertTrue(true, 'Container paste operation test completed');
+        // self::assertTrue(true, 'Container paste operation test completed');
     }
 
     #[Test]
@@ -291,7 +291,7 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         self::assertTrue(class_exists('B13\\Container\\Tca\\Registry'));
         // self::assertTrue(class_exists('B13\\Container\\Tca\\ContainerConfiguration'));
 
-        self::assertTrue(true, 'Container parameter handling test completed');
+        // self::assertTrue(true, 'Container parameter handling test completed');
     }
 
     /*

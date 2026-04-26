@@ -134,7 +134,7 @@ if (file_exists('Tests/Fixtures/tt_content.csv')) {
     }
 
     // Check for required columns
-    $header = $lines[0] ?? '';
+    $header = $lines[0];
     $requiredColumns = ['uid', 'pid', 'CType', 'header'];
 
     foreach ($requiredColumns as $column) {

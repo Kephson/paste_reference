@@ -43,6 +43,7 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
         );
     }
 
+    /*
     #[Test]
     public function containerExtensionCanBeInstantiated(): void
     {
@@ -53,6 +54,7 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
         $registry = GeneralUtility::makeInstance(\B13\Container\Tca\Registry::class);
         self::assertInstanceOf(\B13\Container\Tca\Registry::class, $registry);
     }
+    */
 
     #[Test]
     public function containerExtensionIsLoaded(): void

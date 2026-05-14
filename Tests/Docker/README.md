@@ -1,13 +1,13 @@
 # TYPO3 Multi-Version Docker Test Environments
 
-This directory contains Docker-based test environments for testing the paste-reference extension across multiple TYPO3 versions.
+This directory contains Docker-based test environments for testing the
+paste_reference extension across multiple TYPO3 versions.
 
 ## Overview
 
-The test environments provide isolated, reproducible setups for:
+The test environments provides an isolated, reproducible setup for:
 - TYPO3 v13.4 with PHP 8.2
-- TYPO3 v14.1 with PHP 8.3
-- MariaDB databases for each version
+- MariaDB database
 - Pre-configured extension installation
 - Test data seeding
 
@@ -19,14 +19,6 @@ Tests/Docker/
 │   ├── Dockerfile             # Web server container
 │   ├── docker-compose.yml     # Service orchestration
 │   ├── composer.json          # TYPO3 v13 dependencies
-│   ├── apache-vhost.conf      # Apache configuration
-│   ├── LocalConfiguration.php # TYPO3 configuration
-│   ├── additional.php         # Test-specific settings
-│   └── init-db.sql           # Database initialization
-├── typo3-v14/                 # TYPO3 v14.1 environment
-│   ├── Dockerfile             # Web server container
-│   ├── docker-compose.yml     # Service orchestration
-│   ├── composer.json          # TYPO3 v14 dependencies
 │   ├── apache-vhost.conf      # Apache configuration
 │   ├── LocalConfiguration.php # TYPO3 configuration
 │   ├── additional.php         # Test-specific settings
@@ -45,12 +37,8 @@ Tests/Docker/
 ### Setup Complete Environment
 
 ```bash
-# Setup both TYPO3 versions
+# Setup
 ./Tests/Scripts/run-tests.sh setup
-
-# Setup specific version only
-./Tests/Scripts/run-tests.sh setup 13
-./Tests/Scripts/run-tests.sh setup 14
 ```
 
 ### Manual Setup
@@ -75,15 +63,6 @@ Tests/Docker/
 - **Database**: localhost:3313
 - **PHP Version**: 8.2
 - **TYPO3 Version**: 13.4
-- **Container Extension**: b13/container ^2.3
-
-### TYPO3 v14 Environment
-
-- **Web URL**: http://localhost:8014
-- **Backend URL**: http://localhost:8014/typo3
-- **Database**: localhost:3314
-- **PHP Version**: 8.3
-- **TYPO3 Version**: 14.1
 - **Container Extension**: b13/container ^3.0
 
 ### Default Credentials
@@ -95,7 +74,7 @@ Tests/Docker/
 
 ## Test Data
 
-Each environment includes comprehensive test data:
+The environment includes comprehensive test data:
 
 ### Pages Structure
 - Test Suite Root (UID: 200)
@@ -148,10 +127,6 @@ Each environment includes comprehensive test data:
 ./Tests/Scripts/run-tests.sh test all phpunit
 ./Tests/Scripts/run-tests.sh test all js
 ./Tests/Scripts/run-tests.sh test all integration
-
-# Run tests on specific version
-./Tests/Scripts/run-tests.sh test 13
-./Tests/Scripts/run-tests.sh test 14
 ```
 
 ### Manual Testing
@@ -159,9 +134,9 @@ Each environment includes comprehensive test data:
 Access the TYPO3 backends to manually test paste-reference functionality:
 
 1. **TYPO3 v13**: http://localhost:8013/typo3
-2. **TYPO3 v14**: http://localhost:8014/typo3
 
-Navigate to the test pages and use the paste-reference functionality to verify cross-version compatibility.
+Navigate to the test pages and use the paste-reference functionality to verify
+cross-version compatibility.
 
 ## Configuration
 
@@ -202,7 +177,7 @@ To customize the environments:
    ```bash
    # Check if ports are in use
    netstat -tulpn | grep -E ':(8013|8014|3313|3314)'
-   
+
    # Modify docker-compose.yml to use different ports
    ```
 
@@ -216,15 +191,13 @@ To customize the environments:
    ```bash
    # Fix file permissions
    docker exec typo3-v13_web_1 chown -R www-data:www-data /var/www/html
-   docker exec typo3-v14_web_1 chown -R www-data:www-data /var/www/html
    ```
 
 4. **Database Connection Issues**
    ```bash
    # Check database container logs
    docker logs typo3-v13_db_1
-   docker logs typo3-v14_db_1
-   
+
    # Restart database containers
    docker-compose -f Tests/Docker/typo3-v13/docker-compose.yml restart db
    ```
@@ -234,15 +207,12 @@ To customize the environments:
 ```bash
 # View container logs
 docker logs typo3-v13_web_1
-docker logs typo3-v14_web_1
 
 # Access container shell
 docker exec -it typo3-v13_web_1 bash
-docker exec -it typo3-v14_web_1 bash
 
 # Check TYPO3 logs
 docker exec typo3-v13_web_1 tail -f var/log/typo3_test.log
-docker exec typo3-v14_web_1 tail -f var/log/typo3_test.log
 ```
 
 ### Performance Optimization
@@ -286,7 +256,7 @@ See the GitHub Actions workflow configuration for implementation details.
 
 ### Adding New TYPO3 Versions
 
-1. Copy existing version directory (e.g., `typo3-v14` → `typo3-v15`)
+1. Copy existing version directory (e.g., `typo3-v13` → `typo3-v14`)
 2. Update all configuration files for the new version
 3. Modify scripts to include the new version
 4. Update documentation and CI configuration

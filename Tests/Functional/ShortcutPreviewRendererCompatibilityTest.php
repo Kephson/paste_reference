@@ -134,6 +134,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'rowDescription' => '',
                 'sorting' => 0,
                 'fe_group' => 0,
+                'type' => '',
             ];
 
             // @phpstan-ignore argument.type, argument.type
@@ -189,6 +190,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'rowDescription' => '',
                 'sorting' => 0,
                 'fe_group' => 0,
+                'type' => '',
             ];
 
             // @phpstan-ignore argument.type, argument.type
@@ -321,6 +323,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'rowDescription' => '',
             'sorting' => 0,
             'fe_group' => 0,
+            'type' => '',
         ];
 
         if ($majorVersion >= 14) {
@@ -391,6 +394,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'rowDescription' => '',
                 'sorting' => 0,
                 'fe_group' => 0,
+                'type' => '',
             ];
 
             // @phpstan-ignore argument.type, argument.type

@@ -80,7 +80,7 @@ class TtContentRepository implements SingletonInterface
         int $language = 0
     ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
-        $itemList = GeneralUtility::intExplode(',', $itemList);
+        $itemList = GeneralUtility::intExplode(',', (string)$itemList);
 
         $queryBuilder = $this->getQueryBuilder();
         $result = $queryBuilder

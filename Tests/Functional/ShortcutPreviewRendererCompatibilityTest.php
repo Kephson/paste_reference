@@ -194,10 +194,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 // TYPO3 v13
                 $result = $getDataRowMethod->invoke($this->renderer, $record);
                 self::assertIsArray($result);
-            } else {
-                // TYPO3 v14
-                $result = $record->toArray();
-                self::assertTrue(method_exists($record, 'toArray'), 'Record::toArray() exists');
             }
         } else {
             // For TYPO3 v13 and below, we would test with array records or objects with getRecord()

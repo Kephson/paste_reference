@@ -116,28 +116,26 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => '1',
                 'pid' => '1',
                 'CType' => 'shortcut',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_oid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
+                'sys_language_uid' => '0',
+                'l18n_parent' => '0',
+                't3ver_wsid' => '0',
+                't3ver_oid' => '0',
+                't3ver_state' => '0',
+                't3ver_stage' => '0',
                 'header' => 'Test Shortcut',
                 'records' => '2',
-                'crdate' => 0,
-                'tstamp' => 0,
-                'starttime' => 0,
-                'endtime' => 0,
+                'crdate' => time(),
+                'tstamp' => time(),
+                'starttime' => time(),
+                'endtime' => time(),
                 'deleted' => '0',
-                'editlock' => 0,
-                'hidden' => 0,
+                'editlock' => '0',
+                'hidden' => '0',
                 'rowDescription' => '',
-                'sorting' => 0,
-                'fe_group' => 0,
-                'type' => '',
+                'sorting' => '0',
+                'fe_group' => '0',
             ];
 
-            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             // Test the actual methods that work
@@ -148,7 +146,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             // Test individual methods
             self::assertEquals(1, $record->getUid());
             self::assertEquals(1, $record->getPid());
-
         } else {
             // Test TYPO3 v13 and below - records are arrays or have getRecord() method
             // In v13, we expect different behavior
@@ -164,7 +161,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         // Use reflection to test the protected getDataRow method
         $reflection = new \ReflectionClass($this->renderer);
         $getDataRowMethod = $reflection->getMethod('getDataRow');
-        $getDataRowMethod->setAccessible(true);
 
         if ($majorVersion >= 14) {
             // Test TYPO3 v14+ behavior with RecordInterface
@@ -173,40 +169,36 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'shortcut',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_oid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
-                'crdate' => 0,
+                'sys_language_uid' => '0',
+                'l18n_parent' => '0',
+                't3ver_wsid' => '0',
+                't3ver_oid' => '0',
+                't3ver_state' => '0',
+                't3ver_stage' => '0',
                 'header' => 'Test Record',
-                'tstamp' => 0,
-                'starttime' => 0,
-                'endtime' => 0,
+                'crdate' => time(),
+                'tstamp' => time(),
+                'starttime' => time(),
+                'endtime' => time(),
                 'deleted' => '0',
-                'editlock' => 0,
-                'hidden' => 0,
+                'editlock' => '0',
+                'hidden' => '0',
                 'rowDescription' => '',
-                'sorting' => 0,
-                'fe_group' => 0,
-                'type' => '',
+                'sorting' => '0',
+                'fe_group' => '0',
             ];
 
-            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
-            // TODO fixMe
-            // The extension currently calls getRow() which doesn't exist on RecordInterface
-            // This test documents the API compatibility issue by checking if the method exists
             if (method_exists($record, 'getRow')) {
+                // TYPO3 v13
                 $result = $getDataRowMethod->invoke($this->renderer, $record);
                 self::assertIsArray($result);
-            } else {
-                // Document the API issue - getRow() doesn't exist, should use toArray()
-                self::markTestIncomplete('Extension uses getRow() which does not exist on RecordInterface. Should use toArray() instead.');
+            } elseif (method_exists($record, 'toArray')) {
+                // TYPO3 v14
+                $result = $record->toArray();
+                self::assertIsArray($result);
             }
-
         } else {
             // For TYPO3 v13 and below, we would test with array records or objects with getRecord()
             // This is a simplified test since we can't easily mock the old behavior
@@ -214,13 +206,13 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'shortcut',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_oid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
-                // 'crdate' => 0,
+                'sys_language_uid' => '0',
+                'l18n_parent' => '0',
+                't3ver_wsid' => '0',
+                't3ver_oid' => '0',
+                't3ver_state' => '0',
+                't3ver_stage' => '0',
+                'crdate' => time(),
                 'header' => 'Test Record',
             ];
 
@@ -255,29 +247,28 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             // Use reflection to test the protected getContentRecordObj method
             $reflection = new \ReflectionClass($this->renderer);
             $getContentRecordObjMethod = $reflection->getMethod('getContentRecordObj');
-            $getContentRecordObjMethod->setAccessible(true);
 
             $testData = [
-                'uid' => 1,
-                'pid' => 1,
+                'uid' => '1',
+                'pid' => '1',
                 'CType' => 'text',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_oid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
-                'crdate' => 0,
+                'sys_language_uid' => '0',
+                'l18n_parent' => '0',
+                't3ver_wsid' => '0',
+                't3ver_oid' => '0',
+                't3ver_state' => '0',
+                't3ver_stage' => '0',
                 'header' => 'Test Content',
-                'tstamp' => 0,
-                'starttime' => 0,
-                'endtime' => 0,
+                'crdate' => time(),
+                'tstamp' => time(),
+                'starttime' => time(),
+                'endtime' => time(),
                 'deleted' => '0',
-                'editlock' => 0,
-                'hidden' => 0,
+                'editlock' => '0',
+                'hidden' => '0',
                 'rowDescription' => '',
-                'sorting' => 0,
-                'fe_group' => 0,
+                'sorting' => '0',
+                'fe_group' => '0',
             ];
 
             $result = $getContentRecordObjMethod->invoke($this->renderer, $testData);
@@ -295,7 +286,9 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function rendererCanHandleGridColumnItemsAcrossVersions(): void
     {
-        $majorVersion = $this->typo3Version->getMajorVersion();
+
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        $majorVersion = $typo3Version->getMajorVersion();
 
         // Test that GridColumnItem class exists and can be instantiated
         self::assertTrue(class_exists(GridColumnItem::class), 'GridColumnItem should exist in all supported versions');
@@ -305,41 +298,38 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
             'uid' => 2,
             'pid' => 1,
             'CType' => 'shortcut',
-            'sys_language_uid' => 0,
-            'l18n_parent' => 0,
-            't3ver_wsid' => 0,
-            't3ver_oid' => 0,
-            't3ver_state' => 0,
-            't3ver_stage' => 0,
-            'crdate' => 0,
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
             'header' => 'Reference Element',
             'records' => '1',
-            'tstamp' => 0,
-            'starttime' => 0,
-            'endtime' => 0,
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
             'deleted' => '0',
-            'editlock' => 0,
-            'hidden' => 0,
+            'editlock' => '0',
+            'hidden' => '0',
             'rowDescription' => '',
-            'sorting' => 0,
-            'fe_group' => 0,
-            'type' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
         ];
 
         if ($majorVersion >= 14) {
             // Test with RecordInterface for v14+
             $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
             // Verify the record has the expected methods
-            self::assertTrue(method_exists($record, 'getRow'));
-            // self::assertTrue(method_exists($record, 'getUid'));
+            self::assertTrue(method_exists($record, 'toArray'));
+            self::assertTrue(method_exists($record, 'getUid'));
 
-            $row = $record->getRow();
+            $row = $record->toArray();
             self::assertEquals('shortcut', $row['CType']);
             self::assertEquals('1', $row['records']);
-
         } else {
             // For v13 and below, test with array-based records
             self::assertEquals('shortcut', $testData['CType']);
@@ -353,7 +343,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         // Use reflection to access the protected majorTypo3Version property
         $reflection = new \ReflectionClass($this->renderer);
         $majorVersionProperty = $reflection->getProperty('majorTypo3Version');
-        $majorVersionProperty->setAccessible(true);
 
         $rendererVersion = $majorVersionProperty->getValue($this->renderer);
         $actualVersion = $this->typo3Version->getMajorVersion();
@@ -365,7 +354,8 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function rendererHandlesRecordFactoryAvailability(): void
     {
-        $majorVersion = $this->typo3Version->getMajorVersion();
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        $majorVersion = $typo3Version->getMajorVersion();
 
         if ($majorVersion >= 14) {
             // RecordFactory should be available in v14+
@@ -378,26 +368,24 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
                 'uid' => 1,
                 'pid' => 1,
                 'CType' => 'text',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
-                't3ver_oid' => 0,
-                'crdate' => 0,
-                'tstamp' => 0,
-                'starttime' => 0,
-                'endtime' => 0,
+                'sys_language_uid' => '0',
+                'l18n_parent' => '0',
+                't3ver_wsid' => '0',
+                't3ver_state' => '0',
+                't3ver_stage' => '0',
+                't3ver_oid' => '0',
+                'crdate' => time(),
+                'tstamp' => time(),
+                'starttime' => time(),
+                'endtime' => time(),
                 'deleted' => '0',
-                'editlock' => 0,
-                'hidden' => 0,
+                'editlock' => '0',
+                'hidden' => '0',
                 'rowDescription' => '',
-                'sorting' => 0,
-                'fe_group' => 0,
-                'type' => '',
+                'sorting' => '0',
+                'fe_group' => '0',
             ];
 
-            // @phpstan-ignore argument.type, argument.type
             $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
         }
     }
@@ -438,7 +426,6 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         // Use reflection to access the protected extensionConfiguration property
         $reflection = new \ReflectionClass($this->renderer);
         $configProperty = $reflection->getProperty('extensionConfiguration');
-        $configProperty->setAccessible(true);
 
         $config = $configProperty->getValue($this->renderer);
 

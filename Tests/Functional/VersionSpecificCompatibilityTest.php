@@ -32,7 +32,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Test version-specific compatibility between TYPO3 v13 and v14
+ * Test version-specific compatibility between TYPO3 v13
  */
 final class VersionSpecificCompatibilityTest extends FunctionalTestCase
 {
@@ -201,7 +201,7 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     {
         $majorVersion = $this->typo3Version->getMajorVersion();
 
-        // Test ConnectionPool API (should be consistent across v13 and v14)
+        // Test ConnectionPool API (should be consistent across v13
         $connectionPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
         $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
 

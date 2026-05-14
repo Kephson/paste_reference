@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
- * Test TYPO3 API compatibility across versions v13 and v14
+ * Test TYPO3 API compatibility across versions v13
  */
 final class ApiCompatibilityTest extends FunctionalTestCase
 {
@@ -102,20 +102,8 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         $majorVersion = $this->typo3Version->getMajorVersion();
 
         // Verify extension works with supported TYPO3 versions
-        self::assertContains($majorVersion, [13, 14], 'Extension should work with TYPO3 v13 and v14');
+        self::assertContains($majorVersion, [13], 'Extension should work with TYPO3 v13');
     }
-
-    /*
-    #[Test]
-    public function connectionPoolApiIsCompatible(): void
-    {
-        $connectionPool = GeneralUtility::makeInstance(ConnectionPool::class);
-        $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
-        // Test restrictions API
-        $restrictions = $queryBuilder->getRestrictions();
-        self::assertInstanceOf(\TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionContainerInterface::class, $restrictions);
-    }
-    */
 
     #[Test]
     public function dataHandlerApiIsCompatible(): void
@@ -125,18 +113,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         // Test DataHandler properties and methods used by extension
         self::assertObjectHasProperty('isImporting', $dataHandler);
     }
-
-    /*
-    #[Test]
-    public function TtContentRepositoryUsesCompatibleApis(): void
-    {
-        $ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
-
-        // Test database query methods
-        $queryBuilder = $ttContentRepository->getQueryBuilder('tt_content');
-        self::assertTrue(is_object($queryBuilder), 'QueryBuilder can be retrieved from TtContentRepository');
-    }
-    */
 
     #[Test]
     public function processCmdmapUsesCompatibleApis(): void
@@ -168,53 +144,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         }
     }
 
-    /*
-    #[Test]
-    public function tcaEventListenerIsCompatible(): void
-    {
-        $listener = GeneralUtility::makeInstance(AfterTcaCompilationEventListener::class);
-
-        // Create a mock TCA array
-        $tca = [
-            'tt_content' => [
-                'types' => [
-                    'shortcut' => [],
-                ],
-            ],
-        ];
-
-        $event = new AfterTcaCompilationEvent($tca);
-
-        // Test that event listener can process TCA without errors
-        try {
-            $listener($event);
-            self::assertTrue(true, 'TCA event listener executed without errors');
-        } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
-            // This is acceptable when extension configuration is not set
-            self::assertStringContainsString('paste_reference', $e->getMessage());
-        }
-    }
-
-    #[Test]
-    public function globalVariablesAreAccessibleAcrossVersions(): void
-    {
-        // Test TYPO3_REQUEST global (used in ProcessCmdmap)
-        // In test environment, this might not be set, but we test the access pattern
-        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
-
-        // The extension should handle null request gracefully
-        self::assertTrue(is_array($request), 'Global variables access pattern is compatible');
-
-        // Test BE_USER global access pattern
-        $backendUser = $GLOBALS['BE_USER'] ?? null;
-        self::assertTrue(is_object($backendUser), 'Backend user global access pattern is compatible');
-
-        // Test LANG global access pattern
-        $languageService = $GLOBALS['LANG'] ?? null;
-        self::assertTrue(is_object($languageService), 'Language service global access pattern is compatible');
-    }
-    */
-
     #[Test]
     public function databaseQueryRestrictionsAreCompatible(): void
     {
@@ -224,7 +153,7 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         // Test that restriction removal methods exist and work
         $restrictions = $queryBuilder->getRestrictions();
 
-        // These restriction classes should exist in both TYPO3 v13 and v14
+        // These restriction classes should exist in both TYPO3 v13
         $restrictionClasses = [
             \TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction::class,
             \TYPO3\CMS\Core\Database\Query\Restriction\StartTimeRestriction::class,
@@ -232,83 +161,10 @@ final class ApiCompatibilityTest extends FunctionalTestCase
         ];
 
         foreach ($restrictionClasses as $restrictionClass) {
-            self::assertTrue(class_exists($restrictionClass), "Restriction class {$restrictionClass} should exist");
+            self::assertTrue(
+                class_exists($restrictionClass),
+                "Restriction class {$restrictionClass} should exist"
+            );
         }
-
-        // Test that removeByType method exists
-        // self::assertTrue(method_exists($restrictions, 'removeByType'));
     }
-
-    /*
-    #[Test]
-    public function backendUtilityMethodsAreCompatible(): void
-    {
-        // Test BackendUtility methods used by the extension
-        self::assertTrue(class_exists(\TYPO3\CMS\Backend\Utility\BackendUtility::class));
-        self::assertTrue(method_exists(\TYPO3\CMS\Backend\Utility\BackendUtility::class, 'getRecordTitle'));
-    }
-
-    #[Test]
-    public function generalUtilityMethodsAreCompatible(): void
-    {
-        // Test GeneralUtility methods used throughout the extension
-        self::assertTrue(method_exists(GeneralUtility::class, 'makeInstance'));
-        self::assertTrue(method_exists(GeneralUtility::class, 'fixed_lgd_cs'));
-
-        // Test that makeInstance works with extension classes
-        $backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
-        self::assertInstanceOf(BackendHelper::class, $backendHelper);
-    }
-
-    #[Test]
-    public function shortcutPreviewRendererApiIsCompatible(): void
-    {
-        // Test that ShortcutPreviewRenderer can be instantiated
-        $renderer = GeneralUtility::makeInstance(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class);
-        self::assertInstanceOf(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class, $renderer);
-
-        // Test that it implements required interfaces
-        self::assertInstanceOf(\TYPO3\CMS\Backend\Preview\PreviewRendererInterface::class, $renderer);
-        self::assertInstanceOf(\TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer::class, $renderer);
-
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test version-specific API availability
-        if ($majorVersion >= 14) {
-            // Test TYPO3 v14+ specific APIs
-            self::assertTrue(class_exists(\TYPO3\CMS\Core\Domain\RecordFactory::class), 'RecordFactory should exist in v14+');
-            self::assertTrue(interface_exists(\TYPO3\CMS\Core\Domain\RecordInterface::class), 'RecordInterface should exist in v14+');
-
-            // Test that RecordFactory can create records
-            $recordFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Domain\RecordFactory::class);
-            $testData = [
-                'uid' => 1,
-                'pid' => 1,
-                'CType' => 'shortcut',
-                'sys_language_uid' => 0,
-                'l18n_parent' => 0,
-                't3ver_wsid' => 0,
-                't3ver_oid' => 0,
-                't3ver_state' => 0,
-                't3ver_stage' => 0,
-                'crdate' => 0,
-            ];
-            $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
-
-            self::assertInstanceOf(\TYPO3\CMS\Core\Domain\RecordInterface::class, $record);
-            self::assertTrue(method_exists($record, 'toArray'), 'RecordInterface should have toArray() method in v14+');
-            self::assertTrue(method_exists($record, 'getUid'), 'RecordInterface should have getUid() method in v14+');
-
-        } else {
-            // Test TYPO3 v13 compatibility
-            self::assertLessThan(14, $majorVersion, 'This should be TYPO3 v13 or below');
-
-            // In v13, records might be handled differently
-            // The renderer should still work but use different internal methods
-        }
-
-        // Test that GridColumnItem class exists (used by the renderer)
-        self::assertTrue(class_exists(\TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem::class));
-    }
-    */
 }

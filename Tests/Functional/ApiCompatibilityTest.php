@@ -24,10 +24,10 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
-use EHAERER\PasteReference\EventListener\AfterTcaCompilationEventListener;
-use EHAERER\PasteReference\Helper\BackendHelper;
+// use EHAERER\PasteReference\EventListener\AfterTcaCompilationEventListener;
+// use EHAERER\PasteReference\Helper\BackendHelper;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
+// use TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;

@@ -203,4 +203,3 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         return $recordObj;
     }
 }
-

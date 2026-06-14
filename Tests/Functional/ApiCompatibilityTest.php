@@ -160,7 +160,30 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     {
         // Test that RecordFactory can create records
         $recordFactory = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Domain\RecordFactory::class);
-        $testData = ['uid' => 1, 'pid' => 1, 'CType' => 'shortcut'];
+        $testData = [
+            'uid' => 2,
+            'pid' => 1,
+            'CType' => 'text',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
+            'header' => 'Test Content Element',
+            'bodytext' => '<p>This is a test content element for API compatibility testing.</p>',
+            'records' => '1',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
+        ];
         $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
         self::assertInstanceOf(\TYPO3\CMS\Core\Domain\RecordInterface::class, $record);

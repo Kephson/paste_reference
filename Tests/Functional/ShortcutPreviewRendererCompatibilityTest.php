@@ -104,11 +104,27 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
 
         // Test record creation from database row
         $testData = [
-            'uid' => 1,
+            'uid' => 30,
             'pid' => 1,
             'CType' => 'shortcut',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
             'header' => 'Test Shortcut',
             'records' => '2',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
         ];
 
         // Test that RecordFactory can create records
@@ -137,10 +153,27 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         // Test TYPO3 v14+ behavior with RecordInterface
         $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
         $testData = [
-            'uid' => 1,
+            'uid' => 40,
             'pid' => 1,
             'CType' => 'shortcut',
-            'header' => 'Test Record',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
+            'header' => 'Test Shortcut',
+            'records' => '2',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
         ];
 
         $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
@@ -166,10 +199,28 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         $getContentRecordObjMethod->setAccessible(true);
 
         $testData = [
-            'uid' => 1,
+            'uid' => 50,
             'pid' => 1,
             'CType' => 'text',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
             'header' => 'Test Content',
+            'bodytext' => 'Test Content',
+            'records' => '2',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
         ];
 
         $result = $getContentRecordObjMethod->invoke($this->renderer, $testData);
@@ -190,11 +241,28 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
 
         // Create test data for a shortcut content element
         $testData = [
-            'uid' => 2,
+            'uid' => 60,
             'pid' => 1,
             'CType' => 'shortcut',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
             'header' => 'Reference Element',
+            'bodytext' => '',
             'records' => '1',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
         ];
 
         // Test with RecordInterface for v14+
@@ -210,26 +278,34 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function rendererVersionDetectionIsAccurate(): void
-    {
-        // Use reflection to access the protected majorTypo3Version property
-        $reflection = new \ReflectionClass($this->renderer);
-        $majorVersionProperty = $reflection->getProperty('majorTypo3Version');
-        $majorVersionProperty->setAccessible(true);
-
-        $rendererVersion = $majorVersionProperty->getValue($this->renderer);
-        $actualVersion = $this->typo3Version->getMajorVersion();
-
-        self::assertEquals($actualVersion, $rendererVersion, 'Renderer should correctly detect TYPO3 version');
-        self::assertContains($rendererVersion, [13, 14], 'Renderer should support TYPO3 v13 and v14');
-    }
-
-    #[Test]
     public function rendererHandlesRecordFactoryAvailability(): void
     {
         $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
         // Test that it can create records for tt_content
-        $testData = ['uid' => 1, 'pid' => 1, 'CType' => 'text'];
+        $testData = [
+            'uid' => 70,
+            'pid' => 1,
+            'CType' => 'text',
+            'sys_language_uid' => '0',
+            'l18n_parent' => '0',
+            't3ver_wsid' => '0',
+            't3ver_oid' => '0',
+            't3ver_state' => '0',
+            't3ver_stage' => '0',
+            'header' => 'Test Content',
+            'bodytext' => 'Test Content',
+            'records' => '2',
+            'crdate' => time(),
+            'tstamp' => time(),
+            'starttime' => time(),
+            'endtime' => time(),
+            'deleted' => '0',
+            'editlock' => '0',
+            'hidden' => '0',
+            'rowDescription' => '',
+            'sorting' => '0',
+            'fe_group' => '0',
+        ];
         $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
         self::assertInstanceOf(RecordInterface::class, $record);

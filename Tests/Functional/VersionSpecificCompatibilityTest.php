@@ -126,15 +126,11 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     {
         $provider = GeneralUtility::makeInstance(PasteReferenceItemProvider::class);
 
-        // Test that the provider extends the correct base class
-        self::assertInstanceOf(RecordProvider::class, $provider);
-
         // Test version-specific method signatures
         $majorVersion = $this->typo3Version->getMajorVersion();
 
         // Test that priority method returns expected type
         $priority = $provider->getPriority();
-        self::assertIsInt($priority);
         self::assertGreaterThan(0, $priority);
     }
 

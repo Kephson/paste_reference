@@ -24,7 +24,6 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -61,7 +60,6 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         ],
     ];
 
-    private Typo3Version $typo3Version;
     private bool $containerExtensionAvailable = false;
 
     protected function setUp(): void
@@ -72,7 +70,6 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
         }
 
         parent::setUp();
-        $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
 
         // Check if container extension is available after setup
         $this->containerExtensionAvailable = class_exists('B13\\Container\\Tca\\Registry')

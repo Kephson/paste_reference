@@ -269,46 +269,9 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
         $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
-        // Verify the record has the expected methods
-        self::assertTrue(method_exists($record, 'getRawRecord'));
-
         $row = $record->getRawRecord()->toArray();
         self::assertEquals('shortcut', $row['CType']);
         self::assertEquals('1', $row['records']);
-    }
-
-    #[Test]
-    public function rendererHandlesRecordFactoryAvailability(): void
-    {
-        $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-        // Test that it can create records for tt_content
-        $testData = [
-            'uid' => 70,
-            'pid' => 1,
-            'CType' => 'text',
-            'sys_language_uid' => '0',
-            'l18n_parent' => '0',
-            't3ver_wsid' => '0',
-            't3ver_oid' => '0',
-            't3ver_state' => '0',
-            't3ver_stage' => '0',
-            'header' => 'Test Content',
-            'bodytext' => 'Test Content',
-            'records' => '2',
-            'crdate' => time(),
-            'tstamp' => time(),
-            'starttime' => time(),
-            'endtime' => time(),
-            'deleted' => '0',
-            'editlock' => '0',
-            'hidden' => '0',
-            'rowDescription' => '',
-            'sorting' => '0',
-            'fe_group' => '0',
-        ];
-        $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
-
-        self::assertInstanceOf(RecordInterface::class, $record);
     }
 
     #[Test]

@@ -54,38 +54,39 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
 
         self::assertEmpty($violations, 'No deprecated global variable access should be used: ' . implode(', ', $violations));
     }
-/*
-    #[Test]
-    public function extensionUsesModernEventSystem(): void
-    {
-        $extensionFiles = $this->getExtensionPhpFiles();
-        $usesModernEvents = false;
-        $usesDeprecatedHooks = false;
 
-        foreach ($extensionFiles as $file) {
-            $content = file_get_contents($file);
+    /*
+        #[Test]
+        public function extensionUsesModernEventSystem(): void
+        {
+            $extensionFiles = $this->getExtensionPhpFiles();
+            $usesModernEvents = false;
+            $usesDeprecatedHooks = false;
 
-            // Check for modern event system usage
-            if (str_contains($content, 'Event')   && str_contains($content, 'EventListener')) {
-                $usesModernEvents = true;
+            foreach ($extensionFiles as $file) {
+                $content = file_get_contents($file);
+
+                // Check for modern event system usage
+                if (str_contains($content, 'Event')   && str_contains($content, 'EventListener')) {
+                    $usesModernEvents = true;
+                }
+
+                // Check for deprecated hook usage patterns
+                if (preg_match('/\$GLOBALS\[\'TYPO3_CONF_VARS\'\]\[\'SC_OPTIONS\'\]/', $content)) {
+                    $usesDeprecatedHooks = true;
+                }
             }
 
-            // Check for deprecated hook usage patterns
-            if (preg_match('/\$GLOBALS\[\'TYPO3_CONF_VARS\'\]\[\'SC_OPTIONS\'\]/', $content)) {
-                $usesDeprecatedHooks = true;
+            // Extension should use modern event system where applicable
+            if ($usesModernEvents) {
+                self::assertTrue($usesModernEvents, 'Extension uses modern event system');
+            }
+
+            // If hooks are still used, they should be documented as necessary
+            if ($usesDeprecatedHooks) {
+                self::markTestIncomplete('Extension uses hooks - verify if migration to events is possible');
             }
         }
-
-        // Extension should use modern event system where applicable
-        if ($usesModernEvents) {
-            self::assertTrue($usesModernEvents, 'Extension uses modern event system');
-        }
-
-        // If hooks are still used, they should be documented as necessary
-        if ($usesDeprecatedHooks) {
-            self::markTestIncomplete('Extension uses hooks - verify if migration to events is possible');
-        }
-    }
     */
 
     #[Test]

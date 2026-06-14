@@ -40,11 +40,13 @@
             <directory>../../Tests/Functional/</directory>
         </testsuite>
     </testsuites>
-    <source>
-        <ignoreDeprecations>
-            <hasMessage>#Extension "container" is having an ext_emconf\.php file, which is deprecated#</hasMessage>
-        </ignoreDeprecations>
+
+    <source ignoreIndirectDeprecations="true">
+        <include>
+            <directory>../../Classes</directory>
+        </include>
     </source>
+
     <php>
         <ini name="display_errors" value="1"/>
         <env name="TYPO3_CONTEXT" value="Testing"/>

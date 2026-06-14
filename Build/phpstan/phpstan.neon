@@ -22,7 +22,7 @@ parameters:
     # Text fixtures extensions uses $_EXTKEY phpstan would be report as "might not defined"
     - ../../Tests/Unit/*/Fixtures/Extensions/*/ext_emconf.php
     - ../../Tests/Functional/*/Fixtures/Extensions/*/ext_emconf.php
-  ignoreErrors:
-    -
-      message: '#Extension "container" is having an ext_emconf\.php file, which is deprecated\.#'
-      path: %currentWorkingDirectory%/.Build/vendor/*
+#  ignoreErrors:
+#    -
+#      message: '#Extension "container" is having an ext_emconf\.php file, which is deprecated\.#'
+#      path: %currentWorkingDirectory%/.Build/vendor/*

@@ -36,14 +36,12 @@ use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExis
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ShortcutPreviewRenderer implements PreviewRendererInterface
 {
     /** @var array<string, mixed> */
     protected array $extensionConfiguration = [];
-    protected int $majorTypo3Version = 0;
     protected TtContentRepository $ttContentRepository;
     protected BackendHelper $backendHelper;
     protected StandardContentPreviewRenderer $standardContentPreviewRenderer;
@@ -57,10 +55,10 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         /** @var array<non-empty-string, string|int|float|bool|null> $emConf */
         $emConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
         $this->extensionConfiguration = $emConf;
-        $this->majorTypo3Version = GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion();
         $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
         $this->backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
         $this->standardContentPreviewRenderer = GeneralUtility::makeInstance(StandardContentPreviewRenderer::class);
+        $this->recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
     }
 
     public function renderPageModulePreviewHeader(GridColumnItem $item): string
@@ -146,12 +144,8 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
 
     protected function getDataRow($gridColumnItem): array
     {
-        if ($this->majorTypo3Version >= 14) {
-            $rawRecord = $gridColumnItem->getRecord()->getRawRecord();
-            $dataRow = $rawRecord->toArray();
-        } else {
-            $dataRow = $gridColumnItem->getRecord();
-        }
+        $rawRecord = $gridColumnItem->getRecord()->getRawRecord();
+        $dataRow = $rawRecord->toArray();
         return $dataRow;
     }
 
@@ -192,29 +186,19 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             $dataRow['shortcutItems'] = [];
             foreach ($collectedItems as $item) {
                 if ($item) {
-                    if ($this->majorTypo3Version >= 14) {
-                        $renderItems[] = $this->getContentRecordObj($item);
-                    } else {
-                        $renderItems[] = $item;
-                    }
+                    $renderItems[] = $this->getContentRecordObj($item);
                 }
             }
-            if ($this->majorTypo3Version >= 14) {
-                $recordObj = $this->getContentRecordObj($dataRow);
-                $record = $gridColumnItem->getRecord();
-                $gridColumnItem->setRecord($record);
-            } else {
-                $record = $gridColumnItem->getRecord();
-                $gridColumnItem->setRecord($record);
-            }
+            $recordObj = $this->getContentRecordObj($dataRow);
+            $record = $gridColumnItem->getRecord();
+            $gridColumnItem->setRecord($record);
         }
         return $renderItems;
     }
 
     protected function getContentRecordObj(array $record): RecordInterface
     {
-        $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-        $recordObj = $recordFactory->createFromDatabaseRow('tt_content', $record);
+        $recordObj = $this->recordFactory->createFromDatabaseRow('tt_content', $record);
         return $recordObj;
     }
 }

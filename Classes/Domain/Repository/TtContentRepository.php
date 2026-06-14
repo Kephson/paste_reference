@@ -7,7 +7,7 @@ namespace EHAERER\PasteReference\Domain\Repository;
 /***************************************************************
  *  Copyright notice
  *  (c) 2026 David Bruchmann <david.bruchmann@gmail.com>
- *  (c) 2021-2023 Ephraim Härer <mail@ephra.im>
+ *  (c) 2021-2026 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Dirk Hoffmann <dirk-hoffmann@telekom.de>
  *  All rights reserved
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -66,7 +66,7 @@ class TtContentRepository implements SingletonInterface
      * @todo: move this in a repository
      *
      * @param string $shortcutItem The single page to be used as the tree root
-     * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data rows ordered by parent position, column position and sorting
+     * @param-out array $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $recursive The number of levels for the recursion
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
@@ -80,7 +80,7 @@ class TtContentRepository implements SingletonInterface
         int $language = 0
     ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
-        $itemList = GeneralUtility::intExplode(',', $itemList);
+        $itemList = GeneralUtility::intExplode(',', (string)$itemList);
 
         $queryBuilder = $this->getQueryBuilder();
         $result = $queryBuilder
@@ -110,8 +110,8 @@ class TtContentRepository implements SingletonInterface
             ->addOrderBy('sorting')
             ->executeQuery();
 
+        /** @ var array<string,mixed>|false $item */
         while ($item = $result->fetchAssociative()) {
-            /** @var array<non-empty-string, string|int|float|bool|null> $item */
             if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
                 $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
                 if (is_array($translatedItem) && $translatedItem !== []) {
@@ -123,6 +123,7 @@ class TtContentRepository implements SingletonInterface
                 BackendUtility::workspaceOL('tt_content', $item, $this->backendHelper->getBackendUser()->workspace);
             }
             $item['tx_paste_reference_container'] = $item['pid'];
+            /** @var array<int, array<non-empty-string, mixed>> $collectedItems */
             $collectedItems[] = $item;
         }
     }
@@ -132,8 +133,8 @@ class TtContentRepository implements SingletonInterface
      *
      * @todo: move this in a repository
      *
-     * @param string $shortcutItem The tt_content element to fetch the data from
-     * @param array<int, array<non-empty-string, mixed>> $collectedItems The collected item data row
+     * @param string $shortcutItem The tt_content element to fetch the data fromom
+     * @param-out array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
@@ -179,6 +180,7 @@ class TtContentRepository implements SingletonInterface
                     $this->backendHelper->getBackendUser()->workspace
                 );
             }
+            /** @var array<int, array<non-empty-string, mixed>> $collectedItems */
             $collectedItems[] = $item;
         }
     }
@@ -206,8 +208,8 @@ class TtContentRepository implements SingletonInterface
             )
             ->executeQuery()
             ->fetchAssociative();
-        $pid = (int)($contentElement['pid'] ?? 0);
-        return is_array($contentElement) && $pid ? $pid : 0;
+
+        return !empty($contentElement['pid']) ? (int)$contentElement['pid'] : 0;
     }
 
     /**

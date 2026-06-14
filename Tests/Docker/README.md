@@ -1,13 +1,15 @@
 # TYPO3 Multi-Version Docker Test Environments
 
-This directory contains Docker-based test environments for testing the paste-reference extension across multiple TYPO3 versions.
+This directory could contain Docker-based test environments for
+testing the paste-reference extension across multiple TYPO3 versions.
+As each extension version is currently only for one TYPO3 version,
+there is only the one according Docker setup.
 
 ## Overview
 
 The test environments provide isolated, reproducible setups for:
-- TYPO3 v13.4 with PHP 8.2
 - TYPO3 v14.1 with PHP 8.3
-- MariaDB databases for each version
+- MariaDB database
 - Pre-configured extension installation
 - Test data seeding
 
@@ -15,14 +17,6 @@ The test environments provide isolated, reproducible setups for:
 
 ```
 Tests/Docker/
-├── typo3-v13/                 # TYPO3 v13.4 environment
-│   ├── Dockerfile             # Web server container
-│   ├── docker-compose.yml     # Service orchestration
-│   ├── composer.json          # TYPO3 v13 dependencies
-│   ├── apache-vhost.conf      # Apache configuration
-│   ├── LocalConfiguration.php # TYPO3 configuration
-│   ├── additional.php         # Test-specific settings
-│   └── init-db.sql           # Database initialization
 ├── typo3-v14/                 # TYPO3 v14.1 environment
 │   ├── Dockerfile             # Web server container
 │   ├── docker-compose.yml     # Service orchestration
@@ -30,7 +24,7 @@ Tests/Docker/
 │   ├── apache-vhost.conf      # Apache configuration
 │   ├── LocalConfiguration.php # TYPO3 configuration
 │   ├── additional.php         # Test-specific settings
-│   └── init-db.sql           # Database initialization
+│   └── init-db.sql            # Database initialization
 └── README.md                  # This file
 ```
 
@@ -40,7 +34,7 @@ Tests/Docker/
 
 - Docker and Docker Compose installed
 - At least 4GB RAM available for containers
-- Ports 8013, 8014, 3313, 3314 available
+- Ports 8014, 3314 available
 
 ### Setup Complete Environment
 
@@ -49,7 +43,6 @@ Tests/Docker/
 ./Tests/Scripts/run-tests.sh setup
 
 # Setup specific version only
-./Tests/Scripts/run-tests.sh setup 13
 ./Tests/Scripts/run-tests.sh setup 14
 ```
 
@@ -67,15 +60,6 @@ Tests/Docker/
 ```
 
 ## Environment Details
-
-### TYPO3 v13 Environment
-
-- **Web URL**: http://localhost:8013
-- **Backend URL**: http://localhost:8013/typo3
-- **Database**: localhost:3313
-- **PHP Version**: 8.2
-- **TYPO3 Version**: 13.4
-- **Container Extension**: b13/container ^2.3
 
 ### TYPO3 v14 Environment
 
@@ -158,8 +142,7 @@ Each environment includes comprehensive test data:
 
 Access the TYPO3 backends to manually test paste-reference functionality:
 
-1. **TYPO3 v13**: http://localhost:8013/typo3
-2. **TYPO3 v14**: http://localhost:8014/typo3
+1. **TYPO3 v14**: http://localhost:8014/typo3
 
 Navigate to the test pages and use the paste-reference functionality to verify cross-version compatibility.
 
@@ -201,8 +184,8 @@ To customize the environments:
 1. **Port Conflicts**
    ```bash
    # Check if ports are in use
-   netstat -tulpn | grep -E ':(8013|8014|3313|3314)'
-   
+   netstat -tulpn | grep -E ':(8014|3314)'
+
    # Modify docker-compose.yml to use different ports
    ```
 
@@ -215,16 +198,14 @@ To customize the environments:
 3. **Permission Problems**
    ```bash
    # Fix file permissions
-   docker exec typo3-v13_web_1 chown -R www-data:www-data /var/www/html
    docker exec typo3-v14_web_1 chown -R www-data:www-data /var/www/html
    ```
 
 4. **Database Connection Issues**
    ```bash
    # Check database container logs
-   docker logs typo3-v13_db_1
    docker logs typo3-v14_db_1
-   
+
    # Restart database containers
    docker-compose -f Tests/Docker/typo3-v13/docker-compose.yml restart db
    ```
@@ -233,15 +214,12 @@ To customize the environments:
 
 ```bash
 # View container logs
-docker logs typo3-v13_web_1
 docker logs typo3-v14_web_1
 
 # Access container shell
-docker exec -it typo3-v13_web_1 bash
 docker exec -it typo3-v14_web_1 bash
 
 # Check TYPO3 logs
-docker exec typo3-v13_web_1 tail -f var/log/typo3_test.log
 docker exec typo3-v14_web_1 tail -f var/log/typo3_test.log
 ```
 

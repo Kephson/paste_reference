@@ -44,7 +44,6 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->createTestData();
-        $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     }
 
     private function createTestData(): void

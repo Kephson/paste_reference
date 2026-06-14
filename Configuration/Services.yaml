@@ -23,3 +23,7 @@ services:
     tags:
       - name: event.listener
         identifier: 'paste-reference/backend/modify-page-module-content'
+  
+  EHAERER\PasteReference\ContextMenu\PasteReferenceItemProvider:
+    public: true
+  

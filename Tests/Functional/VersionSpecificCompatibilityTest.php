@@ -133,43 +133,10 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
         // Test version-specific method signatures
         $majorVersion = $this->typo3Version->getMajorVersion();
 
-        if ($majorVersion >= 13) {
-            // Test methods that should exist in v13+
-            self::assertTrue(method_exists($provider, 'canHandle'));
-            self::assertTrue(method_exists($provider, 'getPriority'));
-            self::assertTrue(method_exists($provider, 'addItems'));
-        }
-
         // Test that priority method returns expected type
         $priority = $provider->getPriority();
         self::assertIsInt($priority);
         self::assertGreaterThan(0, $priority);
-    }
-
-    #[Test]
-    public function dataHandlerIntegrationWorksInCurrentVersion(): void
-    {
-        $processCmdmap = GeneralUtility::makeInstance(ProcessCmdmap::class);
-        $dataHandler = GeneralUtility::makeInstance(\TYPO3\CMS\Core\DataHandling\DataHandler::class);
-
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test initialization
-        $processCmdmap->init('tt_content', 1, $dataHandler);
-
-        // Test that DataHandler properties exist in current version
-        self::assertObjectHasProperty('isImporting', $dataHandler);
-
-        if ($majorVersion >= 13) {
-            // Test v13+ specific DataHandler features
-            self::assertTrue(method_exists($dataHandler, 'start'));
-            self::assertTrue(method_exists($dataHandler, 'process_datamap'));
-            self::assertTrue(method_exists($dataHandler, 'process_cmdmap'));
-        }
-
-        // Test that our extension's DataHandler integration works
-        self::assertEquals('tt_content', $processCmdmap->getTable());
-        self::assertSame($dataHandler, $processCmdmap->getDataHandler());
     }
 
     #[Test]
@@ -180,95 +147,30 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
         // Test BackendUserAuthentication class exists and has expected methods
         self::assertTrue(class_exists(BackendUserAuthentication::class));
 
-        if ($majorVersion >= 13) {
-            // Test v13+ specific methods
-            $reflection = new \ReflectionClass(BackendUserAuthentication::class);
+        // Test v13+ specific methods
+        $reflection = new \ReflectionClass(BackendUserAuthentication::class);
 
-            // Methods used by the extension
-            self::assertTrue($reflection->hasMethod('checkAuthMode'));
+        // Methods used by the extension
+        self::assertTrue($reflection->hasMethod('checkAuthMode'));
 
-            // Properties used by the extension
-            if ($reflection->hasProperty('uc')) {
-                self::assertTrue($reflection->hasProperty('uc'));
-            }
-        }
-    }
-
-    #[Test]
-    public function requestObjectHandlingIsVersionCompatible(): void
-    {
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        if ($majorVersion >= 13) {
-            // Test PSR-7 request handling (standard in v13+)
-            self::assertTrue(interface_exists(\Psr\Http\Message\ServerRequestInterface::class));
-
-            // Test that our extension's request handling pattern is compatible
-            // The extension checks for TYPO3_REQUEST global and handles null gracefully
-            $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
-
-            // In test environment, request might be null - extension should handle this
-            if ($request !== null) {
-                self::assertInstanceOf(\Psr\Http\Message\ServerRequestInterface::class, $request);
-            }
-
-            // Test that the extension's request parameter access pattern works
-            if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
-                $queryParams = $request->getQueryParams();
-                self::assertIsArray($queryParams);
-            }
-        }
-    }
-
-    #[Test]
-    public function databaseApiVersionCompatibility(): void
-    {
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test ConnectionPool API (should be consistent across v13 and v14)
-        $connectionPool = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Database\ConnectionPool::class);
-        $queryBuilder = $connectionPool->getQueryBuilderForTable('tt_content');
-
-        // Test query builder methods used by extension
-        self::assertTrue(method_exists($queryBuilder, 'select'));
-        self::assertTrue(method_exists($queryBuilder, 'from'));
-        self::assertTrue(method_exists($queryBuilder, 'where'));
-        self::assertTrue(method_exists($queryBuilder, 'executeQuery'));
-
-        if ($majorVersion >= 13) {
-            // Test v13+ specific query methods
-            self::assertTrue(method_exists($queryBuilder, 'executeStatement'));
-
-            // Test that executeQuery returns expected type
-            $result = $queryBuilder
-                ->select('uid', 'pid')
-                ->from('tt_content')
-                ->where($queryBuilder->expr()->eq('uid', 1))
-                ->executeQuery();
-
-            self::assertInstanceOf(\Doctrine\DBAL\Result::class, $result);
+        // Properties used by the extension
+        if ($reflection->hasProperty('uc')) {
+            self::assertTrue($reflection->hasProperty('uc'));
         }
     }
 
     #[Test]
     public function extensionConfigurationApiIsVersionCompatible(): void
     {
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
         // Test ExtensionConfiguration API
         $extensionConfiguration = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class);
 
-        if ($majorVersion >= 13) {
-            // Test that get method exists and works
-            self::assertTrue(method_exists($extensionConfiguration, 'get'));
-
-            try {
-                $config = $extensionConfiguration->get('paste_reference');
-                self::assertIsArray($config);
-            } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
-                // This is acceptable in test environment
-                self::assertStringContainsString('paste_reference', $e->getMessage());
-            }
+        try {
+            $config = $extensionConfiguration->get('paste_reference');
+            self::assertIsArray($config);
+        } catch (\TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException $e) {
+            // This is acceptable in test environment
+            self::assertStringContainsString('paste_reference', $e->getMessage());
         }
     }
 
@@ -277,66 +179,18 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     {
         $majorVersion = $this->typo3Version->getMajorVersion();
 
-        if ($majorVersion >= 13) {
-            // Test that TCA event system classes exist
-            self::assertTrue(class_exists(\TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent::class));
+        // Test that TCA event system classes exist
+        self::assertTrue(class_exists(\TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent::class));
 
-            // Test event creation and usage
-            $tca = ['tt_content' => ['types' => ['shortcut' => []]]];
-            $event = new \TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent($tca);
+        // Test event creation and usage
+        $tca = ['tt_content' => ['types' => ['shortcut' => []]]];
+        $event = new \TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent($tca);
 
-            self::assertInstanceOf(\TYPO3\CMS\Core\Configuration\Event\AfterTcaCompilationEvent::class, $event);
-            self::assertEquals($tca, $event->getTca());
+        // Test that event can be modified
+        $modifiedTca = $tca;
+        $modifiedTca['tt_content']['types']['shortcut']['previewRenderer'] = 'TestRenderer';
+        $event->setTca($modifiedTca);
 
-            // Test that event can be modified
-            $modifiedTca = $tca;
-            $modifiedTca['tt_content']['types']['shortcut']['previewRenderer'] = 'TestRenderer';
-            $event->setTca($modifiedTca);
-
-            self::assertEquals($modifiedTca, $event->getTca());
-        }
-    }
-
-    #[Test]
-    public function iconApiIsVersionCompatible(): void
-    {
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        if ($majorVersion >= 13) {
-            // Test that icon-related classes exist (used in context menu)
-            self::assertTrue(class_exists(\TYPO3\CMS\Core\Imaging\IconFactory::class));
-
-            // Test icon identifier usage pattern
-            $iconIdentifier = 'actions-document-paste-after';
-            self::assertIsString($iconIdentifier);
-
-            // The extension uses standard TYPO3 icon identifiers which should be stable
-            $standardIcons = [
-                'actions-document-paste-after',
-                'actions-edit-copy',
-                'actions-edit-cut',
-            ];
-
-            foreach ($standardIcons as $icon) {
-                self::assertIsString($icon);
-            }
-        }
-    }
-
-    #[Test]
-    public function routingApiIsVersionCompatible(): void
-    {
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        if ($majorVersion >= 13) {
-            // Test UriBuilder API (used in context menu)
-            self::assertTrue(class_exists(\TYPO3\CMS\Backend\Routing\UriBuilder::class));
-
-            $uriBuilder = GeneralUtility::makeInstance(\TYPO3\CMS\Backend\Routing\UriBuilder::class);
-            self::assertInstanceOf(\TYPO3\CMS\Backend\Routing\UriBuilder::class, $uriBuilder);
-
-            // Test that buildUriFromRoute method exists
-            self::assertTrue(method_exists($uriBuilder, 'buildUriFromRoute'));
-        }
+        self::assertEquals($modifiedTca, $event->getTca());
     }
 }

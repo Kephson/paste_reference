@@ -56,7 +56,7 @@ class ProcessCmdmap extends AbstractDataHandler
         $this->init($table, $id, $parentObj);
         /** @var ServerRequestInterface $request */
         $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
-        if (!($request instanceof ServerRequestInterface)) {
+        if (!$request) {
             return;
         }
         $queryParams = $request->getQueryParams();

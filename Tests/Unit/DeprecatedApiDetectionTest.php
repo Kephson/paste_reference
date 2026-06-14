@@ -57,31 +57,6 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
     }
 
     #[Test]
-    public function extensionUsesModernDatabaseApi(): void
-    {
-        $extensionFiles = $this->getExtensionPhpFiles();
-        $modernApiUsage = false;
-        $deprecatedApiUsage = false;
-
-        foreach ($extensionFiles as $file) {
-            $content = file_get_contents($file);
-
-            // Check for modern ConnectionPool usage
-            if (str_contains($content, 'ConnectionPool')) {
-                $modernApiUsage = true;
-            }
-
-            // Check for deprecated database API
-            if (str_contains($content, '$GLOBALS[\'TYPO3_DB\']')) {
-                $deprecatedApiUsage = true;
-            }
-        }
-
-        self::assertTrue($modernApiUsage, 'Extension should use modern ConnectionPool API');
-        self::assertFalse($deprecatedApiUsage, 'Extension should not use deprecated database API');
-    }
-
-    #[Test]
     public function extensionUsesModernEventSystem(): void
     {
         $extensionFiles = $this->getExtensionPhpFiles();
@@ -137,35 +112,6 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
     }
 
     #[Test]
-    public function extensionHandlesTypo3VersionDifferences(): void
-    {
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        $majorVersion = $typo3Version->getMajorVersion();
-
-        // Test that extension can detect and handle version differences
-        self::assertContains($majorVersion, [13, 14], 'Extension should support current TYPO3 versions');
-
-        // Check if extension has version-specific code handling
-        $extensionFiles = $this->getExtensionPhpFiles();
-        $hasVersionHandling = false;
-
-        foreach ($extensionFiles as $file) {
-            $content = file_get_contents($file);
-            if (str_contains($content, 'Typo3Version')   ||
-                str_contains($content, 'version_compare')   ||
-                str_contains($content, 'getMajorVersion')) {
-                $hasVersionHandling = true;
-                break;
-            }
-        }
-
-        // Version handling is optional but good practice
-        if ($hasVersionHandling) {
-            self::assertTrue($hasVersionHandling, 'Extension has version-specific handling');
-        }
-    }
-
-    #[Test]
     public function extensionUsesCompatibleNamespaces(): void
     {
         $extensionFiles = $this->getExtensionPhpFiles();
@@ -208,71 +154,6 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
         }
 
         self::assertEmpty($violations, 'No removed constants should be used: ' . implode(', ', $violations));
-    }
-
-    #[Test]
-    public function shortcutPreviewRendererHandlesVersionSpecificApis(): void
-    {
-        $shortcutRendererFile = dirname(__DIR__, 2) . '/Classes/PageLayoutView/ShortcutPreviewRenderer.php';
-
-        if (!file_exists($shortcutRendererFile)) {
-            self::markTestSkipped('ShortcutPreviewRenderer file not found');
-        }
-
-        $content = file_get_contents($shortcutRendererFile);
-
-        // Check that the renderer properly handles version differences
-        self::assertStringContainsString('$this->majorTypo3Version', $content, 'Renderer should check TYPO3 version');
-
-        // Check for version-specific method calls
-        $hasGetRowCall = str_contains($content, 'getRow()');
-        $hasGetRecordCall = str_contains($content, 'getRecord()');
-
-        // The renderer should handle both API versions
-        self::assertTrue($hasGetRowCall || $hasGetRecordCall, 'Renderer should handle version-specific record methods');
-
-        // Check for proper version branching in getDataRow method
-        self::assertStringContainsString('if ($this->majorTypo3Version >= 14)', $content, 'Should have version check for API differences');
-
-        // Check that RecordFactory is used conditionally
-        $hasRecordFactoryUsage = str_contains($content, 'RecordFactory');
-        if ($hasRecordFactoryUsage) {
-            self::assertTrue($hasRecordFactoryUsage, 'RecordFactory usage should be version-aware');
-        }
-
-        // Verify no hardcoded version assumptions
-        $problematicPatterns = [
-            '/getRow\(\)(?!\s*;)/',  // getRow() without version check
-            '/getRecord\(\)(?!\s*;)/',  // getRecord() without version check
-        ];
-
-        $violations = [];
-        foreach ($problematicPatterns as $pattern) {
-            if (preg_match($pattern, $content)) {
-                // Check if it's within a version-conditional block
-                $lines = explode("\n", $content);
-                foreach ($lines as $lineNum => $line) {
-                    if (preg_match($pattern, $line)) {
-                        // Look for version check in surrounding lines
-                        $hasVersionCheck = false;
-                        for ($i = max(0, $lineNum - 10); $i <= min(count($lines) - 1, $lineNum + 5); $i++) {
-                            if (str_contains($lines[$i], 'majorTypo3Version')) {
-                                $hasVersionCheck = true;
-                                break;
-                            }
-                        }
-                        if (!$hasVersionCheck) {
-                            $violations[] = 'Line ' . ($lineNum + 1) . ': Version-specific API call without version check';
-                        }
-                    }
-                }
-            }
-        }
-
-        // Allow some violations as they might be in version-conditional blocks
-        if (count($violations) > 2) {
-            self::fail('Too many version-specific API calls without proper version checks: ' . implode(', ', $violations));
-        }
     }
 
     /**

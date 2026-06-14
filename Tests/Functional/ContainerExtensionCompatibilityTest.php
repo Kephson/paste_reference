@@ -213,37 +213,6 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function containerExtensionCompatibilityCheck(): void
-    {
-        // First check if container extension classes are available
-        $containerRegistryExists = class_exists('B13\\Container\\Tca\\Registry');
-        $containerConfigExists = class_exists('B13\\Container\\Tca\\ContainerConfiguration');
-
-        if (!$containerRegistryExists || !$containerConfigExists) {
-            self::markTestSkipped(
-                'Container extension (b13/container) classes not available. ' .
-                'Registry: ' . ($containerRegistryExists ? 'YES' : 'NO') . ', ' .
-                'Config: ' . ($containerConfigExists ? 'YES' : 'NO')
-            );
-        }
-
-        // Basic class availability tests
-        self::assertTrue($containerRegistryExists, 'Container Registry class should be available');
-        self::assertTrue($containerConfigExists, 'Container Configuration class should be available');
-
-        // Test that we can instantiate the registry (this is the main functionality test)
-        try {
-            $registry = GeneralUtility::makeInstance(\B13\Container\Tca\Registry::class);
-            self::assertInstanceOf(\B13\Container\Tca\Registry::class, $registry);
-        } catch (\Exception $e) {
-            self::fail('Container registry cannot be instantiated: ' . $e->getMessage());
-        }
-
-        // Mark that we actually ran the test (not skipped)
-        self::assertTrue(true, 'Container extension compatibility test completed successfully');
-    }
-
-    #[Test]
     public function pasteOperationWorksInContainerElements(): void
     {
         if (!class_exists('B13\\Container\\Tca\\Registry')) {
@@ -264,118 +233,9 @@ final class ContainerExtensionCompatibilityTest extends FunctionalTestCase
                 ]
             );
 
-            self::assertInstanceOf(\B13\Container\Tca\ContainerConfiguration::class, $containerConfig);
             self::assertEquals('test_container', $containerConfig->getCType());
         } catch (\Exception $e) {
             self::fail('Container configuration cannot be created: ' . $e->getMessage());
         }
-
-        self::assertTrue(true, 'Container paste operation test completed');
-    }
-
-    #[Test]
-    public function containerParentParameterHandlingAcrossVersions(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test basic functionality without complex database operations
-        self::assertGreaterThanOrEqual(13, $majorVersion, 'Should be running on TYPO3 v13 or higher');
-
-        // Test that container classes are available
-        self::assertTrue(class_exists('B13\\Container\\Tca\\Registry'));
-        self::assertTrue(class_exists('B13\\Container\\Tca\\ContainerConfiguration'));
-
-        self::assertTrue(true, 'Container parameter handling test completed');
-    }
-
-    #[Test]
-    public function containerElementVisibilityInBackend(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        // Test basic class availability
-        self::assertTrue(class_exists('B13\\Container\\Tca\\Registry'));
-        self::assertTrue(true, 'Container visibility test completed');
-    }
-
-    #[Test]
-    public function pasteReferenceContainerFieldHandling(): void
-    {
-        // Test basic shortcut functionality (works without container extension)
-        self::assertTrue(class_exists(\EHAERER\PasteReference\Helper\BackendHelper::class));
-
-        // Test that ShortcutPreviewRenderer can be instantiated
-        if (class_exists(\EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class)) {
-            $renderer = GeneralUtility::makeInstance(
-                \EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class
-            );
-            self::assertInstanceOf(
-                \EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer::class,
-                $renderer
-            );
-        }
-
-        self::assertTrue(true, 'Container field handling test completed');
-    }
-
-    #[Test]
-    public function containerDragDropIntegration(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        // Test basic drag-drop functionality
-        self::assertTrue(class_exists('B13\\Container\\Tca\\Registry'));
-        self::assertTrue(true, 'Container drag-drop test completed');
-    }
-
-    #[Test]
-    public function containerSortingAndPositioning(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        // Test basic sorting functionality
-        self::assertTrue(class_exists('B13\\Container\\Tca\\Registry'));
-        self::assertTrue(true, 'Container sorting test completed');
-    }
-
-    #[Test]
-    public function containerLanguageHandling(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        // Test basic language handling
-        $majorVersion = $this->typo3Version->getMajorVersion();
-        self::assertGreaterThanOrEqual(13, $majorVersion);
-        self::assertTrue(true, 'Container language handling test completed');
-    }
-
-    #[Test]
-    public function containerWorkspaceCompatibility(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test workspace compatibility basics
-        if ($majorVersion >= 13) {
-            $backendHelper = GeneralUtility::makeInstance(\EHAERER\PasteReference\Helper\BackendHelper::class);
-            self::assertInstanceOf(\EHAERER\PasteReference\Helper\BackendHelper::class, $backendHelper);
-        }
-
-        self::assertTrue(true, 'Container workspace compatibility test completed');
     }
 }

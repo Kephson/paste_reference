@@ -45,6 +45,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
     protected TtContentRepository $ttContentRepository;
     protected BackendHelper $backendHelper;
     protected StandardContentPreviewRenderer $standardContentPreviewRenderer;
+    protected RecordFactory $recordFactory;
 
     /**
      * @throws ExtensionConfigurationExtensionNotConfiguredException
@@ -151,7 +152,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
 
     /**
      * @param GridColumnItem $gridColumnItem
-     * @return array<int, array<non-empty-string, mixed>>
+     * @return list<RecordInterface>
      * @throws DBALException
      */
     protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
@@ -202,3 +203,4 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         return $recordObj;
     }
 }
+

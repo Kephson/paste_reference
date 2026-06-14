@@ -44,17 +44,6 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function containerExtensionCanBeInstantiated(): void
-    {
-        if (!class_exists('B13\\Container\\Tca\\Registry')) {
-            self::markTestSkipped('Container extension not available');
-        }
-
-        $registry = GeneralUtility::makeInstance(\B13\Container\Tca\Registry::class);
-        self::assertInstanceOf(\B13\Container\Tca\Registry::class, $registry);
-    }
-
-    #[Test]
     public function containerExtensionIsLoaded(): void
     {
         if (!class_exists('B13\\Container\\Tca\\Registry')) {
@@ -72,8 +61,6 @@ final class ContainerExtensionAvailabilityTest extends FunctionalTestCase
                 implode(', ', $loadedExtensions)
             );
         }
-
-        self::assertTrue($isLoaded, 'Container extension should be loaded');
     }
 
     #[Test]

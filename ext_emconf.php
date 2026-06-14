@@ -11,7 +11,7 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Paste reference for content elements',
     'description' => 'Paste reference instead of copy for content elements',
     'category' => 'plugin',
-    'version' => '4.0.2',
+    'version' => '5.0.0-dev',
     'constraints' => [
         'depends' => [
             'typo3' => '14.3.0-14.3.99',
@@ -30,7 +30,7 @@ $EM_CONF[$_EXTKEY] = [
     ],
     'state' => 'stable',
     'clearCacheOnLoad' => true,
-    'author' => 'Ephraim Härer',
-    'author_email' => 'mail@ephra.im',
-    'author_company' => 'private',
+    'author' => 'Ephraim Härer, David Bruchmann',
+    'author_email' => 'mail@ephra.im, david.bruchmann@gmail.com',
+    'author_company' => 'private, WDB Barlian',
 ];

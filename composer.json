@@ -91,8 +91,12 @@
 	},
     "extra": {
 		"typo3/cms": {
+			"version": "5.0.0-dev",
 			"extension-key": "paste_reference",
-			"web-dir": ".Build/public"
+			"web-dir": ".Build/public",
+			"Package": {
+				"providesPackages": {}
+			}
 		}
 	}
 }

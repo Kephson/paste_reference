@@ -24,7 +24,6 @@ namespace EHAERER\PasteReference\Tests\Functional;
 
 use EHAERER\PasteReference\ContextMenu\PasteReferenceItemProvider;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Information\Typo3Version;

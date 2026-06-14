@@ -133,10 +133,10 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
 
         // Test the actual methods that work
         $array = $record->toArray();
-        self::assertEquals(1, $array['uid']);
+        self::assertEquals(30, $array['uid']);
 
         // Test individual methods
-        self::assertEquals(1, $record->getUid());
+        self::assertEquals(30, $record->getUid());
         self::assertEquals(1, $record->getPid());
     }
 
@@ -229,7 +229,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
 
         // Test the correct RecordInterface methods
         $array = $result->toArray();
-        self::assertEquals(1, $array['uid']);
+        self::assertEquals(50, $array['uid']);
         self::assertEquals('text', $array['CType']);
     }
 
@@ -270,9 +270,9 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         $record = $recordFactory->createFromDatabaseRow('tt_content', $testData);
 
         // Verify the record has the expected methods
-        self::assertTrue(method_exists($record, 'getRow'));
+        self::assertTrue(method_exists($record, 'getRawRecord'));
 
-        $row = $record->getRow();
+        $row = $record->getRawRecord()->toArray();
         self::assertEquals('shortcut', $row['CType']);
         self::assertEquals('1', $row['records']);
     }

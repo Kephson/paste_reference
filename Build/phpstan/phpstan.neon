@@ -14,7 +14,7 @@ parameters:
   paths:
     - ../../Classes
     - ../../Tests
-    - ../../ext_tables.php
+    - ../../ext_localconf.php
 
   excludePaths:
     # Checking acceptance support files is cumbersome due to codeception dynamic mixin generation
@@ -22,3 +22,7 @@ parameters:
     # Text fixtures extensions uses $_EXTKEY phpstan would be report as "might not defined"
     - ../../Tests/Unit/*/Fixtures/Extensions/*/ext_emconf.php
     - ../../Tests/Functional/*/Fixtures/Extensions/*/ext_emconf.php
+  ignoreErrors:
+    -
+      message: '#Extension "container" is having an ext_emconf\.php file, which is deprecated\.#'
+      path: %currentWorkingDirectory%/.Build/vendor/*

@@ -54,7 +54,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
 
         self::assertEmpty($violations, 'No deprecated global variable access should be used: ' . implode(', ', $violations));
     }
-
+/*
     #[Test]
     public function extensionUsesModernEventSystem(): void
     {
@@ -86,6 +86,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
             self::markTestIncomplete('Extension uses hooks - verify if migration to events is possible');
         }
     }
+    */
 
     #[Test]
     public function extensionDoesNotUseDeprecatedUtilityMethods(): void

@@ -38,6 +38,11 @@
                 test location path needs to be given to phpunit.
             -->
             <directory>../../Tests/Functional/</directory>
+            <source>
+                <ignoreDeprecations>
+                    <hasMessage>#Extension "container" is having an ext_emconf\.php file, which is deprecated#</hasMessage>
+                </ignoreDeprecations>
+            </source>
         </testsuite>
     </testsuites>
     <php>

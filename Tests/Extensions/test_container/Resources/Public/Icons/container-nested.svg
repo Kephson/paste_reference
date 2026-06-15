@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <rect x="1" y="1" width="14" height="6" fill="none" stroke="currentColor" stroke-width="1"/>
+    <rect x="1" y="9" width="6" height="6" fill="none" stroke="currentColor" stroke-width="1"/>
+    <rect x="9" y="9" width="6" height="6" fill="none" stroke="currentColor" stroke-width="1"/>
+    <text x="8" y="5" font-size="2" text-anchor="middle" fill="currentColor">MAIN</text>
+    <text x="4" y="12.5" font-size="2" text-anchor="middle" fill="currentColor">L</text>
+    <text x="12" y="12.5" font-size="2" text-anchor="middle" fill="currentColor">R</text>
+</svg>

@@ -1,0 +1,40 @@
+{
+    "name": "typo3/test-environment-v13",
+    "description": "TYPO3 v13.4 test environment for paste-reference extension",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-backend": "^13.4",
+        "typo3/cms-core": "^13.4",
+        "typo3/cms-frontend": "^13.4",
+        "typo3/cms-install": "^13.4",
+        "typo3/cms-extbase": "^13.4",
+        "typo3/cms-fluid": "^13.4",
+        "typo3/cms-fluid-styled-content": "^13.4",
+        "typo3/testing-framework": "^8.2.2",
+        "b13/container": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "bin-dir": "vendor/bin",
+        "allow-plugins": {
+            "typo3/class-alias-loader": true,
+            "typo3/cms-composer-installers": true
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "web-dir": "public"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "EHAERER\\PasteReference\\": "../../Classes/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -32,15 +32,12 @@
 		"typo3/cms-backend": "^14.3",
 		"typo3/cms-core": "^14.3"
 	},
-	"suggest": {
-		"b13/container": "Extension to use custom container elements."
-	},
 	"require-dev": {
-		"b13/container": "^3.0",
-		"ergebnis/composer-normalize": "^2.31",
-		"friendsofphp/php-cs-fixer": "^3.65.0",
-		"phpstan/phpstan": "^2.0.2",
-		"phpstan/phpstan-phpunit": "^2.0.1",
+		"b13/container": "^3.2",
+		"ergebnis/composer-normalize": "^2.52",
+		"friendsofphp/php-cs-fixer": "^3.95",
+		"phpstan/phpstan": "^2.2",
+		"phpstan/phpstan-phpunit": "^2.0",
 		"typo3/cms-adminpanel": "^14.3",
 		"typo3/cms-belog": "^14.3",
 		"typo3/cms-beuser": "^14.3",
@@ -67,10 +64,13 @@
 		"typo3/cms-tstemplate": "^14.3",
 		"typo3/cms-viewpage": "^14.3",
 		"typo3/cms-workspaces": "^14.3",
-		"typo3/testing-framework": "^9.3.0"
+		"typo3/testing-framework": "^9.5"
 	},
 	"conflict": {
 		"gridelementsteam/gridelements": "*"
+	},
+	"suggest": {
+		"b13/container": "Extension to use custom container elements."
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
@@ -89,14 +89,14 @@
 		"sort-packages": true,
 		"vendor-dir": ".Build/vendor"
 	},
-    "extra": {
+	"extra": {
 		"typo3/cms": {
-			"version": "5.0.0-dev",
-			"extension-key": "paste_reference",
-			"web-dir": ".Build/public",
 			"Package": {
 				"providesPackages": {}
-			}
+			},
+			"extension-key": "paste_reference",
+			"version": "5.0.0-dev",
+			"web-dir": ".Build/public"
 		}
 	}
 }

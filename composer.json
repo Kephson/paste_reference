@@ -22,7 +22,6 @@
 			"homepage": "https://github.com/DavidBruchmann/",
 			"role": "Developer"
 		}
-
 	],
 	"homepage": "https://github.com/kephson/paste-reference",
 	"support": {
@@ -35,8 +34,8 @@
 	},
 	"require-dev": {
 		"b13/container": "^3.2",
-		"ergebnis/composer-normalize": "^2.31",
-		"friendsofphp/php-cs-fixer": "^3.64.0",
+		"ergebnis/composer-normalize": "^2.52",
+		"friendsofphp/php-cs-fixer": "^3.95",
 		"phpstan/phpstan": "^1.12.5 || ^2.0.2",
 		"phpstan/phpstan-phpunit": "^1.4.0 || ^2.0.1",
 		"typo3/cms-adminpanel": "^13.4",
@@ -65,7 +64,7 @@
 		"typo3/cms-tstemplate": "^13.4",
 		"typo3/cms-viewpage": "^13.4",
 		"typo3/cms-workspaces": "^13.4",
-		"typo3/testing-framework": "^9.3.0"
+		"typo3/testing-framework": "^9.5.0"
 	},
 	"conflict": {
 		"gridelementsteam/gridelements": "*"

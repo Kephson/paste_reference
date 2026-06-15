@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2021-02-17T20:30:12Z"
-		  product-name="paste_reference">
-		<header/>
-		<body>
-			<trans-unit id="disableCopyFromPageButton" xml:space="preserve">
-				<source>Disable the "Copy from page" button.</source>
-			</trans-unit>
-			<trans-unit id="overlayShortcutTranslation" xml:space="preserve">
-				<source>Use language overlay for content and page records referenced in shortcut elements.</source>
-			</trans-unit>
-			<trans-unit id="enableExtendedShortcutPreviewRenderer" xml:space="preserve">
-				<source>Enable extended shortcut preview renderer in TYPO3 backend.</source>
-			</trans-unit>
-		</body>
-	</file>
+  <file source-language="en" datatype="plaintext" original="messages" date="2021-02-17T20:30:12Z" product-name="paste_reference">
+    <header/>
+    <body>
+      <trans-unit id="disableCopyFromPageButton" xml:space="preserve">
+        <source>Disable the "Copy from page" button.</source>
+      </trans-unit>
+      <trans-unit id="overlayShortcutTranslation" xml:space="preserve">
+        <source>Use language overlay for content and page records referenced in shortcut elements.</source>
+      </trans-unit>
+      <trans-unit id="enableExtendedShortcutPreviewRenderer" xml:space="preserve">
+        <source>Enable extended shortcut preview renderer in TYPO3 backend.</source>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

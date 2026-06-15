@@ -196,12 +196,12 @@ Options:
             - 15    maintained until 2027-11-11
             - 16    maintained until 2028-11-09
 
-    -p <8.1|8.2|8.3|8.4>
+    -p <8.2|8.3|8.4|8.5>
         Specifies the PHP minor version to be used
-            - 8.1: use PHP 8.1 (default)
-            - 8.2: use PHP 8.2
+            - 8.2: use PHP 8.2 (default)
             - 8.3: use PHP 8.3
             - 8.4: use PHP 8.4
+            - 8.5: use PHP 8.5
 
     -x
         Only with -s functional|unit
@@ -226,9 +226,9 @@ Options:
         Show this help.
 
 Examples:
-    # Run unit tests using PHP 8.1 (default)
+    # Run unit tests using PHP 8.2 (default)
     ./Build/Scripts/runTests.sh -s unit
-    ./Build/Scripts/runTests.sh -p 8.1 -s unit
+    ./Build/Scripts/runTests.sh -p 8.2 -s unit
 
     # Run functional tests using PHP 8.3 and MariaDB 10.6 using pdo_mysql
     ./Build/Scripts/runTests.sh -p 8.3 -s functional -d mariadb -i 10.6 -a pdo_mysql
@@ -249,7 +249,7 @@ TEST_SUITE="help"
 DATABASE_DRIVER=""
 DBMS="sqlite"
 DBMS_VERSION=""
-PHP_VERSION="8.1"
+PHP_VERSION="8.2"
 PHP_XDEBUG_ON=0
 PHP_XDEBUG_PORT=9003
 CGLCHECK_DRY_RUN=""
@@ -286,7 +286,7 @@ while getopts "a:b:d:i:s:p:xy:nhu" OPT; do
             ;;
         p)
             PHP_VERSION=${OPTARG}
-            if ! [[ ${PHP_VERSION} =~ ^(8.1|8.2|8.3|8.4)$ ]]; then
+            if ! [[ ${PHP_VERSION} =~ ^(8.2|8.3|8.4|8.5)$ ]]; then
                 INVALID_OPTIONS+=("p ${OPTARG}")
             fi
             ;;

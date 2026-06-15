@@ -52,7 +52,7 @@ class PasteReferenceItemProvider extends RecordProvider
         $urlParameters = [
             'prErr' => 1,
             'uPT' => 1,
-            'CB[paste]' => $this->table . '|' . -$this->record['uid'],
+            'CB[paste]' => $this->table . '|-' . $this->record['uid'],
             'CB[pad]' => 'normal',
             'CB[update]' => [
                 'colPos' => $this->record['colPos'],

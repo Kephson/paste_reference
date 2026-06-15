@@ -23,7 +23,7 @@ namespace EHAERER\PasteReference\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use EHAERER\PasteReference\Helper\Helper;
+use EHAERER\PasteReference\Helper\BackendHelper;
 use TYPO3\CMS\Backend\Clipboard\Clipboard;
 use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
@@ -43,7 +43,7 @@ class PageLayoutController
     protected array $extensionConfiguration = [];
     protected array $elFromTable = [];
     protected string $copyMode = '';
-    protected ?Helper $helper = null;
+    protected ?BackendHelper $backendHelper = null;
     protected ?IconFactory $iconFactory = null;
     protected ?PageRenderer $pageRenderer = null;
 
@@ -56,7 +56,7 @@ class PageLayoutController
     public function __construct(PageRenderer $pageRenderer, IconFactory $iconFactory)
     {
         $this->extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
-        $this->helper = GeneralUtility::makeInstance(Helper::class);
+        $this->backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
         $this->iconFactory = $iconFactory;
         $this->pageRenderer = $pageRenderer;
 
@@ -75,7 +75,7 @@ class PageLayoutController
 
         $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         try {
-            $jsLines[] = 'top.pasteReferenceAllowed = ' . (int)$this->helper->getBackendUser()->checkAuthMode('tt_content', 'CType', 'shortcut') . ';';
+            $jsLines[] = 'top.pasteReferenceAllowed = ' . (int)$this->backendHelper->getBackendUser()->checkAuthMode('tt_content', 'CType', 'shortcut') . ';';
             $jsLines[] = 'top.browserUrl = ' . json_encode((string)$uriBuilder->buildUriFromRoute('wizard_element_browser')) . ';';
         } catch (RouteNotFoundException $e) {
         }
@@ -87,7 +87,7 @@ class PageLayoutController
 
         if (
             !(bool)($this->extensionConfiguration['disableCopyFromPageButton'] ?? false)
-            && !(bool)($this->helper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
+            && !(bool)($this->backendHelper->getBackendUser()->uc['disableCopyFromPageButton'] ?? false)
         ) {
             $jsLines[] = 'top.copyFromAnotherPageLinkTemplate = ' . json_encode($this->getButtonTemplate()) . ';';
         }
@@ -101,9 +101,9 @@ class PageLayoutController
 
     protected function getButtonTemplate(): string
     {
-        $title = $this->helper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_js.copyfrompage');
+        $title = $this->backendHelper->getLanguageService()->sL('EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:tx_paste_reference_js.copyfrompage');
         $icon = $this->iconFactory->getIcon('actions-insert-reference', IconSize::SMALL)->render();
-        // the CSS-class "t3js-paste-new" does not exist in system extensions
+        // @info: the CSS-class "t3js-paste-new" does not exist in system extensions
         return '<button type="button" class="t3js-paste-new btn btn-default btn-sm" title="' . $title . '">' . $icon . '</button>';
     }
 

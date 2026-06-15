@@ -59,10 +59,11 @@
         \TYPO3\TestingFramework\Core\SystemEnvironmentBuilder::run(0, $requestType, $composerMode);
     }
 
-    $testbase->createDirectory(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3conf/ext');
-    $testbase->createDirectory(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3temp/assets');
-    $testbase->createDirectory(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3temp/var/tests');
-    $testbase->createDirectory(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/typo3temp/var/transient');
+    $publicPath = \TYPO3\CMS\Core\Core\Environment::getPublicPath();
+    $testbase->createDirectory($publicPath . '/typo3conf/ext');
+    $testbase->createDirectory($publicPath . '/typo3temp/assets');
+    $testbase->createDirectory($publicPath . '/typo3temp/var/tests');
+    $testbase->createDirectory($publicPath . '/typo3temp/var/transient');
 
     // Retrieve an instance of class loader and inject to core bootstrap
     $classLoader = require $testbase->getPackagesPath() . '/autoload.php';

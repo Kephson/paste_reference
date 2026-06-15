@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+    bootstrap="../.Build/vendor/autoload.php"
+    cacheDirectory="../.Build/.phpunit.cache"
+    colors="true"
+    stopOnFailure="false"
+    stopOnError="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    beStrictAboutTestsThatDoNotTestAnything="false"
+    beStrictAboutOutputDuringTests="false"
+    executionOrder="random"
+    resolveDependencies="true">
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory>Unit</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>Functional</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>Integration</directory>
+        </testsuite>
+        <testsuite name="api-compatibility">
+            <file>Functional/ApiCompatibilityTest.php</file>
+            <file>Functional/VersionSpecificCompatibilityTest.php</file>
+            <file>Functional/ShortcutPreviewRendererCompatibilityTest.php</file>
+            <file>Unit/DeprecatedApiDetectionTest.php</file>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">../Classes</directory>
+        </include>
+    </source>
+
+    <php>
+        <env name="TYPO3_CONTEXT" value="Testing"/>
+        <env name="TYPO3_PATH_WEB" value="../.Build/public"/>
+        <env name="TYPO3_PATH_ROOT" value="../.Build/public"/>
+        <ini name="display_errors" value="1"/>
+        <ini name="error_reporting" value="E_ALL"/>
+        <ini name="memory_limit" value="1G"/>
+    </php>
+
+    <logging>
+        <junit outputFile="../.Build/logs/junit.xml"/>
+        <testdoxHtml outputFile="../.Build/logs/testdox.html"/>
+    </logging>
+</phpunit>

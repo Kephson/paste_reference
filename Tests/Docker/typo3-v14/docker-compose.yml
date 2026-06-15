@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ../../../
+      dockerfile: Tests/Docker/typo3-v14/Dockerfile
+    ports:
+      - "8014:80"
+    volumes:
+      - ../../../:/var/www/html/extensions/paste_reference:ro
+      - typo3_v14_data:/var/www/html/var
+      - typo3_v14_fileadmin:/var/www/html/public/fileadmin
+    environment:
+      - TYPO3_VERSION=14.1
+      - PHP_VERSION=8.3
+      - TYPO3_CONTEXT=Development/Testing
+      - TYPO3_TEST_DB_HOST=db
+      - TYPO3_TEST_DB_NAME=typo3_test
+      - TYPO3_TEST_DB_USER=typo3
+      - TYPO3_TEST_DB_PASSWORD=typo3
+    depends_on:
+      - db
+    networks:
+      - typo3_v14_network
+
+  db:
+    image: mariadb:11.4
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=typo3_test
+      - MYSQL_USER=typo3
+      - MYSQL_PASSWORD=typo3
+    volumes:
+      - typo3_v14_db:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - "3314:3306"
+    networks:
+      - typo3_v14_network
+
+volumes:
+  typo3_v14_data:
+  typo3_v14_fileadmin:
+  typo3_v14_db:
+
+networks:
+  typo3_v14_network:
+    driver: bridge

@@ -40,6 +40,13 @@
             <directory>../../Tests/Functional/</directory>
         </testsuite>
     </testsuites>
+
+    <source ignoreIndirectDeprecations="true">
+        <include>
+            <directory>../../Classes</directory>
+        </include>
+    </source>
+
     <php>
         <ini name="display_errors" value="1"/>
         <env name="TYPO3_CONTEXT" value="Testing"/>

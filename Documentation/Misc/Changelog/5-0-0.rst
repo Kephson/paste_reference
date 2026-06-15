@@ -1,0 +1,20 @@
+5.0.0 - June 15, 2026
+=====================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [TASK] make it work to run with TYPO3 14.3, thanks to @DavidBruchmann

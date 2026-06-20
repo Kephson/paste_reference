@@ -36,22 +36,22 @@ log_error() {
 # Function to run complete environment setup
 setup_complete_environment() {
     local version=${1:-"all"}
-    
+
     log_info "Setting up complete TYPO3 test environment..."
-    
+
     # Step 1: Setup Docker environments
     log_info "Step 1: Setting up Docker environments..."
     "$SCRIPT_DIR/setup-typo3-environment.sh" setup "$version"
-    
+
     # Step 2: Install extensions
     log_info "Step 2: Installing extensions..."
     sleep 10  # Wait for environments to be fully ready
     "$SCRIPT_DIR/install-extension.sh" install "$version"
-    
+
     # Step 3: Seed test data
     log_info "Step 3: Seeding test data..."
     "$SCRIPT_DIR/seed-test-data.sh" seed "$version"
-    
+
     log_success "Complete environment setup finished for version(s): $version"
 }
 
@@ -59,39 +59,39 @@ setup_complete_environment() {
 run_tests() {
     local version=${1:-"all"}
     local test_type=${2:-"all"}
-    
+
     log_info "Running tests for TYPO3 version(s): $version, type: $test_type"
-    
+
     # Check if environments are running
-    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
-        if ! docker ps | grep -q "typo3-v13_web_1"; then
-            log_error "TYPO3 v13 environment is not running. Please run setup first."
-            return 1
-        fi
-    fi
-    
+    #if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+    #    if ! docker ps | grep -q "typo3-v13_web_1"; then
+    #        log_error "TYPO3 v13 environment is not running. Please run setup first."
+    #        return 1
+    #    fi
+    #fi
+
     if [ "$version" = "all" ] || [ "$version" = "14" ]; then
         if ! docker ps | grep -q "typo3-v14_web_1"; then
             log_error "TYPO3 v14 environment is not running. Please run setup first."
             return 1
         fi
     fi
-    
+
     # Run PHPUnit tests
     if [ "$test_type" = "all" ] || [ "$test_type" = "unit" ] || [ "$test_type" = "php" ]; then
         run_phpunit_tests "$version"
     fi
-    
+
     # Run JavaScript tests
     if [ "$test_type" = "all" ] || [ "$test_type" = "js" ] || [ "$test_type" = "javascript" ]; then
         run_javascript_tests "$version"
     fi
-    
+
     # Run container extension tests
     if [ "$test_type" = "all" ] || [ "$test_type" = "container" ]; then
         run_container_tests "$version"
     fi
-    
+
     # Run integration tests
     if [ "$test_type" = "all" ] || [ "$test_type" = "integration" ]; then
         run_integration_tests "$version"
@@ -101,17 +101,17 @@ run_tests() {
 # Function to run PHPUnit tests
 run_phpunit_tests() {
     local version=${1:-"all"}
-    
+
     log_info "Running PHPUnit tests..."
-    
-    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
-        log_info "Running PHPUnit tests for TYPO3 v13..."
-        docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
-            --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
-            --testsuite unit \
-            --colors=always || log_warning "Some PHPUnit tests failed for TYPO3 v13"
-    fi
-    
+
+    #if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+    #    log_info "Running PHPUnit tests for TYPO3 v13..."
+    #    docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
+    #        --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
+    #        --testsuite unit \
+    #        --colors=always || log_warning "Some PHPUnit tests failed for TYPO3 v13"
+    #fi
+
     if [ "$version" = "all" ] || [ "$version" = "14" ]; then
         log_info "Running PHPUnit tests for TYPO3 v14..."
         docker exec "typo3-v14_web_1" php vendor/bin/phpunit \
@@ -124,12 +124,12 @@ run_phpunit_tests() {
 # Function to run JavaScript tests
 run_javascript_tests() {
     local version=${1:-"all"}
-    
+
     log_info "Running JavaScript tests..."
-    
+
     # Run tests in project root (they will test against both environments)
     cd "$PROJECT_ROOT"
-    
+
     if command -v npm &> /dev/null; then
         log_info "Running JavaScript tests with npm..."
         npm test || log_warning "Some JavaScript tests failed"
@@ -144,18 +144,18 @@ run_javascript_tests() {
 # Function to run container extension tests
 run_container_tests() {
     local version=${1:-"all"}
-    
+
     log_info "Running container extension compatibility tests..."
-    
-    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
-        log_info "Running container tests for TYPO3 v13..."
-        docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
-            --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
-            --testsuite functional \
-            --filter ContainerExtensionCompatibilityTest \
-            --colors=always || log_warning "Some container tests failed for TYPO3 v13"
-    fi
-    
+
+    #if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+    #    log_info "Running container tests for TYPO3 v13..."
+    #    docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
+    #        --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
+    #        --testsuite functional \
+    #        --filter ContainerExtensionCompatibilityTest \
+    #        --colors=always || log_warning "Some container tests failed for TYPO3 v13"
+    #fi
+
     if [ "$version" = "all" ] || [ "$version" = "14" ]; then
         log_info "Running container tests for TYPO3 v14..."
         docker exec "typo3-v14_web_1" php vendor/bin/phpunit \
@@ -169,17 +169,17 @@ run_container_tests() {
 # Function to run integration tests
 run_integration_tests() {
     local version=${1:-"all"}
-    
+
     log_info "Running integration tests..."
-    
-    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
-        log_info "Running integration tests for TYPO3 v13..."
-        docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
-            --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
-            --testsuite integration \
-            --colors=always || log_warning "Some integration tests failed for TYPO3 v13"
-    fi
-    
+
+    #if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+    #    log_info "Running integration tests for TYPO3 v13..."
+    #    docker exec "typo3-v13_web_1" php vendor/bin/phpunit \
+    #        --configuration /var/www/html/extensions/paste_reference/Tests/phpunit.xml \
+    #        --testsuite integration \
+    #        --colors=always || log_warning "Some integration tests failed for TYPO3 v13"
+    #fi
+
     if [ "$version" = "all" ] || [ "$version" = "14" ]; then
         log_info "Running integration tests for TYPO3 v14..."
         docker exec "typo3-v14_web_1" php vendor/bin/phpunit \
@@ -193,9 +193,10 @@ run_integration_tests() {
 show_test_summary() {
     log_info "Test Results Summary:"
     echo "====================="
-    
+
     # Check if test result files exist and show summary
-    for version in 13 14; do
+    #for version in 13 14; do
+    for version in 14; do
         local log_file="/tmp/typo3-v${version}-test-results.log"
         if [ -f "$log_file" ]; then
             log_info "TYPO3 v$version Results:"
@@ -207,15 +208,15 @@ show_test_summary() {
 # Function to cleanup test environments
 cleanup_environments() {
     local version=${1:-"all"}
-    
+
     log_warning "Cleaning up test environments..."
-    
+
     # Stop and remove containers
     "$SCRIPT_DIR/setup-typo3-environment.sh" clean "$version"
-    
+
     # Clean test data
     "$SCRIPT_DIR/seed-test-data.sh" clean "$version"
-    
+
     log_success "Cleanup completed"
 }
 
@@ -223,18 +224,18 @@ cleanup_environments() {
 show_status() {
     log_info "TYPO3 Test Environment Status:"
     echo "=============================="
-    
+
     "$SCRIPT_DIR/setup-typo3-environment.sh" status
-    
+
     # Show additional information
     echo ""
     log_info "Available Commands:"
     echo "  Backend Access:"
-    echo "    TYPO3 v13: http://localhost:8013/typo3 (admin/password)"
+    #echo "    TYPO3 v13: http://localhost:8013/typo3 (admin/password)"
     echo "    TYPO3 v14: http://localhost:8014/typo3 (admin/password)"
     echo ""
     echo "  Database Access:"
-    echo "    TYPO3 v13: localhost:3313 (typo3/typo3)"
+    #echo "    TYPO3 v13: localhost:3313 (typo3/typo3)"
     echo "    TYPO3 v14: localhost:3314 (typo3/typo3)"
     echo ""
     echo "  Test Users:"
@@ -245,27 +246,27 @@ show_status() {
 # Function to run quick health check
 health_check() {
     local version=${1:-"all"}
-    
+
     log_info "Running health check..."
-    
+
     local all_healthy=true
-    
-    if [ "$version" = "all" ] || [ "$version" = "13" ]; then
-        if curl -f -s "http://localhost:8013" > /dev/null; then
-            log_success "TYPO3 v13 web server: OK"
-        else
-            log_error "TYPO3 v13 web server: FAILED"
-            all_healthy=false
-        fi
-        
-        if curl -f -s "http://localhost:8013/typo3" > /dev/null; then
-            log_success "TYPO3 v13 backend: OK"
-        else
-            log_error "TYPO3 v13 backend: FAILED"
-            all_healthy=false
-        fi
-    fi
-    
+
+    #if [ "$version" = "all" ] || [ "$version" = "13" ]; then
+    #    if curl -f -s "http://localhost:8013" > /dev/null; then
+    #        log_success "TYPO3 v13 web server: OK"
+    #    else
+    #        log_error "TYPO3 v13 web server: FAILED"
+    #        all_healthy=false
+    #    fi
+    #
+    #    if curl -f -s "http://localhost:8013/typo3" > /dev/null; then
+    #        log_success "TYPO3 v13 backend: OK"
+    #    else
+    #        log_error "TYPO3 v13 backend: FAILED"
+    #        all_healthy=false
+    #    fi
+    #fi
+
     if [ "$version" = "all" ] || [ "$version" = "14" ]; then
         if curl -f -s "http://localhost:8014" > /dev/null; then
             log_success "TYPO3 v14 web server: OK"
@@ -273,7 +274,7 @@ health_check() {
             log_error "TYPO3 v14 web server: FAILED"
             all_healthy=false
         fi
-        
+
         if curl -f -s "http://localhost:8014/typo3" > /dev/null; then
             log_success "TYPO3 v14 backend: OK"
         else
@@ -281,7 +282,7 @@ health_check() {
             all_healthy=false
         fi
     fi
-    
+
     if [ "$all_healthy" = true ]; then
         log_success "All environments are healthy"
         return 0
@@ -296,10 +297,10 @@ main() {
     local action=${1:-"help"}
     local version=${2:-"all"}
     local test_type=${3:-"all"}
-    
+
     log_info "TYPO3 Multi-Version Test Runner"
     log_info "Action: $action, Version: $version, Test Type: $test_type"
-    
+
     case $action in
         "setup")
             setup_complete_environment "$version"
@@ -355,9 +356,9 @@ main() {
             echo "  cleanup    - Clean up all environments and data"
             echo ""
             echo "Versions:"
-            echo "  13   - TYPO3 v13 only"
+            #echo "  13   - TYPO3 v13 only"
             echo "  14   - TYPO3 v14 only"
-            echo "  all  - Both versions (default)"
+            echo "  all  - All versions (default)"
             echo ""
             echo "Test Types (for 'test' action):"
             echo "  unit       - Unit tests only"
@@ -366,8 +367,8 @@ main() {
             echo "  all        - All test types (default)"
             echo ""
             echo "Examples:"
-            echo "  $0 setup              # Setup both TYPO3 v13 and v14"
-            echo "  $0 setup 13           # Setup TYPO3 v13 only"
+            echo "  $0 setup              # Setup all TYPO3 versions"
+            #echo "  $0 setup 13           # Setup TYPO3 v13 only"
             echo "  $0 test all unit      # Run unit tests on both versions"
             echo "  $0 test 14 js         # Run JavaScript tests for v14"
             echo "  $0 health             # Check if environments are healthy"

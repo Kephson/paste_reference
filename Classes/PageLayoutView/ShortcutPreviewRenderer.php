@@ -219,10 +219,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         $doProcess = false;
         foreach ($subSchema->getFieldsOfType(TableColumnType::FILE) as $field) {
             $fieldName = $field->getName();
-            if ($recordObj->has($fieldName)
-                && ($image = $recordObj->get($fieldName))
-                && !is_object($recordObj->get($fieldName))
-            ) {
+            if ($recordObj->has($fieldName)) {
                 $doProcess = true;
             }
         }
@@ -232,8 +229,8 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
         $fakeRecordDataRow = $dataRow;
         foreach ($subSchema->getFieldsOfType(TableColumnType::FILE) as $field) {
             $fieldName = $field->getName();
-            if ($recordObj->has($fieldName) && ($image = $recordObj->get($fieldName))) {
-                if (is_object($image)) {
+            if ($recordObj->has($fieldName)) {
+                if (is_object($recordObj->get($fieldName))) {
                     continue;
                 }
                 $tableName = 'tt_content';

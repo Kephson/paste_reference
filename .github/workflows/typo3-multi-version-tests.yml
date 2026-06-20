@@ -1,6 +1,8 @@
 #=======================================================================================================================
+
 name: TYPO3 Multi-Version Tests
 run-name: "TYPO3 Multi-Version Tests requested by @${{ github.actor }}"
+
 #-----------------------------------------------------------------------------------------------------------------------
 # This workflow tests the paste-reference extension against multiple TYPO3 versions to ensure compatibility
 # and prevent regressions when making changes. It runs in parallel with the main CI workflow.

@@ -1,17 +1,17 @@
 {
     "name": "typo3/test-environment-v14",
-    "description": "TYPO3 v14.1 test environment for paste-reference extension",
+    "description": "TYPO3 v14.3 test environment for paste-reference extension",
     "type": "project",
     "require": {
         "php": "^8.3",
-        "typo3/cms-backend": "^14.1",
-        "typo3/cms-core": "^14.1",
-        "typo3/cms-frontend": "^14.1",
-        "typo3/cms-install": "^14.1",
-        "typo3/cms-extbase": "^14.1",
-        "typo3/cms-fluid": "^14.1",
-        "typo3/cms-fluid-styled-content": "^14.1",
-        "typo3/testing-framework": "^8.2.2",
+        "typo3/cms-backend": "^14.3",
+        "typo3/cms-core": "^14.3",
+        "typo3/cms-frontend": "^14.3",
+        "typo3/cms-install": "^14.3",
+        "typo3/cms-extbase": "^14.3",
+        "typo3/cms-fluid": "^14.3",
+        "typo3/cms-fluid-styled-content": "^14.3",
+        "typo3/testing-framework": "^9.5.0",
         "b13/container": "^3.0"
     },
     "require-dev": {

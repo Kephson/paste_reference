@@ -142,7 +142,7 @@ jobs:
           # Use 'docker compose' instead of 'docker-compose' and bypass rebuilding
           docker compose up -d
           # Wait for TYPO3 to be ready
-          timeout 300 bash -c 'until curl -f http://localhost:8080/typo3/install.php; do sleep 5; done'
+          timeout 300 bash -c 'until curl -f http://localhost:8014/typo3/install.php; do sleep 5; done'
 
       - name: Install container extension (dependency)
         run: |

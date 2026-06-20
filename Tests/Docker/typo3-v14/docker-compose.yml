@@ -8,7 +8,7 @@ services:
     ports:
       - "8014:80"
     volumes:
-      _ ../../../:/var/www/html/extensions/paste_reference:ro
+      - ../../../:/var/www/html/extensions/paste_reference:ro
       - typo3_v14_data:/var/www/html/var
       - typo3_v14_fileadmin:/var/www/html/public/fileadmin
     environment:

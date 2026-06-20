@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     build:
-      context: ../../../
+      context: ../../
       dockerfile: Tests/Docker/typo3-v14/Dockerfile
     ports:
       - "8014:80"

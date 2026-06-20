@@ -6,14 +6,16 @@ namespace EHAERER\PasteReference\DataHandler;
 
 /***************************************************************
  *  Copyright notice
- *  (c) 2021-2025 Ephraim Härer <mail@ephra.im>
+ *  (c) 2024-2026 David Bruchmann <david.bruchmann@gmail.com>
+ *  (c) 2021-2026 Ephraim Härer <mail@ephra.im>
  *  (c) 2013 Jo Hasenau <info@cybercraft.de>
  *  All rights reserved
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project
+ *  is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
  *  The GNU General Public License can be found at
  *  http://www.gnu.org/copyleft/gpl.html.
  *  This script is distributed in the hope that it will be useful,

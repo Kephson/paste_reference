@@ -30,7 +30,6 @@ use TYPO3\CMS\Backend\View\BackendLayout\Grid\GridColumnItem;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -44,14 +43,12 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
     ];
 
     private ShortcutPreviewRenderer $renderer;
-    private Typo3Version $typo3Version;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->createTestData();
         $this->renderer = GeneralUtility::makeInstance(ShortcutPreviewRenderer::class);
-        $this->typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
     }
 
     private function createTestData(): void

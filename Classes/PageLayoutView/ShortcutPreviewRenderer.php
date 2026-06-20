@@ -151,11 +151,18 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             $shortcutItem = trim($shortcutItem);
             if (str_contains($shortcutItem, 'pages_')) {
                 $this->ttContentRepository->collectContentDataFromPages(
-                    $shortcutItem, $collectedItems, $dataRow['uid'], $dataRow['sys_language_uid'], $dataRow['recursive']
+                    $shortcutItem,
+                    $collectedItems,
+                    $dataRow['uid'],
+                    $dataRow['sys_language_uid'],
+                    $dataRow['recursive']
                 );
             } elseif (!str_contains($shortcutItem, '_') || str_contains($shortcutItem, 'tt_content_')) {
                 $this->ttContentRepository->collectContentData(
-                    $shortcutItem, $collectedItems, $dataRow['uid'], $dataRow['sys_language_uid']
+                    $shortcutItem,
+                    $collectedItems,
+                    $dataRow['uid'],
+                    $dataRow['sys_language_uid']
                 );
             }
         }

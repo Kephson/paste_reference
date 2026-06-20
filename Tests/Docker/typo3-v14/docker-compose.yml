@@ -3,12 +3,12 @@ version: '3.8'
 services:
   web:
     build:
-      context: ../../
+      context: ../../../
       dockerfile: Tests/Docker/typo3-v14/Dockerfile
     ports:
       - "8014:80"
     volumes:
-      - ../../../:/var/www/html/extensions/paste_reference:ro
+      _ ../../../:/var/www/html/extensions/paste_reference:ro
       - typo3_v14_data:/var/www/html/var
       - typo3_v14_fileadmin:/var/www/html/public/fileadmin
     environment:

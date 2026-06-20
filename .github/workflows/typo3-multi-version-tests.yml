@@ -134,12 +134,13 @@ jobs:
           docker build -t ${{ env.TEST_CONTAINER_NAME }} \
             --build-arg PHP_VERSION=${{ matrix.php-version }} \
             --build-arg TYPO3_VERSION=${{ matrix.typo3-version }} \
-            .
+            -f Dockerfile ../../../
 
       - name: Start TYPO3 test environment
         run: |
           cd Tests/Docker/${{ env.DOCKER_TAG }}
-          docker-compose -f docker-compose.yml up -d
+          # Use 'docker compose' instead of 'docker-compose' and bypass rebuilding
+          docker compose up -d
           # Wait for TYPO3 to be ready
           timeout 300 bash -c 'until curl -f http://localhost:8080/typo3/install.php; do sleep 5; done'
 

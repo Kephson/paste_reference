@@ -141,17 +141,19 @@ jobs:
           cd Tests/Docker/${{ env.DOCKER_TAG }}
           # Use 'docker compose' instead of 'docker-compose' and bypass rebuilding
           docker compose up -d
+
+          # Debug: See if the container is running (Up) or crashed (Exited)
+          docker compose ps
+          # Debug: Read internal webserver errors if it fails
+          docker compose logs web
+
           # Wait for TYPO3 to be ready
           timeout 300 bash -c 'until curl -f http://localhost:8014/typo3/install.php; do sleep 5; done'
 
       - name: Install container extension (dependency)
         run: |
           cd Tests/Docker/${{ env.DOCKER_TAG }}
-          if [[ "${{ matrix.typo3-version }}" == "13.4" ]]; then
-            docker exec ${{ env.TEST_CONTAINER_NAME }} composer require "b13/container:^3.0" --no-interaction
-          else
-            docker exec ${{ env.TEST_CONTAINER_NAME }} composer require "b13/container:^3.0" --no-interaction
-          fi
+          docker exec ${{ env.TEST_CONTAINER_NAME }} composer require "b13/container:^3.0" --no-interaction
           docker exec ${{ env.TEST_CONTAINER_NAME }} php vendor/bin/typo3 extension:activate container || true
 
       - name: Install paste-reference extension

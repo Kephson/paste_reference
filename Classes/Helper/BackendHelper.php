@@ -37,7 +37,7 @@ class BackendHelper
     /**
      * @return LanguageService
      */
-    public function getLanguageService(): ?LanguageService
+    public static function getLanguageService(): ?LanguageService
     {
         return $GLOBALS['LANG'] ?? null;
     }

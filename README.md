@@ -68,7 +68,8 @@ Paste reference uses [**semantic versioning**][5], which means, that
 
 #### 4.3.1 Releases
 
-* for TYPO3 v13: [4.0.3](https://github.com/Kephson/paste_reference/releases/tag/4.0.3)
+* for TYPO3 v14: [5.0.0](https://github.com/Kephson/paste_reference/releases/tag/5.0.0)
+* for TYPO3 v13: [4.0.5](https://github.com/Kephson/paste_reference/releases/tag/4.0.5)
 * for TYPO3 v12: [3.0.5](https://github.com/Kephson/paste_reference/releases/tag/3.0.5)
 * for TYPO3 v11: [2.0.5](https://github.com/Kephson/paste_reference/releases/tag/2.0.5)
 * for TYPO3 v10: [1.0.3](https://github.com/Kephson/paste_reference/releases/tag/1.0.3)
@@ -76,21 +77,23 @@ Paste reference uses [**semantic versioning**][5], which means, that
 To get the most recent development for the branch 4, consider installing the
 branch instead of the release. The branch
 [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) supports also
-TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.
+TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.  
+The sub-versions above might not be always the newest, so please check the
+[RELEASES](https://github.com/Kephson/paste_reference/releases) instead of relying on the list above.
 
 #### 4.3.2 Branches
 
 The following branches are of interest:
 
-* for TYPO3 v13 and v14: [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev)
+* for TYPO3 v14: [v5-dev](https://github.com/Kephson/paste_reference/tree/v5-dev)
+* for TYPO3 v13: [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev)
 + for TYPO3 v12: [TYPO3_12](https://github.com/Kephson/paste_reference/tree/TYPO3_12)
 * for TYPO3 v11: [TYPO3_11-5](https://github.com/Kephson/paste_reference/tree/TYPO3_11-5)
 * for TYPO3 v10: [TYPO3_10-4](https://github.com/Kephson/paste_reference/tree/TYPO3_10-4)
 
 Note, that releases are usually to prefer, if possible.
-The branch [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) is
-ahead of the releases currently, so in this case using the branch is better and
-gives you most recent development changes.
+If it's advisable to install a branch instead of a release, according info can be found in
+the issues of the repository.
 
 ### 4.4 Contribution
 

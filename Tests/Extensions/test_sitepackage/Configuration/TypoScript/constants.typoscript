@@ -1,0 +1,13 @@
+# Constants for test sitepackage
+styles.content.loginform.pid = 1
+
+plugin.tx_testsitepackage_inlinerecordsirre {
+    view {
+        templateRootPath = EXT:test_sitepackage/Resources/Private/Templates/
+        partialRootPath = EXT:test_sitepackage/Resources/Private/Partials/
+        layoutRootPath = EXT:test_sitepackage/Resources/Private/Layouts/
+    }
+    persistence {
+        storagePid = 0
+    }
+}

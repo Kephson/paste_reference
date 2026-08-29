@@ -1,0 +1,70 @@
+## TCEFORM.tt_content.CType.addItems.tx_testsitepacke_parent = IRRE Element
+
+mod.wizards.newContentElement.wizardItems {
+
+    container {
+        header = Container Elements
+        elements {
+            ce_columns2 {
+                iconIdentifier = content-container-columns-2
+                title = Two Columns Container
+                description = Container with two columns for content elements
+                tt_content_defValues {
+                    CType = ce_columns2
+                }
+            }
+        }
+        show = *
+    }
+
+    tx_testsitepacke_parent {
+        header = testsitepacke IRRE
+        elements {
+            tx_testsitepacke_parent {
+                iconIdentifier = tx-testsitepacke-parent-icon
+                title = testsitepacke IRRE
+                description = Content Element including IRRE Elements
+                tt_content_defValues {
+                    CType = tx_testsitepacke_parent
+                }
+            }
+        }
+        show = *
+    }
+}
+
+
+# Page TSconfig for backend layout
+mod {
+    web_layout {
+        BackendLayouts {
+            default {
+                title = Default Layout
+                config {
+                    backend_layout {
+                        colCount = 2
+                        rowCount = 1
+                        rows {
+                            1 {
+                                columns {
+                                    1 {
+                                        name = Main Content
+                                        colPos = 0
+                                        colspan = 1
+                                        allowed = *
+                                    }
+                                    2 {
+                                        name = Sidebar
+                                        colPos = 1
+                                        colspan = 1
+                                        allowed = *
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

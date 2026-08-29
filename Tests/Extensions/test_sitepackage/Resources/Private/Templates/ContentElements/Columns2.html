@@ -1,0 +1,22 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<div class="ce-columns2">
+    <div class="row">
+        <div class="col-md-6">
+            <f:if condition="{children.101}">
+                <f:for each="{children.101}" as="child">
+                    <f:cObject typoscriptObjectPath="tt_content" data="{child.data}" table="tt_content" />
+                </f:for>
+            </f:if>
+        </div>
+        <div class="col-md-6">
+            <f:if condition="{children.102}">
+                <f:for each="{children.102}" as="child">
+                    <f:cObject typoscriptObjectPath="tt_content" data="{child.data}" table="tt_content" />
+                </f:for>
+            </f:if>
+        </div>
+    </div>
+</div>
+
+</html>

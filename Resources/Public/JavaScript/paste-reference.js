@@ -225,7 +225,7 @@ class PasteReference {
               }
 
               // Extract page ID from current page context
-              const pageElement = document.querySelector('[data-page]');
+              const pageElement = document.querySelector('.t3js-page-ce[data-page]');
               if (pageElement && pageElement.dataset.page) {
                 draggableObj.setPid(parseInt(pageElement.dataset.page, 10));
               }
@@ -280,7 +280,7 @@ class PasteReference {
    * activates the paste into / paste after icons outside the context menus
    */
   activatePasteIcons() {
-    const pid = document.querySelector('[data-page]').dataset.page;
+    const pid = document.querySelector('.t3js-page-ce[data-page]').dataset.page;
     const allColumns = document.querySelectorAll('.t3js-page-column');
 
     allColumns.forEach((colElement) => {

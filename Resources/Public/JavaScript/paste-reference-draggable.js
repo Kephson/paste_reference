@@ -13,7 +13,7 @@
 
 /**
  * Draggable class to collect and transfer data in a reliable way.
- * 
+ *
  * @author David Bruchmann <david.bruchmann@gmail.com>
  */
 class Draggable {
@@ -117,7 +117,7 @@ class Draggable {
       }
 
       if (this.#pid <= 0) {
-        const pageElement = document.querySelector('[data-page]');
+        const pageElement = document.querySelector('.t3js-page-ce[data-page]');
         if (pageElement && pageElement.dataset.page) {
           this.setPid(parseInt(pageElement.dataset.page, 10));
         }

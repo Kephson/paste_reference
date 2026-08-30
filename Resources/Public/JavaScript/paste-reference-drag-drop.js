@@ -478,7 +478,7 @@ console.log(draggable);
     BroadcastService.post(new BroadcastMessage('page-layout-drag-drop', eventName, payload || {}));
   },
   getCurrentPageId: function () {
-    return parseInt(document.querySelector('[data-page]').dataset.page, 10);
+    return parseInt(document.querySelector('.t3js-page-ce[data-page]').dataset.page, 10);
   }
 }
 

@@ -26,7 +26,6 @@ namespace EHAERER\PasteReference\Domain\Repository;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 use EHAERER\PasteReference\Helper\BackendHelper;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -50,7 +49,6 @@ class TtContentRepository implements SingletonInterface
     protected array $extensionConfiguration = [];
     protected bool $showHidden = true;
     protected BackendHelper $backendHelper;
-    protected string $table = 'tt_content';
 
     public function __construct()
     {
@@ -62,8 +60,6 @@ class TtContentRepository implements SingletonInterface
 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
-     *
-     * @todo: move this in a repository
      *
      * @param string $shortcutItem The single page to be used as the tree root
      * @param-out array $collectedItems The collected item data rows ordered by parent position, column position and sorting
@@ -131,8 +127,6 @@ class TtContentRepository implements SingletonInterface
     /**
      * Collects tt_content data from a single tt_content element
      *
-     * @todo: move this in a repository
-     *
      * @param string $shortcutItem The tt_content element to fetch the data from
      * @param-out array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
@@ -186,55 +180,6 @@ class TtContentRepository implements SingletonInterface
     }
 
     /**
-     * get pid for a ContentElement
-     *
-     * @param int $uid the uid value of a tt_content record
-     *
-     * @return int
-     * @throws DBALException|DBALDriverException
-     */
-    public function getPidFromUid(int $uid = 0): int
-    {
-        $queryBuilder = $this->getQueryBuilder();
-        /** @var array<non-empty-string, string|int|float|bool|null> $contentElement */
-        $contentElement = $queryBuilder
-            ->select('pid')
-            ->from('tt_content')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'uid',
-                    $queryBuilder->createNamedParameter(abs($uid), Connection::PARAM_INT)
-                )
-            )
-            ->executeQuery()
-            ->fetchAssociative();
-
-        return $contentElement['pid'] ? (int)$contentElement['pid'] : 0;
-    }
-
-    /**
-     * Function to remove any remains of versioned records after finalizing a workspace action
-     * via 'Discard' or 'Publish' commands
-     */
-    public function cleanupWorkspacesAfterFinalizing(): void
-    {
-        $queryBuilder = $this->getQueryBuilder();
-        $queryBuilder
-            ->delete('tt_content')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'pid',
-                    $queryBuilder->createNamedParameter(-1, Connection::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq(
-                    't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
-                )
-            )
-            ->executeStatement();
-    }
-
-    /**
      * @param string $table
      * @return QueryBuilder
      */
@@ -248,11 +193,5 @@ class TtContentRepository implements SingletonInterface
             ->removeByType(EndTimeRestriction::class);
 
         return $queryBuilder;
-    }
-
-    public function getConnection(): Connection
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($this->table);
     }
 }

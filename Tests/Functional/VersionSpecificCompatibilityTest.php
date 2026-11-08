@@ -22,7 +22,6 @@ namespace EHAERER\PasteReference\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -123,13 +122,9 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
     #[Test]
     public function dataHandlerIntegrationWorksInCurrentVersion(): void
     {
-        $processCmdmap = GeneralUtility::makeInstance(ProcessCmdmap::class);
         $dataHandler = GeneralUtility::makeInstance(\TYPO3\CMS\Core\DataHandling\DataHandler::class);
 
         $majorVersion = $this->typo3Version->getMajorVersion();
-
-        // Test initialization
-        $processCmdmap->init('tt_content', 1, $dataHandler);
 
         // Test that DataHandler properties exist in current version
         self::assertObjectHasProperty('isImporting', $dataHandler);
@@ -140,10 +135,6 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
             // self::assertTrue(method_exists($dataHandler, 'process_datamap'));
             // self::assertTrue(method_exists($dataHandler, 'process_cmdmap'));
         }
-
-        // Test that our extension's DataHandler integration works
-        self::assertEquals('tt_content', $processCmdmap->getTable());
-        self::assertSame($dataHandler, $processCmdmap->getDataHandler());
     }
 
     #[Test]

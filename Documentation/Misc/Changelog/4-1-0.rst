@@ -1,0 +1,54 @@
+4.1.0 - unreleased
+==================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+Version 4.1.0 supports TYPO3 13.4 only. TYPO3 14.3 is supported by version 6.
+
+**The classes** ``Hooks\DataHandler``, ``Hooks\PageLayoutController``,
+``DataHandler\ProcessCmdmap`` **and** ``DataHandler\AbstractDataHandler``
+**have been removed.** Code extending or calling them has to be adapted.
+
+Pasting a reference no longer uses a DataHandler hook. A reference is now a
+regular new ``shortcut`` content element created through a datamap.
+
+The page module integration was rewritten as an additive toolbar
+(``<paste-reference-toolbar>``). The core paste button in copy mode is hidden
+by CSS and replaced by a button offering "Paste copy" and "Paste reference".
+Content selected through the "from another page" button can now be pasted as
+copy or as reference.
+
+The header of a new reference is a translated label containing the title of
+the original at the time of pasting.
+
+Breaking changes
+----------------
+
+- The classes named above have been removed.
+- ``reference=1`` request parameter for ``tce_db`` is not evaluated anymore.
+- Removed ``TtContentRepository::cleanupWorkspacesAfterFinalizing()``,
+  ``TtContentRepository::getPidFromUid()`` and
+  ``TtContentRepository::getConnection()``.
+- Removed the JavaScript modules ``paste-reference.js``,
+  ``paste-reference-drag-drop.js``, ``paste-reference-draggable.js`` and
+  ``helper.js``, and the ``top.*`` variables they used.
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- [!!!][TASK] replace DataHandler hook by datamap for references
+- [!!!][FEATURE] add paste toolbar web component to the page module
+- [FEATURE] paste content from other pages also as reference
+- [FEATURE] add AJAX route with type and language of a selected content element
+- [TASK] execute context menu action with AjaxDataHandler

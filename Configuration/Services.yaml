@@ -7,9 +7,6 @@ services:
   EHAERER\PasteReference\:
     resource: '../Classes/*'
 
-  EHAERER\PasteReference\Hooks\PageLayoutController:
-    public: true
-
   EHAERER\PasteReference\ContextMenu\PasteReferenceItemProvider:
     tags:
       - name: backend.contextmenu.itemprovider

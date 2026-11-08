@@ -22,7 +22,6 @@ namespace EHAERER\PasteReference\Tests\Functional;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use EHAERER\PasteReference\DataHandler\ProcessCmdmap;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
@@ -115,17 +114,14 @@ final class ApiCompatibilityTest extends FunctionalTestCase
     }
 
     #[Test]
-    public function processCmdmapUsesCompatibleApis(): void
+    public function noDataHandlerHookOfThisExtensionIsRegistered(): void
     {
-        $processCmdmap = GeneralUtility::makeInstance(ProcessCmdmap::class);
-        $dataHandler = GeneralUtility::makeInstance(DataHandler::class);
-
-        // Test initialization with compatible parameters
-        $processCmdmap->init('tt_content', 1, $dataHandler);
-
-        self::assertEquals('tt_content', $processCmdmap->getTable());
-        self::assertEquals(1, $processCmdmap->getPageUid());
-        self::assertSame($dataHandler, $processCmdmap->getDataHandler());
+        $hooks = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php'] ?? [];
+        foreach (['processCmdmapClass', 'processDatamapClass', 'moveRecordClass'] as $hookName) {
+            foreach ($hooks[$hookName] ?? [] as $hook) {
+                self::assertStringNotContainsString('EHAERER\PasteReference', (string)$hook);
+            }
+        }
     }
 
     #[Test]

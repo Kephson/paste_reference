@@ -185,7 +185,7 @@ final class ShortcutPreviewRendererCompatibilityTest extends FunctionalTestCase
         self::assertCount(1, $parameters);
 
         $firstParam = $parameters[0];
-        self::assertEquals('gridColumnItem', $firstParam->getName());
+        self::assertEquals('item', $firstParam->getName());
 
         // Check parameter type
         $paramType = $firstParam->getType();

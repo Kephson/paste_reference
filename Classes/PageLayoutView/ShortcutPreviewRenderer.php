@@ -24,7 +24,7 @@ namespace EHAERER\PasteReference\PageLayoutView;
  ***************************************************************/
 
 use Doctrine\DBAL\Exception as DBALException;
-// use Doctrine\DBAL\DriverException as DBALDriverException;
+
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use EHAERER\PasteReference\Helper\BackendHelper;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
@@ -67,30 +67,31 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
      * that contains the record for which a preview should be
      * rendered and returned.
      *
-     * @param $gridColumnItem GridColumnItem
+     * @param $item GridColumnItem
      * @return string
      * @throws DBALException
+     * @throws \JsonException
      */
-    public function renderPageModulePreviewContent(GridColumnItem $gridColumnItem): string
+    public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
         $infoArr = [];
         $tsConfigPage = [];
         $tsConfig = [];
-        $this->getProcessedValue($gridColumnItem, 'header_position,header_layout,header_link', $infoArr);
-        $dataRow = $this->getDataRow($gridColumnItem);
+        $this->getProcessedValue($item, 'header_position,header_layout,header_link', $infoArr);
+        $dataRow = $this->getDataRow($item);
 
         if (!empty($dataRow['pid']) && $tsConfigPage = BackendUtility::getPagesTSconfig($dataRow['pid'])) {
             $tsConfig = $tsConfigPage['mod.']['web_layout.']['tt_content.']['preview.'] ?? [];
         }
 
         if (!empty($dataRow['records'])) {
-            $shortCutRenderItems = $this->addShortcutRenderItems($gridColumnItem);
+            $shortCutRenderItems = $this->addShortcutRenderItems($item);
             $preview = '';
             foreach ($shortCutRenderItems as $shortcutRecord) {
                 $shortcutItem = GeneralUtility::makeInstance(
                     GridColumnItem::class,
-                    $gridColumnItem->getContext(),
-                    $gridColumnItem->getColumn(),
+                    $item->getContext(),
+                    $item->getColumn(),
                     $shortcutRecord
                 );
                 $preview .= $this->getRenderedPreviewItem(
@@ -101,10 +102,16 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             }
             return $preview;
         }
-        return parent::renderPageModulePreviewContent($gridColumnItem);
+        return parent::renderPageModulePreviewContent($item);
     }
 
-    protected function getRenderedPreviewItem($url, $actionLabel, $content)
+    /**
+     * @param string $url
+     * @param string $actionLabel
+     * @param string $content
+     * @return string
+     */
+    protected function getRenderedPreviewItem(string $url, string $actionLabel, string $content): string
     {
         return '<p class="pt-2 small"><b><a href="' . $url . '">' . $actionLabel . '</a></b></p>'
             . '<div class="mb-2 p-2 border position-relative reference">'
@@ -113,32 +120,39 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
             . '</div>';
     }
 
-    public function getPreviewShortcutItem(GridColumnItem $gridColumnItem): string
+    /**
+     * @param GridColumnItem $item
+     * @return string
+     */
+    public function getPreviewShortcutItem(GridColumnItem $item): string
     {
-        $previewShortcutItem = $gridColumnItem->getPreview();
-        return $previewShortcutItem;
+        return $item->getPreview();
     }
 
-    protected function getDataRow($gridColumnItem): array
+    /**
+     * @param $item
+     * @return array
+     */
+    protected function getDataRow($item): array
     {
         if ($this->majorTypo3Version >= 14) {
-            $rawRecord = $gridColumnItem->getRecord()->getRawRecord();
+            $rawRecord = $item->getRecord()->getRawRecord();
             $dataRow = $rawRecord->toArray();
         } else {
-            $dataRow = $gridColumnItem->getRecord();
+            $dataRow = $item->getRecord();
         }
         return $dataRow;
     }
 
     /**
-     * @param GridColumnItem $gridColumnItem
+     * @param GridColumnItem $item
      * @return array
      * @throws DBALException
      */
-    protected function addShortcutRenderItems(GridColumnItem $gridColumnItem): array
+    protected function addShortcutRenderItems(GridColumnItem $item): array
     {
         $renderItems = [];
-        $dataRow = $this->getDataRow($gridColumnItem);
+        $dataRow = $this->getDataRow($item);
 
         $shortcutItems = explode(',', $dataRow['records']);
         $collectedItems = [];
@@ -165,31 +179,34 @@ class ShortcutPreviewRenderer extends StandardContentPreviewRenderer implements 
         }
         if (!empty($collectedItems)) {
             $dataRow['shortcutItems'] = [];
-            foreach ($collectedItems as $item) {
-                if ($item) {
+            foreach ($collectedItems as $cItem) {
+                if ($cItem) {
                     if ($this->majorTypo3Version >= 14) {
-                        $renderItems[] = $this->getContentRecordObj($item);
+                        $renderItems[] = $this->getContentRecordObj($cItem);
                     } else {
-                        $renderItems[] = $item;
+                        $renderItems[] = $cItem;
                     }
                 }
             }
             if ($this->majorTypo3Version >= 14) {
                 $recordObj = $this->getContentRecordObj($dataRow);
-                $record = $gridColumnItem->getRecord();
-                $gridColumnItem->setRecord($record);
+                $record = $item->getRecord();
+                $item->setRecord($record);
             } else {
-                $record = $gridColumnItem->getRecord();
-                $gridColumnItem->setRecord($record);
+                $record = $item->getRecord();
+                $item->setRecord($record);
             }
         }
         return $renderItems;
     }
 
+    /**
+     * @param array $record
+     * @return RecordInterface
+     */
     protected function getContentRecordObj(array $record): RecordInterface
     {
         $recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-        $recordObj = $recordFactory->createFromDatabaseRow('tt_content', $record);
-        return $recordObj;
+        return $recordFactory->createFromDatabaseRow('tt_content', $record);
     }
 }

@@ -4,22 +4,28 @@ declare(strict_types=1);
 
 namespace EHAERER\PasteReference\ContextMenu;
 
-/*
- * This file is part of the TYPO3 CMS project.
+/***************************************************************
+ *  Copyright notice
+ *  (c) 2024-2026 David Bruchmann <david.bruchmann@gmail.com>
+ *  (c) 2021-2026 Ephraim Härer <mail@ephra.im>
+ *  (c) 2013 Jo Hasenau <info@cybercraft.de>
+ *  All rights reserved
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
- */
+ *  This script is part of the TYPO3 project. The TYPO3 project
+ *  is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation; either version 2
+ *  of the License, or (at your option) any later version.
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
-use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\JsConfirmation;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -45,48 +51,52 @@ class PasteReferenceItemProvider extends RecordProvider
     /**
      * @param string $itemName
      * @return string[]
-     * @throws RouteNotFoundException
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
-        $urlParameters = [
-            'prErr' => 1,
-            'uPT' => 1,
-            'CB[paste]' => $this->table . '|' . -$this->record['uid'],
-            'CB[pad]' => 'normal',
-            'CB[update]' => [
-                'colPos' => $this->record['colPos'],
-                'sys_language_uid' => $this->record['sys_language_uid'],
-            ],
-            'reference' => 1,
+        $selectedRecord = $this->clipboard->getSelectedRecord();
+        $attributes = [
+            'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
+            'data-clipboard-uid' => (string)($selectedRecord['uid'] ?? 0),
+            'data-clipboard-title' => (string)BackendUtility::getRecordTitle('tt_content', $selectedRecord, false, false),
+            'data-clipboard-language' => (string)(int)($selectedRecord['sys_language_uid'] ?? 0),
+            'data-reference-header' => $this->getReferenceHeader($selectedRecord),
+            'data-target' => (string)(-(int)$this->record['uid']),
+            'data-col-pos' => (string)(int)$this->record['colPos'],
+            'data-language' => (string)(int)$this->record['sys_language_uid'],
         ];
 
         // Add needed EXT:container information to reference into a container
         if (($this->record['tx_container_parent'] ?? 0) > 0) {
-            $urlParameters['CB[update]']['tx_container_parent'] = $this->record['tx_container_parent'];
+            $attributes['data-container-parent'] = (string)(int)$this->record['tx_container_parent'];
         }
 
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $attributes = $this->getPasteAdditionalAttributes('after');
-        $attributes += [
-            'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
-            'data-action-url' => (string)$uriBuilder->buildUriFromRoute('tce_db', $urlParameters),
-            'data-title' => $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference'),
-            'data-message' => 'my message here',
-        ];
         if ($this->backendUser->jsConfirmation(JsConfirmation::COPY_MOVE_PASTE)) {
-            $selItem = $this->clipboard->getSelectedRecord();
-            $title = $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference');
-            $confirmMessage = sprintf(
+            $attributes = array_merge($attributes, $this->getPasteAdditionalAttributes('after'));
+            $attributes['data-title'] = $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference');
+            $attributes['data-message'] = sprintf(
                 $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:mess.reference_after'),
-                GeneralUtility::fixed_lgd_cs($selItem['_RECORD_TITLE'], (int)$this->backendUser->uc['titleLen']),
+                GeneralUtility::fixed_lgd_cs($selectedRecord['_RECORD_TITLE'] ?? '', (int)$this->backendUser->uc['titleLen']),
                 GeneralUtility::fixed_lgd_cs(BackendUtility::getRecordTitle($this->table, $this->record), (int)$this->backendUser->uc['titleLen'])
             );
-            $attributes ['data-title'] = htmlspecialchars($title);
-            $attributes ['data-message'] = htmlspecialchars($confirmMessage);
         }
 
         return $attributes;
+    }
+
+    /**
+     * The context menu also opens outside of the page module, where the labels are not available in JavaScript.
+     *
+     * @param array<string, mixed> $selectedRecord
+     */
+    protected function getReferenceHeader(array $selectedRecord): string
+    {
+        $file = 'LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:';
+        $title = (string)BackendUtility::getRecordTitle('tt_content', $selectedRecord, false, false);
+        $header = $title !== ''
+            ? str_replace('{title}', $title, $this->languageService->sL($file . 'tx_paste_reference_js.reference_header'))
+            : str_replace('{uid}', (string)($selectedRecord['uid'] ?? 0), $this->languageService->sL($file . 'tx_paste_reference_js.reference_header_no_title'));
+        return mb_substr($header, 0, 255);
     }
 
     /**

@@ -11,8 +11,8 @@
                edit-on-github="Kephson/paste_reference"
                typo3-core-preferred="stable"/>
     <project title="Paste reference"
-             release="4.0.5"
-             version="4.0"
+             release="4.1.0"
+             version="4.1"
              copyright="2026"/>
     <inventory id="t3tsref" url="https://docs.typo3.org/typo3cms/TyposcriptReference/"/>
     <inventory id="t3editors" url="https://docs.typo3.org/typo3cms/EditorsTutorial/"/>

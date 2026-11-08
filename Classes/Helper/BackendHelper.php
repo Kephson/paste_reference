@@ -35,7 +35,7 @@ class BackendHelper
     }
 
     /**
-     * @return LanguageService
+     * @return LanguageService|null
      */
     public function getLanguageService(): ?LanguageService
     {

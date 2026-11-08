@@ -26,11 +26,8 @@ namespace EHAERER\PasteReference\ContextMenu;
  ***************************************************************/
 
 use TYPO3\CMS\Backend\ContextMenu\ItemProviders\RecordProvider;
-use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
-use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\JsConfirmation;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class PasteReferenceItemProvider extends RecordProvider
 {
@@ -53,45 +50,33 @@ class PasteReferenceItemProvider extends RecordProvider
     /**
      * @param string $itemName
      * @return string[]
-     * @throws RouteNotFoundException
      */
     protected function getAdditionalAttributes(string $itemName): array
     {
-        $urlParameters = [
-            'prErr' => 1,
-            'uPT' => 1,
-            'CB[paste]' => $this->table . '|-' . $this->record['uid'],
-            'CB[pad]' => 'normal',
-            'CB[update]' => [
-                'colPos' => $this->record['colPos'],
-                'sys_language_uid' => $this->record['sys_language_uid'],
-            ],
-            'reference' => 1,
+        $selectedRecord = $this->clipboard->getSelectedRecord();
+        $attributes = [
+            'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
+            'data-clipboard-uid' => (string)($selectedRecord['uid'] ?? 0),
+            'data-clipboard-title' => (string)BackendUtility::getRecordTitle('tt_content', $selectedRecord, false, false),
+            'data-clipboard-language' => (string)(int)($selectedRecord['sys_language_uid'] ?? 0),
+            'data-target' => (string)(-(int)$this->record['uid']),
+            'data-col-pos' => (string)(int)$this->record['colPos'],
+            'data-language' => (string)(int)$this->record['sys_language_uid'],
         ];
 
         // Add needed EXT:container information to reference into a container
         if (($this->record['tx_container_parent'] ?? 0) > 0) {
-            $urlParameters['CB[update]']['tx_container_parent'] = $this->record['tx_container_parent'];
+            $attributes['data-container-parent'] = (string)(int)$this->record['tx_container_parent'];
         }
 
-        $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
-        $attributes = $this->getPasteAdditionalAttributes('after');
-        $attributes += [
-            'data-callback-module' => '@ehaerer/paste-reference/context-menu-actions',
-            'data-action-url' => (string)$uriBuilder->buildUriFromRoute('tce_db', $urlParameters),
-            'data-title' => $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference'),
-            'data-message' => 'my message here',
-        ];
         if ($this->backendUser->jsConfirmation(JsConfirmation::COPY_MOVE_PASTE)) {
-            $selItem = $this->clipboard->getSelectedRecord();
-            $title = $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference');
-            $confirmMessage = sprintf(
+            $attributes = array_merge($attributes, $this->getPasteAdditionalAttributes('after'));
+            $attributes['data-title'] = $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:newContentElementReference');
+            $attributes['data-message'] = sprintf(
                 $this->languageService->sL('LLL:EXT:paste_reference/Resources/Private/Language/locallang_db.xlf:mess.reference_after'),
-                GeneralUtility::fixed_lgd_cs($selItem['_RECORD_TITLE'], (int)$this->backendUser->uc['titleLen']),
-                GeneralUtility::fixed_lgd_cs(BackendUtility::getRecordTitle($this->table, $this->record), (int)$this->backendUser->uc['titleLen'])
+                BackendUtility::cropToTitleLength($selectedRecord['_RECORD_TITLE'] ?? ''),
+                BackendUtility::cropToTitleLength(BackendUtility::getRecordTitle($this->table, $this->record))
             );
-            $attributes ['data-title'] = htmlspecialchars($title);
-            $attributes ['data-message'] = htmlspecialchars($confirmMessage);
         }
 
         return $attributes;

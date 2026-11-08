@@ -15,7 +15,7 @@
 
 * Copy content elements and paste as reference (also in context menu with right
   click)
-* Copy content elements from other pages in page module
+* Copy content elements from other pages in page module, as copy or as reference
 * [Full documentation in TYPO3 TER][1]
 
 ## 2 Usage
@@ -68,6 +68,7 @@ Paste reference uses [**semantic versioning**][5], which means, that
 
 #### 4.3.1 Releases
 
+* for TYPO3 v14.3: 6.0.0 (branch `v6-dev`)
 * for TYPO3 v13: [4.0.3](https://github.com/Kephson/paste_reference/releases/tag/4.0.3)
 * for TYPO3 v12: [3.0.5](https://github.com/Kephson/paste_reference/releases/tag/3.0.5)
 * for TYPO3 v11: [2.0.5](https://github.com/Kephson/paste_reference/releases/tag/2.0.5)
@@ -82,13 +83,14 @@ TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.
 
 The following branches are of interest:
 
+* for TYPO3 v14: [v6-dev](https://github.com/Kephson/paste_reference/tree/v6-dev) and [v5-dev](https://github.com/Kephson/paste_reference/tree/v5-dev)
 * for TYPO3 v13 and v14: [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev)
 + for TYPO3 v12: [TYPO3_12](https://github.com/Kephson/paste_reference/tree/TYPO3_12)
 * for TYPO3 v11: [TYPO3_11-5](https://github.com/Kephson/paste_reference/tree/TYPO3_11-5)
 * for TYPO3 v10: [TYPO3_10-4](https://github.com/Kephson/paste_reference/tree/TYPO3_10-4)
 
 Note, that releases are usually to prefer, if possible.
-The branch [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) is
+The branch [v5-dev](https://github.com/Kephson/paste_reference/tree/v5-dev) is
 ahead of the releases currently, so in this case using the branch is better and
 gives you most recent development changes.
 

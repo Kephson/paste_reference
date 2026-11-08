@@ -26,9 +26,11 @@ namespace EHAERER\PasteReference\PageLayoutView;
  ***************************************************************/
 
 use Doctrine\DBAL\Exception as DBALException;
-// use Doctrine\DBAL\DriverException as DBALDriverException;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use EHAERER\PasteReference\Helper\BackendHelper;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
 use TYPO3\CMS\Backend\Preview\StandardContentPreviewRenderer;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -41,6 +43,7 @@ use TYPO3\CMS\Core\Domain\RawRecord;
 use TYPO3\CMS\Core\Domain\Record;
 use TYPO3\CMS\Core\Domain\RecordFactory;
 use TYPO3\CMS\Core\Domain\RecordInterface;
+use TYPO3\CMS\Core\Schema\Exception\UndefinedSchemaException;
 use TYPO3\CMS\Core\Schema\TcaSchemaFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -48,25 +51,21 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
 {
     /** @var array<string, mixed> */
     protected array $extensionConfiguration = [];
-    protected TtContentRepository $ttContentRepository;
-    protected StandardContentPreviewRenderer $standardContentPreviewRenderer;
-    protected RecordFactory $recordFactory;
     protected array $itemLabels = [];
-    private readonly TcaSchemaFactory $tcaSchemaFactory;
 
     /**
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException
      */
-    public function __construct()
+    public function __construct(
+        protected readonly StandardContentPreviewRenderer $standardContentPreviewRenderer,
+        protected readonly RecordFactory                  $recordFactory,
+        private readonly TcaSchemaFactory                 $tcaSchemaFactory,
+        ExtensionConfiguration                            $extensionConfiguration,
+        protected readonly TtContentRepository            $ttContentRepository,
+    )
     {
-        /** @var array<non-empty-string, string|int|float|bool|null> $emConf */
-        $emConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
-        $this->extensionConfiguration = $emConf;
-        $this->ttContentRepository = GeneralUtility::makeInstance(TtContentRepository::class);
-        $this->standardContentPreviewRenderer = GeneralUtility::makeInstance(StandardContentPreviewRenderer::class);
-        $this->recordFactory = GeneralUtility::makeInstance(RecordFactory::class);
-        $this->tcaSchemaFactory = GeneralUtility::makeInstance(TcaSchemaFactory::class);
+        $this->extensionConfiguration = $extensionConfiguration->get('paste_reference') ?? [];
     }
 
     public function renderPageModulePreviewHeader(GridColumnItem $item): string
@@ -81,30 +80,30 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
      * that contains the record for which a preview should be
      * rendered and returned.
      *
-     * @param $gridColumnItem GridColumnItem
+     * @param GridColumnItem $item
      * @return string
+     * @throws ContainerExceptionInterface
      * @throws DBALException
+     * @throws JsonException
+     * @throws NotFoundExceptionInterface
+     * @throws UndefinedSchemaException
      */
-    public function renderPageModulePreviewContent(GridColumnItem $gridColumnItem): string
+    public function renderPageModulePreviewContent(GridColumnItem $item): string
     {
-        $infoArr = [];
-        $tsConfigPage = [];
-        $tsConfig = [];
-        // $this->standardContentPreviewRenderer->getProcessedValue($gridColumnItem, 'header_position,header_layout,header_link', $infoArr);
-        $dataRow = $gridColumnItem->getRecord()->getRawRecord()->toArray();
+        $dataRow = $item->getRecord()->getRawRecord()->toArray();
 
         if (!empty($dataRow['pid']) && $tsConfigPage = BackendUtility::getPagesTSconfig($dataRow['pid'])) {
             $tsConfig = $tsConfigPage['mod.']['web_layout.']['tt_content.']['preview.'] ?? [];
         }
 
         if (!empty($dataRow['records'])) {
-            $shortCutRenderItems = $this->addShortcutRenderItems($gridColumnItem);
+            $shortCutRenderItems = $this->addShortcutRenderItems($item);
             $preview = '';
             foreach ($shortCutRenderItems as $shortcutRecord) {
                 $shortcutItem = GeneralUtility::makeInstance(
                     GridColumnItem::class,
-                    $gridColumnItem->getContext(),
-                    $gridColumnItem->getColumn(),
+                    $item->getContext(),
+                    $item->getColumn(),
                     $shortcutRecord
                 );
                 $recordType = $shortcutRecord->getRecordType();
@@ -117,19 +116,30 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             }
             return $preview;
         }
-        return $this->standardContentPreviewRenderer->renderPageModulePreviewContent($gridColumnItem);
+        return $this->standardContentPreviewRenderer->renderPageModulePreviewContent($item);
     }
 
+    /**
+     * @param GridColumnItem $item
+     * @return string
+     */
     public function renderPageModulePreviewFooter(GridColumnItem $item): string
     {
         return $this->standardContentPreviewRenderer->renderPageModulePreviewFooter($item);
     }
 
+    /**
+     * @param string $previewHeader
+     * @param string $previewContent
+     * @param GridColumnItem $item
+     * @return string
+     */
     public function wrapPageModulePreview(
-        string $previewHeader,
-        string $previewContent,
+        string         $previewHeader,
+        string         $previewContent,
         GridColumnItem $item
-    ): string {
+    ): string
+    {
         return $this->standardContentPreviewRenderer->wrapPageModulePreview(
             $previewHeader,
             $previewContent,
@@ -186,8 +196,13 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
      * Common shortcut items don't have images included.
      * The resulting GridColumnItem is only used for the preview.
      * Altering the current record instead seems not possible.
+     * @param GridColumnItem $item
+     * @return GridColumnItem
+     * @throws UndefinedSchemaException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function getFakeItemForPreview(GridColumnItem $gridColumnItem): GridColumnItem
+    protected function getFakeItemForPreview(GridColumnItem $item): GridColumnItem
     {
         $unrelatedTypes = [
             'bullets',
@@ -206,13 +221,13 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             'menu_subpages',
             'shortcut',
         ];
-        $recordObj = $gridColumnItem->getRecord();
+        $recordObj = $item->getRecord();
         $rawRecord = $recordObj->getRawRecord();
         $recordType = $recordObj->getRecordType();
         $schema = $this->tcaSchemaFactory->get($recordObj->getMainType());
         $subSchema = $schema->getSubSchema($recordType);
         if (in_array($recordType, $unrelatedTypes)) {
-            return $gridColumnItem;
+            return $item;
         }
         $dataRow = $rawRecord->toArray();
         if (!$schema->hasSubSchema($recordType)) {
@@ -226,7 +241,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             }
         }
         if (!$doProcess) {
-            return $gridColumnItem;
+            return $item;
         }
         $fakeRecordDataRow = $dataRow;
         foreach ($subSchema->getFieldsOfType(TableColumnType::FILE) as $field) {
@@ -256,11 +271,18 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
             $rawFakeRecord,
             $fakeRecordDataRow
         );
-        $gridColumnItem->setRecord($fakeRecord);
-        return $gridColumnItem;
+        $item->setRecord($fakeRecord);
+        return $item;
     }
 
-    protected function getRenderedPreviewItem($schema, $url, $actionLabel, $content)
+    /**
+     * @param $schema
+     * @param $url
+     * @param $actionLabel
+     * @param $content
+     * @return string
+     */
+    protected function getRenderedPreviewItem($schema, $url, $actionLabel, $content): string
     {
         return '<p class="pt-2 small"><b><a href="' . $url . '">' . $schema . '<br>' . $actionLabel . '</a></b></p>'
             . '<div class="mb-2 p-2 border position-relative reference">'

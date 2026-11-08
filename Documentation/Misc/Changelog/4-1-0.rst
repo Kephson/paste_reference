@@ -13,7 +13,10 @@
 Important changes
 -----------------
 
-Version 4.1.0 supports TYPO3 13.4 only. TYPO3 14.3 is supported by version 6.
+Version 4.1.0 supports TYPO3 13.4 only. TYPO3 14.3 is supported by version 5+.
+Newest release for TYPO3 14.3 is version 6.
+
+Fully redesigned the backend JavaScript with the help of Claude Code. Now it's more next to Core Code and hopefully with less problems.
 
 **The classes** ``Hooks\DataHandler``, ``Hooks\PageLayoutController``,
 ``DataHandler\ProcessCmdmap`` **and** ``DataHandler\AbstractDataHandler``

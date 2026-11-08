@@ -27,9 +27,7 @@ final readonly class RecordInfoController
 
     public function __construct(
         private TcaSchemaFactory $tcaSchemaFactory,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws UndefinedSchemaException

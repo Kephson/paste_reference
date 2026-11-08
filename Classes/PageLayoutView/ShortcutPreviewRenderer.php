@@ -28,7 +28,6 @@ namespace EHAERER\PasteReference\PageLayoutView;
 use Doctrine\DBAL\Exception as DBALException;
 use EHAERER\PasteReference\Domain\Repository\TtContentRepository;
 use EHAERER\PasteReference\Helper\BackendHelper;
-use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use TYPO3\CMS\Backend\Preview\PreviewRendererInterface;
@@ -59,12 +58,11 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
      */
     public function __construct(
         protected readonly StandardContentPreviewRenderer $standardContentPreviewRenderer,
-        protected readonly RecordFactory                  $recordFactory,
-        private readonly TcaSchemaFactory                 $tcaSchemaFactory,
-        ExtensionConfiguration                            $extensionConfiguration,
-        protected readonly TtContentRepository            $ttContentRepository,
-    )
-    {
+        protected readonly RecordFactory $recordFactory,
+        private readonly TcaSchemaFactory $tcaSchemaFactory,
+        ExtensionConfiguration $extensionConfiguration,
+        protected readonly TtContentRepository $ttContentRepository,
+    ) {
         $this->extensionConfiguration = $extensionConfiguration->get('paste_reference') ?? [];
     }
 
@@ -84,7 +82,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
      * @return string
      * @throws ContainerExceptionInterface
      * @throws DBALException
-     * @throws JsonException
+     * @throws \JsonException
      * @throws NotFoundExceptionInterface
      * @throws UndefinedSchemaException
      */
@@ -135,11 +133,10 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
      * @return string
      */
     public function wrapPageModulePreview(
-        string         $previewHeader,
-        string         $previewContent,
+        string $previewHeader,
+        string $previewContent,
         GridColumnItem $item
-    ): string
-    {
+    ): string {
         return $this->standardContentPreviewRenderer->wrapPageModulePreview(
             $previewHeader,
             $previewContent,
@@ -166,8 +163,7 @@ class ShortcutPreviewRenderer implements PreviewRendererInterface
                     $shortcutItem,
                     $collectedItems,
                     $dataRow['uid'],
-                    $dataRow['sys_language_uid'],
-                    $dataRow['recursive']
+                    $dataRow['sys_language_uid']
                 );
             } elseif (!str_contains($shortcutItem, '_') || str_contains($shortcutItem, 'tt_content_')) {
                 $this->ttContentRepository->collectContentData(

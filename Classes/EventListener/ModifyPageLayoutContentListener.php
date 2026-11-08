@@ -44,15 +44,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 final readonly class ModifyPageLayoutContentListener
 {
     public function __construct(
-        private PageRenderer           $pageRenderer,
-        private UriBuilder             $uriBuilder,
+        private PageRenderer $pageRenderer,
+        private UriBuilder $uriBuilder,
         private ExtensionConfiguration $extensionConfiguration,
-    )
-    {
-    }
+    ) {}
 
     /**
-     *
      * @param ModifyPageLayoutContentEvent $event
      * @throws ExtensionConfigurationExtensionNotConfiguredException
      * @throws ExtensionConfigurationPathDoesNotExistException

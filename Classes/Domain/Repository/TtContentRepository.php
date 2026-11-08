@@ -73,15 +73,13 @@ class TtContentRepository implements SingletonInterface
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
-     *
      */
     public function collectContentDataFromPages(
         string $shortcutItem,
-        array  &$collectedItems,
-        int    $parentUid = 0,
-        int    $language = 0
-    ): void
-    {
+        array &$collectedItems,
+        int $parentUid = 0,
+        int $language = 0
+    ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
         $itemList = GeneralUtility::intExplode(',', (string)$itemList);
 
@@ -89,9 +87,9 @@ class TtContentRepository implements SingletonInterface
         $result = $queryBuilder
             ->select('*')
             ->addSelectLiteral($queryBuilder->expr()->inSet(
-                    'pid',
-                    $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
-                ) . ' AS inSet')
+                'pid',
+                $queryBuilder->createNamedParameter($itemList, ArrayParameterType::INTEGER)
+            ) . ' AS inSet')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->neq(
@@ -139,15 +137,13 @@ class TtContentRepository implements SingletonInterface
      * @param int $parentUid uid of the referencing tt_content record
      * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
-     *
      */
     public function collectContentData(
         string $shortcutItem,
-        array  &$collectedItems,
-        int    $parentUid,
-        int    $language
-    ): void
-    {
+        array &$collectedItems,
+        int $parentUid,
+        int $language
+    ): void {
         $shortcutItem = str_replace('tt_content_', '', $shortcutItem);
         if ((int)$shortcutItem !== $parentUid) {
             $queryBuilder = $this->getQueryBuilder();

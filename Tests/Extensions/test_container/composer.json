@@ -1,0 +1,11 @@
+{
+	"name": "ehaerer/test-container",
+	"description": "Container elements for the functional tests of paste_reference",
+	"license": "MIT",
+	"type": "typo3-cms-extension",
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "test_container"
+		}
+	}
+}

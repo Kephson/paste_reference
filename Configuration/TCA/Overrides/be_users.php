@@ -1,9 +1,10 @@
 <?php
-
 defined('TYPO3') || die();
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
 // @see #108843
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addUserSetting(
+ExtensionManagementUtility::addUserSetting(
     'disableCopyFromPageButton',
     [
         'label' => 'LLL:EXT:paste_reference/Resources/Private/Language/locallang.xlf:disableCopyFromPageButton',
@@ -12,5 +13,4 @@ defined('TYPO3') || die();
             'renderType' => 'checkboxToggle',
         ],
     ],
-    // 'after:somOtherSetting'
 );

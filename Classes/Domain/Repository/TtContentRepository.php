@@ -27,10 +27,10 @@ namespace EHAERER\PasteReference\Domain\Repository;
 
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\DBAL\Exception\DriverException as DBALDriverException;
 use EHAERER\PasteReference\Helper\BackendHelper;
-use TYPO3\CMS\Backend\Domain\Repository\Localization\LocalizationRepository;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -52,36 +52,33 @@ class TtContentRepository implements SingletonInterface
     protected array $extensionConfiguration = [];
     protected bool $showHidden = true;
     protected BackendHelper $backendHelper;
-    protected string $table = 'tt_content';
-    protected LocalizationRepository $localizationRepository;
 
+    /**
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     */
     public function __construct()
     {
         /** @var array<non-empty-string, string|int|float|bool|null> $emConf */
         $emConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('paste_reference') ?? [];
         $this->extensionConfiguration = $emConf;
         $this->backendHelper = GeneralUtility::makeInstance(BackendHelper::class);
-        $this->localizationRepository = GeneralUtility::makeInstance(LocalizationRepository::class);
     }
 
     /**
      * Collects tt_content data from a single page or a page tree starting at a given page
      *
-     * @todo: move this in a repository
-     *
      * @param string $shortcutItem The single page to be used as the tree root
      * @param-out array $collectedItems The collected item data rows ordered by parent position, column position and sorting
      * @param int $parentUid uid of the referencing tt_content record
-     * @param int $languageId sys_language_uid of the referencing tt_content record
-     * @param int $recursive The number of levels for the recursion
+     * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
      */
     public function collectContentDataFromPages(
         string $shortcutItem,
         array &$collectedItems,
         int $parentUid = 0,
-        int $languageId = 0,
-        int $recursive = 0  // TODO: $recursive never seems being used
+        int $language = 0
     ): void {
         $itemList = str_replace('pages_', '', $shortcutItem);
         $itemList = GeneralUtility::intExplode(',', (string)$itemList);
@@ -116,8 +113,11 @@ class TtContentRepository implements SingletonInterface
 
         /** @ var array<string,mixed>|false $item */
         while ($item = $result->fetchAssociative()) {
-            if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && (int)$languageId > 0) {
-                $translatedItem = $this->localizationRepository->getRecordTranslation($this->table, (int)($item['uid'] ?? 0), (int)$languageId);
+            if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
+                $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
+                if (is_array($translatedItem) && $translatedItem !== []) {
+                    $item = array_shift($translatedItem);
+                }
             }
             if ($this->backendHelper->getBackendUser()->workspace > 0) {
                 unset($item['inSet']);
@@ -132,19 +132,17 @@ class TtContentRepository implements SingletonInterface
     /**
      * Collects tt_content data from a single tt_content element
      *
-     * @todo: move this in a repository
-     *
      * @param string $shortcutItem The tt_content element to fetch the data fromom
      * @param-out array $collectedItems The collected item data row
      * @param int $parentUid uid of the referencing tt_content record
-     * @param int $languageId sys_language_uid of the referencing tt_content record
+     * @param int $language sys_language_uid of the referencing tt_content record
      * @throws DBALException
      */
     public function collectContentData(
         string $shortcutItem,
         array &$collectedItems,
         int $parentUid,
-        int $languageId
+        int $language
     ): void {
         $shortcutItem = str_replace('tt_content_', '', $shortcutItem);
         if ((int)$shortcutItem !== $parentUid) {
@@ -167,8 +165,11 @@ class TtContentRepository implements SingletonInterface
                 ->setMaxResults(1)
                 ->executeQuery()
                 ->fetchAssociative();
-            if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && (int)$languageId > 0) {
-                $translatedItem = $this->localizationRepository->getRecordTranslation($this->table, (int)($item['uid'] ?? 0), (int)$languageId);
+            if (!empty($this->extensionConfiguration['overlayShortcutTranslation']) && $language > 0) {
+                $translatedItem = BackendUtility::getRecordLocalization('tt_content', (int)($item['uid'] ?? 0), $language) ?: [];
+                if (is_array($translatedItem) && $translatedItem !== []) {
+                    $item = array_shift($translatedItem);
+                }
             }
 
             if ($this->backendHelper->getBackendUser()->workspace > 0) {
@@ -184,54 +185,9 @@ class TtContentRepository implements SingletonInterface
     }
 
     /**
-     * get pid for a ContentElement
-     *
-     * @param int $uid the uid value of a tt_content record
-     *
-     * @return int
-     * @throws DBALException|DBALDriverException
+     * @param string $table
+     * @return QueryBuilder
      */
-    public function getPidFromUid(int $uid = 0): int
-    {
-        $queryBuilder = $this->getQueryBuilder();
-        /** @var array<non-empty-string, string|int|float|bool|null> $contentElement */
-        $contentElement = $queryBuilder
-            ->select('pid')
-            ->from('tt_content')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'uid',
-                    $queryBuilder->createNamedParameter(abs($uid), Connection::PARAM_INT)
-                )
-            )
-            ->executeQuery()
-            ->fetchAssociative();
-
-        return !empty($contentElement['pid']) ? (int)$contentElement['pid'] : 0;
-    }
-
-    /**
-     * Function to remove any remains of versioned records after finalizing a workspace action
-     * via 'Discard' or 'Publish' commands
-     */
-    public function cleanupWorkspacesAfterFinalizing(): void
-    {
-        $queryBuilder = $this->getQueryBuilder();
-        $queryBuilder
-            ->delete('tt_content')
-            ->where(
-                $queryBuilder->expr()->eq(
-                    'pid',
-                    $queryBuilder->createNamedParameter(-1, Connection::PARAM_INT)
-                ),
-                $queryBuilder->expr()->eq(
-                    't3ver_wsid',
-                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
-                )
-            )
-            ->executeStatement();
-    }
-
     public function getQueryBuilder(string $table = 'tt_content'): QueryBuilder
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -242,11 +198,5 @@ class TtContentRepository implements SingletonInterface
             ->removeByType(EndTimeRestriction::class);
 
         return $queryBuilder;
-    }
-
-    public function getConnection(): Connection
-    {
-        return GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable($this->table);
     }
 }

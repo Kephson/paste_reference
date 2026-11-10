@@ -23,18 +23,98 @@ namespace EHAERER\PasteReference\EventListener;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use EHAERER\PasteReference\Hooks\PageLayoutController;
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Backend\Clipboard\Clipboard;
 use TYPO3\CMS\Backend\Controller\Event\ModifyPageLayoutContentEvent;
+use TYPO3\CMS\Backend\Routing\Exception\RouteNotFoundException;
+use TYPO3\CMS\Backend\Routing\UriBuilder;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+use TYPO3\CMS\Core\Authentication\JsConfirmation;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationExtensionNotConfiguredException;
+use TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Page\JavaScriptModuleInstruction;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-final class ModifyPageLayoutContentListener
+/**
+ * Loads the paste toolbar of the page module and hands over its configuration.
+ */
+final readonly class ModifyPageLayoutContentListener
 {
+    public function __construct(
+        private PageRenderer $pageRenderer,
+        private UriBuilder $uriBuilder,
+        private ExtensionConfiguration $extensionConfiguration,
+    ) {}
+
     /**
      * @param ModifyPageLayoutContentEvent $event
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws RouteNotFoundException
      */
     public function __invoke(ModifyPageLayoutContentEvent $event): void
     {
-        $pageLayoutController = GeneralUtility::makeInstance(PageLayoutController::class);
-        $event->addHeaderContent($pageLayoutController->drawHeaderHook());
+        $backendUser = $this->getBackendUser();
+        $this->pageRenderer->addCssFile('EXT:paste_reference/Resources/Public/Css/paste-toolbar.css');
+        $this->pageRenderer->getJavaScriptRenderer()->addJavaScriptModuleInstruction(
+            JavaScriptModuleInstruction::create('@ehaerer/paste-reference/paste-toolbar.js')->instance([
+                'clipboard' => $this->getClipboardItem($event->getRequest()),
+                'referenceAllowed' => $backendUser->checkAuthMode('tt_content', 'CType', 'shortcut'),
+                'copyFromPageEnabled' => $this->isCopyFromPageEnabled($backendUser),
+                'confirmPaste' => $backendUser->jsConfirmation(JsConfirmation::COPY_MOVE_PASTE),
+                'elementBrowserUrl' => (string)$this->uriBuilder->buildUriFromRoute('wizard_element_browser', ['mode' => 'db']),
+            ])
+        );
+    }
+
+    /**
+     * @return array{uid: int, title: string, cType: string, language: int, copyMode: string}|null
+     */
+    private function getClipboardItem(ServerRequestInterface $request): ?array
+    {
+        $clipboard = GeneralUtility::makeInstance(Clipboard::class);
+        $clipboard->initializeClipboard($request);
+        $clipboard->lockToNormal();
+        $clipboard->cleanCurrent();
+        $clipboard->endClipboard();
+
+        $elements = $clipboard->elFromTable('tt_content');
+        if ($elements === []) {
+            return null;
+        }
+        $uid = (int)substr((string)array_key_first($elements), strlen('tt_content|'));
+        $record = BackendUtility::getRecordWSOL('tt_content', $uid);
+        if ($record === null) {
+            return null;
+        }
+        return [
+            'uid' => $uid,
+            'title' => (string)BackendUtility::getRecordTitle('tt_content', $record, false, false),
+            'cType' => (string)($record['CType'] ?? ''),
+            'language' => (int)($record['sys_language_uid'] ?? 0),
+            'copyMode' => (string)($clipboard->clipData['normal']['mode'] ?? ''),
+        ];
+    }
+
+    /**
+     * @throws ExtensionConfigurationPathDoesNotExistException
+     * @throws ExtensionConfigurationExtensionNotConfiguredException
+     */
+    private function isCopyFromPageEnabled(BackendUserAuthentication $backendUser): bool
+    {
+        $configuration = $this->extensionConfiguration->get('paste_reference');
+        return !($configuration['disableCopyFromPageButton'] ?? false)
+            && !($backendUser->uc['disableCopyFromPageButton'] ?? false);
+    }
+
+    /**
+     * @return BackendUserAuthentication
+     */
+    private function getBackendUser(): BackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
     }
 }

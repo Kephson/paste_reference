@@ -7,7 +7,7 @@ services:
   EHAERER\PasteReference\:
     resource: '../Classes/*'
 
-  EHAERER\PasteReference\Hooks\PageLayoutController:
+  EHAERER\PasteReference\PageLayoutView\ShortcutPreviewRenderer:
     public: true
 
   EHAERER\PasteReference\ContextMenu\PasteReferenceItemProvider:

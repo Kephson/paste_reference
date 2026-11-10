@@ -14,7 +14,6 @@ parameters:
   paths:
     - ../../Classes
     - ../../Tests
-    - ../../ext_localconf.php
 
   excludePaths:
     # Checking acceptance support files is cumbersome due to codeception dynamic mixin generation

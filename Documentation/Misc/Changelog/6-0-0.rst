@@ -15,6 +15,8 @@ Important changes
 
 Version 6.0.0 supports TYPO3 14.3 and later 14 versions only.
 
+Fully redesigned the backend JavaScript with the help of Claude Code. Now it's more next to Core Code and hopefully with less problems.
+
 Pasting a reference no longer uses a DataHandler hook. A reference is now a
 regular new ``shortcut`` content element created through a datamap, so
 permissions, column restrictions, workspaces and languages are handled by the

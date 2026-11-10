@@ -18,7 +18,7 @@ If you need to configure those, switch to the module "Admin tools" -> "Settings"
     :align: left
     :name: ExtensionConfiguration
 
-There are two settings:
+There are three settings:
 
 Properties
 ^^^^^^^^^^
@@ -26,3 +26,13 @@ Properties
 disableCopyFromPageButton
 """""""""""""""""""""""""
 You can disable the "copy from page button" in the page module if you don't need it.
+
+
+overlayShortcutTranslation
+""""""""""""""""""""""""""
+Use language overlay for content and page records referenced in shortcut elements.
+
+
+enableExtendedShortcutPreviewRenderer
+"""""""""""""""""""""""""""""""""""""
+Enable extended shortcut preview renderer in TYPO3 backend. Enabled by default.

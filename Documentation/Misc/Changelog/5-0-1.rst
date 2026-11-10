@@ -1,0 +1,23 @@
+5.0.1 - November 10, 2026
+=========================
+
+.. include:: ../../Includes.txt
+
+.. only:: html
+
+.. contents::
+        :local:
+        :depth: 3
+
+
+Important changes
+-----------------
+
+All Changes
+-----------
+This is a list of all changes in this release: ::
+
+- hydrate data for new Record-API, to assure that other extensions like powermail with PreviewRenderer get expected and expectable data
+- Update README
+- update deprecated code
+- thanks to @DavidBruchmann

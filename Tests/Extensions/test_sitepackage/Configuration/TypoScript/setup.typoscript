@@ -1,0 +1,96 @@
+# Basic page configuration
+page = PAGE
+page {
+    typeNum = 0
+
+    10 = FLUIDTEMPLATE
+    10 {
+        templateName = Default
+        templateRootPaths {
+            0 = EXT:test_sitepackage/Resources/Private/Templates/Page/
+        }
+        partialRootPaths {
+            0 = EXT:test_sitepackage/Resources/Private/Partials/Page/
+        }
+        layoutRootPaths {
+            0 = EXT:test_sitepackage/Resources/Private/Layouts/Page/
+        }
+
+        variables {
+            content = CONTENT
+            content {
+                table = tt_content
+                select {
+                    orderBy = sorting
+                    where = {#colPos}=0
+                }
+            }
+
+            sidebar = CONTENT
+            sidebar {
+                table = tt_content
+                select {
+                    orderBy = sorting
+                    where = {#colPos}=1
+                }
+            }
+        }
+    }
+
+    includeCSS {
+        theme = EXT:test_sitepackage/Resources/Public/Css/theme.css
+    }
+}
+
+# Container rendering for ce_columns2
+tt_content.ce_columns2 = FLUIDTEMPLATE
+tt_content.ce_columns2 {
+    templateName = Columns2
+    templateRootPaths {
+        0 = EXT:test_sitepackage/Resources/Private/Templates/ContentElements/
+    }
+
+    dataProcessing {
+        100 = B13\Container\DataProcessing\ContainerProcessor
+    }
+}
+
+plugin.tx_testsitepackage_inlinerecordsirre {
+    extensionName = TestSitepackage
+    pluginName = InlineRecordsIrre
+    vendorName = Test
+
+    mvc {
+        callDefaultActionIfActionCantBeResolved = 1
+    }
+    persistence {
+        storagePid = {$plugin.plugin.tx_testsitepackage_inlinerecordsirre.persistence.storagePid}
+    }
+    settings {
+        detailPid = {$plugin.plugin.tx_testsitepackage_inlinerecordsirre.persistence.storagePid}
+        settings.foo = bar
+    }
+    view {
+        layoutRootPaths {
+            10 = EXT:test_sitepackage/Resources/Private/Layouts/ContentElements/
+            20 = {$plugin.tx_testsitepackage_inlinerecordsirre.view.layoutRootPath}
+        }
+        partialRootPaths {
+            10 = EXT:test_sitepackage/Resources/Private/Partials/ContentElements/
+            20 = {$plugin.tx_testsitepackage_inlinerecordsirre.view.partialRootPath}
+        }
+        templateRootPaths {
+            10 = EXT:test_sitepackage/Resources/Private/Templates/
+            20 = EXT:test_sitepackage/Resources/Private/Templates/ContentElements/
+            30 = {$plugin.tx_testsitepackage_inlinerecordsirre.view.templateRootPath}
+        }
+    }
+}
+
+tt_content.testsitepackage_inlinerecordsirre = EXTBASEPLUGIN
+tt_content.testsitepackage_inlinerecordsirre {
+    extensionName = TestSitepackage
+    pluginName = InlineRecordsIrre
+    vendorName = Test
+}
+

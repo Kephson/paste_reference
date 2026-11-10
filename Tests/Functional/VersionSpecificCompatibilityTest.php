@@ -129,7 +129,7 @@ final class VersionSpecificCompatibilityTest extends FunctionalTestCase
         $majorVersion = $this->typo3Version->getMajorVersion();
 
         // Test that priority method returns expected type
-        $priority = $provider->getPriority();
+        $priority = $provider->getPriority(); // false positive of #94107, #100963 in Extension Scanner
         self::assertGreaterThan(0, $priority);
     }
 

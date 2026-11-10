@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Test\Sitepackage\Controller\:
+    resource: '../Classes/Controller'
+
+  Test\Sitepackage\Domain\Repository\:
+    resource: '../Classes/Domain/Repository'
+
+  Test\Sitepackage\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Domain/Model/*'

@@ -1,0 +1,22 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+
+<f:layout name="ContentElements/Default" />
+
+<f:section name="Main">
+    <h1>IRRE Template index</h1>
+    <div class="parent-container">
+            <f:debug>{_all}</f:debug>
+        <f:comment>
+            <f:for each="{childRecords}" as="{child}">
+                <f:cObject typoscriptObjectPath="tt_content.{child.CType}" />
+            </f:for>
+            <!-- Render each child element via core view helper
+            data, typoscriptObjectPath, currentValueKey, table
+             shortcuts="{0: child.uid}"
+            -->
+            <f:debug>{data}</f:debug>
+        </f:comment>
+    </div>
+</f:section>
+
+</html>

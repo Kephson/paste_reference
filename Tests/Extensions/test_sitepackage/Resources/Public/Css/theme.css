@@ -1,0 +1,67 @@
+/* Basic styling for test sitepackage */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.content-area {
+    flex: 2;
+}
+
+.sidebar {
+    flex: 1;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Container element styling */
+.ce-columns2 {
+    margin: 20px 0;
+}
+
+.ce-columns2 .row {
+    display: flex;
+    gap: 20px;
+}
+
+.ce-columns2 .col-md-6 {
+    flex: 1;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    min-height: 100px;
+}
+
+footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+/* Backend styling hints */
+.t3-page-ce-wrapper {
+    border: 1px dashed #ccc;
+    margin: 5px 0;
+    padding: 10px;
+}
+
+.t3-page-ce-wrapper:hover {
+    border-color: #007cba;
+}

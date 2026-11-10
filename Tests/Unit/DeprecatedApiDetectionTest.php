@@ -139,7 +139,7 @@ final class DeprecatedApiDetectionTest extends UnitTestCase
     {
         $extensionFiles = $this->getExtensionPhpFiles();
         $removedConstants = [
-            'TYPO3_MODE',  // Removed in TYPO3 v11
+            'TYPO3_MODE',  // Removed in TYPO3 v11 // false positive of #92947, #96107 in Extension Scanner
             'TYPO3_version',  // Use Typo3Version class instead
             'TYPO3_branch',  // Use Typo3Version class instead
         ];

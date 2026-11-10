@@ -86,7 +86,7 @@ class ProcessCmdmap extends AbstractDataHandler
 
             $clipBoard = $queryParams['CB'] ??= null;
             if (!empty($clipBoard)) {
-                $updateArray = $clipBoard['update'];
+                $updateArray = $clipBoard['update']; // false positive of #99586 / #100963 in Extension Scanner
                 if (!empty($updateArray)) {
                     $dataArray = array_merge($dataArray, $updateArray);
                 }

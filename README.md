@@ -68,15 +68,15 @@ Paste reference uses [**semantic versioning**][5], which means, that
 
 #### 4.3.1 Releases
 
-* for TYPO3 v13: [4.0.3](https://github.com/Kephson/paste_reference/releases/tag/4.0.3)
+* for TYPO3 v14: [5.0.1](https://github.com/Kephson/paste_reference/releases/tag/5.0.1)
+* for TYPO3 v13: [4.1.0](https://github.com/Kephson/paste_reference/releases/tag/4.1.0)
 * for TYPO3 v12: [3.0.5](https://github.com/Kephson/paste_reference/releases/tag/3.0.5)
 * for TYPO3 v11: [2.0.5](https://github.com/Kephson/paste_reference/releases/tag/2.0.5)
 * for TYPO3 v10: [1.0.3](https://github.com/Kephson/paste_reference/releases/tag/1.0.3)
 
 To get the most recent development for the branch 4, consider installing the
 branch instead of the release. The branch
-[v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) supports also
-TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.
+[v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) includes unreleased bug-fixes.
 
 #### 4.3.2 Branches
 

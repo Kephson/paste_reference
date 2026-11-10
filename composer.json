@@ -95,7 +95,7 @@
 				"providesPackages": {}
 			},
 			"extension-key": "paste_reference",
-			"version": "5.0.0",
+			"version": "5.0.1",
 			"web-dir": ".Build/public"
 		}
 	}

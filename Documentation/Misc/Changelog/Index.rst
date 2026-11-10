@@ -20,6 +20,7 @@ List of versions
    :titlesonly:
    :glob:
 
+   5-0-1
    5-0-0
    4-0-5
    4-0-4

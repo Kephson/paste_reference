@@ -14,6 +14,7 @@ timezone: Europe/Berlin
 composer_version: stable
 web_environment:
     - TYPO3_CONTEXT=Development
+nodejs_version: "24"
 corepack_enable: false
 default_container_timeout: "240"
 
@@ -24,16 +25,16 @@ default_container_timeout: "240"
 # If the name is omitted, the project will take the name of the enclosing directory,
 # which is useful if you want to have a copy of the project side by side with this one.
 
-# type: <projecttype>  # asterios, backdrop, cakephp, codeigniter, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, drupal12, generic, joomla, laravel, magento, magento2, php, shopware6, silverstripe, symfony, typo3, wordpress, wp-bedrock
+# type: <projecttype>  # asterios, backdrop, cakephp, codeigniter, craftcms, drupal, drupal6, drupal7, drupal8, drupal9, drupal10, drupal11, drupal12, generic, joomla, laravel, magento, magento2, maho, modx, php, shopware6, silverstripe, symfony, typo3, wordpress, wp-bedrock
 # See https://docs.ddev.com/en/stable/users/quickstart/ for more
 # information on the different project types
 
 # docroot: <relative_path> # Relative path to the directory containing index.php.
 
-# php_version: "8.4"  # PHP version to use, "5.6" through "8.5"
+# php_version: "8.4"  # PHP version to use; see https://docs.ddev.com/en/stable/users/configuration/config/#php_version.
 
 # You can explicitly specify the webimage but this
-# is not recommended, as the images are often closely tied to DDEV's' behavior,
+# is not recommended, as the images are often closely tied to DDEV's behavior,
 # so this can break upgrades.
 
 # webimage: <docker_image>
@@ -43,9 +44,17 @@ default_container_timeout: "240"
 # database:
 #   type: <dbtype> # mysql, mariadb, postgres
 #   version: <version> # database version, like "10.11" or "8.0"
-#   MariaDB versions can be 5.5-10.8, 10.11, 11.4, 11.8
-#   MySQL versions can be 5.5-8.0, 8.4
+#   MariaDB versions can be 5.5-10.8, 10.11, 11.4, 11.8, 12.3
+#   MySQL versions can be 5.5-8.0, 8.4, 9.7
 #   PostgreSQL versions can be 9-18
+
+# You can explicitly specify the dbimage but this
+# is not recommended, as the images are often closely tied to DDEV's behavior,
+# so this can break upgrades.
+
+# dbimage: <docker_image>
+# It’s unusual to change this option, and we don’t recommend it without Docker experience and a good reason.
+# Typically, this means additions to the existing db image using a .ddev/db-build/Dockerfile.*
 
 # router_http_port: <port>  # Port to be used for http (defaults to global configuration, usually 80)
 # router_https_port: <port> # Port for https (defaults to global configuration, usually 443)
@@ -86,13 +95,17 @@ default_container_timeout: "240"
 # composer_version: "2"
 # You can set it to "" or "2" (default) for Composer v2
 # to use the latest major version available at the time your container is built.
-# It is also possible to use each other Composer version channel. This includes:
+# It is also possible to use any other Composer version channel. This includes:
 #   - 2.2 (latest Composer LTS version)
 #   - stable
 #   - preview
 #   - snapshot
 # Alternatively, an explicit Composer version may be specified, for example "2.2.18".
 # To reinstall Composer after the image was built, run "ddev utility rebuild".
+
+# nodejs_root: <relative_path>
+# Relative path to the directory containing the Node.js version file from the
+# project root. Only used with "nodejs_version: auto" or "nodejs_version: engine".
 
 # nodejs_version: "24"
 # change from the default system Node.js version to any other version.
@@ -272,7 +285,7 @@ default_container_timeout: "240"
 # override_config: false
 # By default, config.*.yaml files are *merged* into the configuration
 # But this means that some things can't be overridden
-# For example, if you have 'use_dns_when_possible: true'' you can't override it with a merge
+# For example, if you have 'use_dns_when_possible: true' you can't override it with a merge
 # and you can't erase existing hooks or all environment variables.
 # However, with "override_config: true" in a particular config.*.yaml file,
 # 'use_dns_when_possible: false' can override the existing values, and
@@ -282,7 +295,7 @@ default_container_timeout: "240"
 # web_environment: []
 # or
 # additional_hostnames: []
-# can have their intended affect. 'override_config' affects only behavior of the
+# can have their intended effect. 'override_config' affects only behavior of the
 # config.*.yaml file it exists in.
 
 # Many DDEV commands can be extended to run tasks before or after the

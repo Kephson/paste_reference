@@ -77,7 +77,7 @@ Paste reference uses [**semantic versioning**][5], which means, that
 To get the most recent development for the branch 4, consider installing the
 branch instead of the release. The branch
 [v4-dev](https://github.com/Kephson/paste_reference/tree/v4-dev) supports also
-TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.  
+TYPO3 v14 up to v14.1 and includes unreleased bug-fixes.
 The sub-versions above might not be always the newest, so please check the
 [RELEASES](https://github.com/Kephson/paste_reference/releases) instead of relying on the list above.
 

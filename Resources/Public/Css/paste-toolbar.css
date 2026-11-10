@@ -1,0 +1,8 @@
+/* The toolbar offers its own paste button with the copy/reference choice. */
+.t3js-page-new-ce .t3js-paste-copy {
+    display: none;
+}
+
+paste-reference-toolbar {
+    display: contents;
+}

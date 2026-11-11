@@ -11,7 +11,7 @@ $EM_CONF[$_EXTKEY] = [
     'title' => 'Paste reference for content elements',
     'description' => 'Paste reference instead of copy for content elements',
     'category' => 'plugin',
-    'version' => '6.0.0',
+    'version' => '6.0.1',
     'constraints' => [
         'depends' => [
             'typo3' => '14.3.0-14.99.99',
@@ -20,7 +20,7 @@ $EM_CONF[$_EXTKEY] = [
             'gridelements' => '*',
         ],
         'suggests' => [
-            'container' => '3.2.0-3.2.99',
+            'container' => '3.2.0-4.99.99',
         ],
     ],
     'autoload' => [

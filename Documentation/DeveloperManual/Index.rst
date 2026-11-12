@@ -13,10 +13,11 @@ For developers
 
 .. only:: html
 
-	This chapter describes how you could contribute to the extension as a developer.
+    This chapter describes the architecture of the extension and how you could contribute as a developer.
 
 .. toctree::
 	:maxdepth: 5
 	:titlesonly:
 
+	Architecture/Index
 	Contribute/Index

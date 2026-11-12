@@ -29,8 +29,8 @@
 	},
 	"require": {
 		"php": "^8.2",
-		"typo3/cms-backend": "^14.3",
-		"typo3/cms-core": "^14.3"
+		"typo3/cms-backend": "^14.3.8",
+		"typo3/cms-core": "^14.3.8"
 	},
 	"require-dev": {
 		"b13/container": "^3.2 || ^4.0",

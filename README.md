@@ -11,12 +11,13 @@
 > paste content elements also as reference and not only as copy. A lot of TYPO3
 > users love these features but don't know that this aren't core features.
 
-## 1 Features
+## 1 Features and architecture
 
+* Architecture of current version is [documented in TYPO3 TER][1]
 * Copy content elements and paste as reference (also in context menu with right
   click)
 * Copy content elements from other pages in page module, as copy or as reference
-* [Full documentation in TYPO3 TER][1]
+* [Full documentation in TYPO3 TER][2]
 
 ## 2 Usage
 
@@ -24,7 +25,7 @@
 
 #### Installation using Composer
 
-The recommended way to install the extension is using [Composer][2].
+The recommended way to install the extension is using [Composer][3].
 
 Run the following command within your Composer based TYPO3 project:
 
@@ -34,7 +35,7 @@ composer require ehaerer/paste-reference
 
 #### Installation as extension from TYPO3 Extension Repository (TER) - not recommended
 
-Download and install the [extension][3] with the extension manager module.
+Download and install the [extension][4] with the extension manager module.
 
 ### 2.2 Minimal setup
 
@@ -42,7 +43,7 @@ Download and install the [extension][3] with the extension manager module.
 
 ## 3 Report issues
 
-Please report issue directly in the [issue tracker in the Github repository][6].
+Please report issue directly in the [issue tracker in the Github repository][7].
 
 ## 4 Administration corner
 
@@ -55,11 +56,11 @@ Please report issue directly in the [issue tracker in the Github repository][6].
 
 ### 4.2 Changelog
 
-Please look into the [official extension documentation in changelog chapter][4].
+Please look into the [official extension documentation in changelog chapter][5].
 
 ### 4.3 Release Management
 
-Paste reference uses [**semantic versioning**][5], which means, that
+Paste reference uses [**semantic versioning**][6], which means, that
 
 * **bugfix updates** (e.g. 1.0.0 => 1.0.1) just includes small bug-fixes or
   security relevant stuff without breaking changes,
@@ -70,7 +71,7 @@ Paste reference uses [**semantic versioning**][5], which means, that
 
 #### 4.3.1 Releases
 
-* for TYPO3 v14.3+: [6.0.0](https://github.com/Kephson/paste_reference/releases/tag/6.0.0)
+* for TYPO3 v14.3+: [6.0.1](https://github.com/Kephson/paste_reference/releases/tag/6.0.1)
 * old and deprecated for TYPO3 v14.3: [5.0.1](https://github.com/Kephson/paste_reference/releases/tag/5.0.1)
 * for TYPO3 v13: [4.1.0](https://github.com/Kephson/paste_reference/releases/tag/4.1.0)
 * for TYPO3 v12: [3.0.5](https://github.com/Kephson/paste_reference/releases/tag/3.0.5)
@@ -139,7 +140,7 @@ been prepared to install required dependency to provide a TYPO3 composer based
 installation within the untracked `.Build/` folder with `.Build/public/` being
 the doc-root to point a web-server on.
 
-For simpler onboarding a generic [ddev project configuration]() is included to
+For simpler onboarding a generic [ddev project configuration](https://ddev.com/) is included to
 quickstart a local TYPO3 instance in a predefined environment along with data
 set. See [5.2](#52-use-ddev-to-setup-a-local-development-instance) for how
 to use ddev.
@@ -302,9 +303,10 @@ start "Documentation-GENERATED-temp/Index.html"
 ```
 
 
-[1]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/
-[2]: https://getcomposer.org/
-[3]: https://extensions.typo3.org/extension/paste_reference
-[4]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/Misc/Changelog/Index.html
-[5]: https://semver.org/
-[6]: https://github.com/Kephson/paste_reference/issues
+[1]: https://docs.typo3.org/p/ehaerer/paste-reference/main/en-us/DeveloperManual/Architecture/Index.html
+[2]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/
+[3]: https://getcomposer.org/
+[4]: https://extensions.typo3.org/extension/paste_reference
+[5]: https://docs.typo3.org/p/ehaerer/paste-reference/master/en-us/Misc/Changelog/Index.html
+[6]: https://semver.org/
+[7]: https://github.com/Kephson/paste_reference/issues
